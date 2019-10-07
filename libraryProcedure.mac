@@ -1,0 +1,60 @@
+kill(all);
+
+/* [wxMaxima: section start ]
+Procedure 1/10/19
+   [wxMaxima: section end   ] */
+
+
+alias(s,sin,c,cos);
+
+Rx(alpha):=matrix(
+    [1,0,0],
+    [0,c(alpha),-s(alpha)],
+    [0,s(alpha),c(alpha)]
+)$
+Ry(beta):=matrix(
+    [c(beta),0,s(beta)],
+    [0,1,0],
+    [-s(beta),0,c(beta)]
+)$
+Rz(gamma):=matrix(
+    [c(gamma),-s(gamma),0],
+    [s(gamma),c(gamma),0],
+    [0,0,1]
+)$
+print("Rx(α)=",Rx(alpha),", Ry(β)=",Ry(beta),", Rz(γ)=",Rz(gamma))$
+Rxyz(alpha,beta,gamma):=Rx(alpha).Ry(beta).Rz(gamma);
+Rxzy(alpha,beta,gamma):=Rx(alpha).Ry(beta).Rz(gamma);
+Ryxz(alpha,beta,gamma):=Ry(alpha).Rx(beta).Rz(gamma);
+Ryzx(alpha,beta,gamma):=Ry(alpha).Rz(beta).Rx(gamma);
+Rzxy(alpha,beta,gamma):=Rz(alpha).Rx(beta).Ry(gamma);
+Rzyx(alpha,beta,gamma):=Rz(alpha).Ry(beta).Rx(gamma);
+
+r1:Rx(%pi/2).Ry(%pi/2);
+r2:Ry(%pi/2).Rx(%pi/2);
+
+if(r1=r2) then 
+    print("La rotazione 3D è commutativa")
+else
+    print("La rotazione 3D NON è commutativa")$
+
+float(Rxyz(1,2,3));
+
+/* [wxMaxima: section start ]
+Procedura 3/10/19
+   [wxMaxima: section end   ] */
+
+
+rx:Rx(alpha);
+rep:Ry(%pi/2).Rz(alpha).Ry(-%pi/2);
+ren:Ry(-%pi/2).Rz(-alpha).Ry(%pi/2);
+if(rx=rep) then 
+    print("La rotazione Rx è scomponibile come una rotazione tra yzy con rotazioni positive")
+else
+    print("La rotazione Rx NON è scomponibile come una rotazione tra yzy con rotazioni positive")$
+if(rx=ren) then 
+    print("La rotazione Rx è scomponibile come una rotazione tra yzy con rotazioni negative")
+else
+    print("La rotazione Rx NON è scomponibile come una rotazione tra yzy con rotazioni negative")$
+
+
