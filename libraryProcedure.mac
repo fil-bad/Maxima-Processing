@@ -23,8 +23,6 @@ Rz(gamma):=matrix(
     [0,0,1]
 )$
 
-print("Rx(α)=",Rx(alpha),", Ry(β)=",Ry(beta),", Rz(γ)=",Rz(gamma))$
-
 Rxyz(alpha,beta,gamma):=Rx(alpha).Ry(beta).Rz(gamma)$
 
 Rxzy(alpha,beta,gamma):=Rx(alpha).Ry(beta).Rz(gamma)$
