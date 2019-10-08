@@ -4,6 +4,12 @@ Procedure 1/10/19
 
 
 alias(s,sin,c,cos)$
+matchdeclare ([a], true)$
+let (sin(a), s)$
+let (cos(a), c)$
+let (asin(a), as)$
+let (acos(a), ac)$
+let (tan(a), tg)$
 
 Rx(alpha):=matrix(
     [1,0,0],
@@ -51,8 +57,11 @@ S(omega_x,omega_y,omega_z):=block(
     [-omega_y,omega_x,0]
     ) 
 )$
+
 R(v,theta):=block(
     II:diagmatrix(3,1),
+    v:rationalize(v),
+    assume(normaVet(v)>0),
     vn:vNorm(v),
     Sversore:S(vn[1,1],vn[2,1],vn[3,1]),
     A:s*II-Sversore,
