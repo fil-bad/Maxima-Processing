@@ -1,14 +1,25 @@
+/* [wxMaxima: title   start ]
+Procedure Maxima 2019/2020
+   [wxMaxima: title   end   ] */
+
+
 /* [wxMaxima: section start ]
 Procedure 1/10/19
    [wxMaxima: section end   ] */
 
 
 alias(s,sin,c,cos)$
+
 matchdeclare ([a], true)$
+
 let (sin(a), s)$
+
 let (cos(a), c)$
+
 let (asin(a), as)$
+
 let (acos(a), ac)$
+
 let (tan(a), tg)$
 
 Rx(alpha):=matrix(
@@ -72,6 +83,24 @@ R(v,theta):=block(
         [ilt(A1[2,1],s,theta),ilt(A1[2,2],s,theta),ilt(A1[2,3],s,theta)],
         [ilt(A1[3,1],s,theta),ilt(A1[3,2],s,theta),ilt(A1[3,3],s,theta)]
         )
+)$
+
+/* [wxMaxima: section start ]
+Procedura 08/10/19
+   [wxMaxima: section end   ] */
+
+
+Rrodr(v,theta):=block(
+    Id:diagmatrix(3,1),
+    v:rationalize(v),
+    assume(normaVet(v)>0),
+    vn:vNorm(v),
+    theta:theta*normaVet(v),
+    
+    Svers:S(vn[1,1],vn[2,1],vn[3,1]),
+    
+    Rfin: Id + sin(theta)*Svers + (1-cos(theta))*(Svers.Svers)
+    
 )$
 
 
