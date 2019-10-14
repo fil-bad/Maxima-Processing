@@ -69,6 +69,8 @@ S(omega_x,omega_y,omega_z):=block(
     ) 
 )$
 
+/* Calcolo matrice di rotazione dati vettore e angolo. */
+
 R(v,theta):=block(
     II:diagmatrix(3,1),
     v:rationalize(v),
@@ -90,17 +92,68 @@ Procedura 08/10/19
    [wxMaxima: section end   ] */
 
 
+/* Formula di Rodriguez. */
+
 Rrodr(v,theta):=block(
-    Id:diagmatrix(3,1),
+    II:diagmatrix(3,1),
     v:rationalize(v),
     assume(normaVet(v)>0),
     vn:vNorm(v),
-    theta:theta*normaVet(v),
-    
     Svers:S(vn[1,1],vn[2,1],vn[3,1]),
-    
-    Rfin: Id + sin(theta)*Svers + (1-cos(theta))*(Svers.Svers)
-    
+    theta:theta*normaVet(v),
+    Rfin: II + sin(theta)*Svers + (1-cos(theta))*(Svers.Svers) 
 )$
+
+/* Formula di Rodriguez (calcolo inverso). Data la matrice ricavo vettore e angolo di rotazione. */
+
+/* Verifico che R sia una matrice di rotazione: */
+
+rotVerify(mat):= block(
+    assume( is( equal( length(mat), length(transpose(mat) ) ) ) ), /*Matrice quadrata*/
+    /* Condizioni per Isometria Diretta */
+    assume( is( equal( determinant(mat), 1) ) ),
+    assume( is( equal( mat.transpose(mat), diagmatrix(length(mat),1) ) )
+))$
+
+/* Determino il vettore di rotazione: */
+
+vetRot(matR):=block( 
+    rotVerify(matR),
+    Id: diagmatrix(length(matR),1),
+    vect: nullspace(matR - Id),
+    vr:args(vect)[1]
+)$
+
+/* Determino l'angolo di rotazione: */
+
+rapMat(m1,m2):= block(
+    [found:0, result: 10], /* Nel nostro caso, 0 <= sin <= 1, */
+    for row thru length(m2) do( 
+        for col thru length (args(m1)) do(
+            if (m2[row][col]#0) 
+                then( 
+                    found:1,
+                    result:m1[row][col]/m2[row][col], 
+                    return(result))),
+        if is(equal(found,1)) 
+            then return(result)
+    )
+)$
+
+R1: (matrice-transpose(matrice))/2$
+
+R2: S(vNormale[1,1],vNormale[2,1],vNormale[3,1])$
+
+R3: (matrice+transpose(matrice))/2 - diagmatrix (3,1)$
+
+R4: S(vNormale[1,1],vNormale[2,1],vNormale[3,1]) . S(vNormale[1,1],vNormale[2,1],vNormale[3,1])$
+
+seno: rapMat(R1,R2)$
+
+coseno: -rapMat(R3,R4) + 1$
+
+theta: atan2(seno,coseno)$
+
+thetanorm: atan2(seno,coseno) * nv$
 
 
