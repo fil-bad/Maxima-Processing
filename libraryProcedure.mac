@@ -73,7 +73,8 @@ S(omega_x,omega_y,omega_z):=block(
 
 R(v,theta):=block(
     II:diagmatrix(3,1),
-    v:rationalize(v),
+    v:ratsimp(v),
+    theta:ratsimp(theta),
     assume(normaVet(v)>0),
     vn:vNorm(v),
     Sversore:S(vn[1,1],vn[2,1],vn[3,1]),
@@ -96,7 +97,8 @@ Procedura 08/10/19
 
 Rrodr(v,theta):=block(
     II:diagmatrix(3,1),
-    v:rationalize(v),
+    v:ratsimp(v),
+    theta:ratsimp(theta),
     assume(normaVet(v)>0),
     vn:vNorm(v),
     Svers:S(vn[1,1],vn[2,1],vn[3,1]),
@@ -117,12 +119,18 @@ rotVerify(mat):= block(
 
 /* Determino il vettore di rotazione: */
 
-vetRot(matR):=block( 
+vetRot(matR):=block( /* La funzione non normalizza il vettore, per poter poi riscalare theta */
+    [result:0],
     rotVerify(matR),
     Id: diagmatrix(length(matR),1),
     vect: nullspace(matR - Id),
-    vr:args(vect)[1]
-)$
+    vr:args(vect)[1], /*in questo modo riesco ad estrarre il vettore dallo span che mi ricavo*/
+    for row thru length(vr) do (
+    if (vr[row][1]#0) then result: vr*1/(vr[row][1]), /*poichè gli elementi del vettore li posso immaginare come elementi moltiplicati
+    tutti quanti per una costante k, appena trovo il primo elemento diverso da 0, lo divido per tutti gli elementi del vettore così da 
+    effettuare già una prima semplificazione del vettore di rotazione*/
+    return(result))
+);
 
 /* Determino l'angolo di rotazione: */
 
