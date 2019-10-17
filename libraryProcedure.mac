@@ -161,14 +161,17 @@ Procedura 14/10/19
    [wxMaxima: section end   ] */
 
 
-T(v,d):=block(
-    v:ratsimp(v),
-    pos:v*d
+Romog(v,theta):=block(
+    Romog:matrix ([R(v,theta), zeromatrix( length(R(v,theta)), 1)],[ zeromatrix(1,  length(R(v,theta))) , matrix([1]) ]),
+    Romog:mat_unblocker (Romog)
 )$
 
-Avv(v,theta,d):=block(
-Avv:matrix ([R(v,theta), T(v,d)],[ zeromatrix(1,  length(R(v,theta))) , matrix([1]) ]),
-Avv:mat_unblocker (Avv)
-);
+Tomog(v,d):=block(
+    II:diagmatrix(3,1),
+    Tomog:matrix ([II, (v*d)],[ zeromatrix(1,  length(II)) , matrix([1]) ]),
+    Tomog:mat_unblocker (Tomog)
+)$
+
+Avv(v,theta,d):=Romog(v,theta).Tomog(v,d);
 
 
