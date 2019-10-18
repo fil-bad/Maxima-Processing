@@ -160,18 +160,24 @@ R4: S(vNormale[1,1],vNormale[2,1],vNormale[3,1]) . S(vNormale[1,1],vNormale[2,1]
 Procedura 14/10/19
    [wxMaxima: section end   ] */
 
-
-Romog(v,theta):=block(
-    Romog:matrix ([R(v,theta), zeromatrix( length(R(v,theta)), 1)],[ zeromatrix(1,  length(R(v,theta))) , matrix([1]) ]),
-    Romog:mat_unblocker (Romog)
+Romog(v,theta):=block( 
+    [ROm, Rot: Rrodr(v, theta) ],    
+    ROm: matrix(
+        [Rot, zeromatrix( length(Rot), 1)],
+        [ zeromatrix(1,  length(Rot)) , matrix([1]) ]
+    ),
+    ROm: mat_unblocker(ROm),
+    return(ROm) 
 )$
 
 Tomog(v,d):=block(
-    II:diagmatrix(3,1),
-    Tomog:matrix ([II, (v*d)],[ zeromatrix(1,  length(II)) , matrix([1]) ]),
-    Tomog:mat_unblocker (Tomog)
+    [ TOm, Id:diagmatrix(3,1) ],
+    TOm: matrix(
+        [ Id, (v*d)],
+        [ zeromatrix(1,  length(Id)) , matrix([1]) ]
+    ),
+    TOm: mat_unblocker(TOm),
+    return(TOm)
 )$
 
-Avv(v,theta,d):=Romog(v,theta).Tomog(v,d);
-
-
+Avv(v,theta,d):= Romog(v,theta).Tomog(v,d)$
