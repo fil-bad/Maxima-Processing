@@ -72,20 +72,20 @@ S(omega_x,omega_y,omega_z):=block(
 /* Calcolo matrice di rotazione dati vettore e angolo. */
 
 R(v,theta):=block(
-    II:diagmatrix(3,1),
+    [ Id: diagmatrix(3,1), norma, vN, Sversore, A1, A2 ],
     v:ratsimp(v),
-    theta:ratsimp(theta),
+    theta:ratsimp(theta),    
     assume(normaVet(v)>0),
-    vn:vNorm(v),
-    Sversore:S(vn[1,1],vn[2,1],vn[3,1]),
-    A:s*II-Sversore,
-    A1:invert(A),
-    theta:theta*normaVet(v),
-    A2:matrix(
+    vN: vNorm(v),
+    Sversore: S(vN[1,1], vN[2,1], vN[3,1]),
+    theta: theta*normaVet(v),
+    A1: invert( s*Id-Sversore ),
+    A2: matrix(
         [ilt(A1[1,1],s,theta),ilt(A1[1,2],s,theta),ilt(A1[1,3],s,theta)],
         [ilt(A1[2,1],s,theta),ilt(A1[2,2],s,theta),ilt(A1[2,3],s,theta)],
         [ilt(A1[3,1],s,theta),ilt(A1[3,2],s,theta),ilt(A1[3,3],s,theta)]
-        )
+        ),
+    return(A2)
 )$
 
 /* [wxMaxima: section start ]
@@ -96,14 +96,15 @@ Procedura 08/10/19
 /* Formula di Rodriguez. */
 
 Rrodr(v,theta):=block(
-    II:diagmatrix(3,1),
-    v:ratsimp(v),
-    theta:ratsimp(theta),
+    [ Id: diagmatrix(3,1), vN, Svers, Rfin ],    
+    v: ratsimp(v),
+    theta: ratsimp(theta),
     assume(normaVet(v)>0),
-    vn:vNorm(v),
-    Svers:S(vn[1,1],vn[2,1],vn[3,1]),
-    theta:theta*normaVet(v),
-    Rfin: II + sin(theta)*Svers + (1-cos(theta))*(Svers.Svers) 
+    vN: vNorm(v),
+    Svers: S(vN[1,1], vN[2,1], vN[3,1]),
+    theta: theta*normaVet(v),
+    Rfin: Id + sin(theta)*Svers + (1-cos(theta))*(Svers.Svers),
+    return(Rfin)
 )$
 
 /* Formula di Rodriguez (calcolo inverso). Data la matrice ricavo vettore e angolo di rotazione. */
@@ -120,7 +121,7 @@ rotVerify(mat):= block(
 /* Determino il vettore di rotazione: */
 
 vetRot(matR):=block( /* La funzione non normalizza il vettore, per poter poi riscalare theta */
-    [result:0],
+    [result: 0, Id, vect, vr, row],
     rotVerify(matR),
     Id: diagmatrix(length(matR),1),
     vect: nullspace(matR - Id),
@@ -130,19 +131,21 @@ vetRot(matR):=block( /* La funzione non normalizza il vettore, per poter poi ris
     tutti quanti per una costante k, appena trovo il primo elemento diverso da 0, lo divido per tutti gli elementi del vettore così da 
     effettuare già una prima semplificazione del vettore di rotazione*/
     return(result))
-);
+)$
 
 /* Determino l'angolo di rotazione: */
 
 rapMat(m1,m2):= block(
-    [found:0, result: 10], /* Nel nostro caso, 0 <= sin <= 1, */
+    [found:0, result], /* Nel nostro caso, 0 <= sin <= 1, */
     for row thru length(m2) do( 
         for col thru length (args(m1)) do(
             if (m2[row][col]#0) 
                 then( 
                     found:1,
                     result:m1[row][col]/m2[row][col], 
-                    return(result))),
+                    return(result)
+                )
+        ),
         if is(equal(found,1)) 
             then return(result)
     )
@@ -159,6 +162,7 @@ R4: S(vNormale[1,1],vNormale[2,1],vNormale[3,1]) . S(vNormale[1,1],vNormale[2,1]
 /* [wxMaxima: section start ]
 Procedura 14/10/19
    [wxMaxima: section end   ] */
+
 
 Romog(v,theta):=block( 
     [ROm, Rot: Rrodr(v, theta) ],    
@@ -181,3 +185,5 @@ Tomog(v,d):=block(
 )$
 
 Avv(v,theta,d):= Romog(v,theta).Tomog(v,d)$
+
+
