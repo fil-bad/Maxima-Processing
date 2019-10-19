@@ -69,7 +69,7 @@ S(omega_x,omega_y,omega_z):=block(
     ) 
 )$
 
-/* Calcolo matrice di rotazione dati vettore e angolo. */
+/* Calcolo matrice di rotazione dati vettore e angolo attraverso l'utilizzo di Laplace. */
 
 R(v,theta):=block(
     [ Id: diagmatrix(3,1), norma, vN, Sversore, A1, A2 ],
@@ -112,7 +112,7 @@ Rrodr(v,theta):=block(
 /* Verifico che R sia una matrice di rotazione: */
 
 rotVerify(mat):= block(
-    assume( is( equal( length(mat), length(transpose(mat) ) ) ) ), /*Matrice quadrata*/
+    assume( is( equal( length(mat), length(transpose(mat) ) ) ) ),
     /* Condizioni per Isometria Diretta */
     assume( is( equal( determinant(mat), 1) ) ),
     assume( is( equal( mat.transpose(mat), diagmatrix(length(mat),1) ) )
@@ -120,23 +120,20 @@ rotVerify(mat):= block(
 
 /* Determino il vettore di rotazione: */
 
-vetRot(matR):=block( /* La funzione non normalizza il vettore, per poter poi riscalare theta */
+vetRot(matR):=block(
     [result: 0, Id, vect, vr, row],
     rotVerify(matR),
     Id: diagmatrix(length(matR),1),
     vect: nullspace(matR - Id),
-    vr:args(vect)[1], /*in questo modo riesco ad estrarre il vettore dallo span che mi ricavo*/
+    vr:args(vect)[1],
     for row thru length(vr) do (
-    if (vr[row][1]#0) then result: vr*1/(vr[row][1]), /*poichè gli elementi del vettore li posso immaginare come elementi moltiplicati
-    tutti quanti per una costante k, appena trovo il primo elemento diverso da 0, lo divido per tutti gli elementi del vettore così da 
-    effettuare già una prima semplificazione del vettore di rotazione*/
-    return(result))
+    if (vr[row][1]#0) then result: vr*1/(vr[row][1]),
 )$
 
 /* Determino l'angolo di rotazione: */
 
 rapMat(m1,m2):= block(
-    [found:0, result], /* Nel nostro caso, 0 <= sin <= 1, */
+    [found:0, result],
     for row thru length(m2) do( 
         for col thru length (args(m1)) do(
             if (m2[row][col]#0) 
@@ -160,9 +157,13 @@ R3: (matrice+transpose(matrice))/2 - diagmatrix (3,1)$
 R4: S(vNormale[1,1],vNormale[2,1],vNormale[3,1]) . S(vNormale[1,1],vNormale[2,1],vNormale[3,1])$
 
 /* [wxMaxima: section start ]
-Procedura 14/10/19
+Procedura 14/10/19 - 17/10/19
    [wxMaxima: section end   ] */
 
+
+/*Procedura di creazione della matrice di avvitamento attraverso l'utilizzo della matrice omogenea di rotazione e di
+traslazione con l'utilizzo di variabili locali all'interno delle funzioni che le definiscono; la matrice di rotazione
+presente nel primo blocco della matrice di rotazione omogenea è stata ricavata con Rodriguez*/
 
 Romog(v,theta):=block( 
     [ROm, Rot: Rrodr(v, theta) ],    
@@ -184,6 +185,144 @@ Tomog(v,d):=block(
     return(TOm)
 )$
 
+
+/*Procedura di creazione della matrice di avvitamento attraverso l'utilizzo della matrice omogenea di rotazione e di
+traslazione senza l'utilizzo di variabili locali all'interno delle funzioni che le definiscono; la matrice di rotazione
+presente nel primo blocco della matrice di rotazione omogenea è stata ricavata con Laplace*/
+
+Romog(v,theta):=block(
+    Romog:matrix ([R(v,theta), zeromatrix( length(R(v,theta)), 1)],[ zeromatrix(1,  length(R(v,theta))) , matrix([1]) ]),
+    Romog:mat_unblocker (Romog)
+)$
+
+Tomog(v,d):=block(
+    II:diagmatrix(3,1),
+    Tomog:matrix ([II, (v*d)],[ zeromatrix(1,  length(II)) , matrix([1]) ]),
+    Tomog:mat_unblocker (Tomog)
+)$
+
+
+/*Definizione della matrice di avvitamento*/
+
 Avv(v,theta,d):= Romog(v,theta).Tomog(v,d)$
+
+/* Matrici di Denavit-Hartenberg: */
+
+Avv_z(v,theta,d):=Romog(v,theta).Tomog(v,d)$
+Avv_x(u,alpha,a):=Romog(u,alpha).Tomog(u,a)$
+e_x:transpose([1,0,0])$
+e_z:transpose([0,0,1])$
+
+Cin_dir_Den_Hart(tabDH):= block(
+    [result:1],
+    for row thru length(tabDH) do(
+        result:result.(Avv_z(e_z,tabDH[row,1],tabDH[row,2]).Avv_x(e_x,tabDH[row,3],tabDH[row,4]))),
+    return(trigreduce(trigreduce(result)))
+        );
+
+/* Esamino la cinematica diretta, con il metodo di Denavit-Hartenberg, delle strutture portanti. */
+
+port_cartesiana:matrix(
+    [0,q_1,-%pi/2,0],
+    [-%pi/2,q_2,-%pi/2,0],
+    [0,q_3,0,0]
+    )$
+port_RRR_planare:matrix(
+    [q_1,0,0,D_1],
+    [q_2,0,0,D_2],
+    [q_3,0,0,D_3]
+    )$
+port_cilindrica:matrix(
+    [q_1,L_1,0,0],
+    [0,q_2,-%pi/2,0],
+    [0,q_3,0,0]
+    )$
+port_SCARA:matrix(
+    [q_1,L_1,0,D_1],
+    [q_2,L_2,0,D_2],
+    [0,q_3,%pi,0]
+    )$
+port_sferica:matrix(
+    [q_1,L_1,%pi/2,0],
+    [q_2,0,%pi/2,D_2],
+    [0,q_3,0,0]
+    )$
+manip_Stanford:matrix(
+    [q_1,L_1,-%pi/2,0],
+    [q_2,L_2,%pi/2,0],
+    [-%pi/2,q_3,0,0]
+    )$
+port_antropomorfo:matrix(
+    [q_1,L_1,%pi/2,0],
+    [q_2,0,0,D_2],
+    [q_3,0,0,D_3]
+    )$
+
+/* Esamino la cinematica diretta, con il metodo di Denavit-Hartenberg, del polso sferico. */
+
+polso_sferico:matrix(
+    [q_4,0,-%pi/2,0],
+    [q_5,0,%pi/2,0],
+    [q_6,L_6,0,0]
+    )$
+
+/* Esamino la cinematica diretta, con il metodo di Denavit-Hartenberg, delle varie strutture portanti alle quali è legato il polso sferico. */
+
+robot_cartesiano:matrix(
+    [0,q_1,-%pi/2,0],
+    [-%pi/2,q_2,-%pi/2,0],
+    [0,q_3,0,0],
+    [q_4,0,-%pi/2,0],
+    [q_5,0,%pi/2,0],
+    [q_6,L_6,0,0]
+    )$
+robot_RRR_planare:matrix(
+    [q_1,0,0,D_1],
+    [q_2,0,0,D_2],
+    [q_3,0,0,D_3],
+    [q_4,0,-%pi/2,0],
+    [q_5,0,%pi/2,0],
+    [q_6,L_6,0,0]
+    )$
+robot_cilindrico:matrix(
+    [q_1,L_1,0,0],
+    [0,q_2,-%pi/2,0],
+    [0,q_3,0,0],
+    [q_4,0,-%pi/2,0],
+    [q_5,0,%pi/2,0],
+    [q_6,L_6,0,0]
+    )$
+robot_SCARA:matrix(
+    [q_1,L_1,0,D_1],
+    [q_2,L_2,0,D_2],
+    [0,q_3,%pi,0],
+    [q_4,0,-%pi/2,0],
+    [q_5,0,%pi/2,0],
+    [q_6,L_6,0,0]
+    )$
+robot_sferico:matrix(
+    [q_1,L_1,%pi/2,0],
+    [q_2,0,%pi/2,D_2],
+    [0,q_3,0,0],
+    [q_4,0,-%pi/2,0],
+    [q_5,0,%pi/2,0],
+    [q_6,L_6,0,0]
+    )$
+robot_Stanford:matrix(
+    [q_1,L_1,-%pi/2,0],
+    [q_2,L_2,%pi/2,0],
+    [-%pi/2,q_3,0,0],
+    [q_4,0,-%pi/2,0],
+    [q_5,0,%pi/2,0],
+    [q_6,L_6,0,0]
+    )$
+robot_antropomorfo:matrix(
+    [q_1,L_1,%pi/2,0],
+    [q_2,0,0,D_2],
+    [q_3,0,0,D_3],
+    [q_4,0,-%pi/2,0],
+    [q_5,0,%pi/2,0],
+    [q_6,L_6,0,0]
+    )$
 
 
