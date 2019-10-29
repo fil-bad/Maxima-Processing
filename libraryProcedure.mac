@@ -127,7 +127,11 @@ vetRot(matR):=block(
     vect: nullspace(matR - Id),
     vr:args(vect)[1],
     for row thru length(vr) do (
-    if (vr[row][1]#0) then result: vr*1/(vr[row][1]),
+        if (vr[row][1]#0) then (
+            result: vr*1/(vr[row][1])
+        )
+    ),
+    result
 )$
 
 /* Determino l'angolo di rotazione: */
@@ -161,9 +165,9 @@ Procedura 14/10/19 - 17/10/19
    [wxMaxima: section end   ] */
 
 
-/*Procedura di creazione della matrice di avvitamento attraverso l'utilizzo della matrice omogenea di rotazione e di
+/* Procedura di creazione della matrice di avvitamento attraverso l'utilizzo della matrice omogenea di rotazione e di
 traslazione con l'utilizzo di variabili locali all'interno delle funzioni che le definiscono; la matrice di rotazione
-presente nel primo blocco della matrice di rotazione omogenea è stata ricavata con Rodriguez*/
+presente nel primo blocco della matrice di rotazione omogenea è stata ricavata con Rodriguez */
 
 Romog(v,theta):=block( 
     [ROm, Rot: Rrodr(v, theta) ],    
@@ -185,10 +189,9 @@ Tomog(v,d):=block(
     return(TOm)
 )$
 
-
-/*Procedura di creazione della matrice di avvitamento attraverso l'utilizzo della matrice omogenea di rotazione e di
+/* Procedura di creazione della matrice di avvitamento attraverso l'utilizzo della matrice omogenea di rotazione e di
 traslazione senza l'utilizzo di variabili locali all'interno delle funzioni che le definiscono; la matrice di rotazione
-presente nel primo blocco della matrice di rotazione omogenea è stata ricavata con Laplace*/
+presente nel primo blocco della matrice di rotazione omogenea è stata ricavata con Laplace */
 
 Romog(v,theta):=block(
     Romog:matrix ([R(v,theta), zeromatrix( length(R(v,theta)), 1)],[ zeromatrix(1,  length(R(v,theta))) , matrix([1]) ]),
@@ -201,16 +204,18 @@ Tomog(v,d):=block(
     Tomog:mat_unblocker (Tomog)
 )$
 
-
-/*Definizione della matrice di avvitamento*/
+/* Definizione della matrice di avvitamento */
 
 Avv(v,theta,d):= Romog(v,theta).Tomog(v,d)$
 
 /* Matrici di Denavit-Hartenberg: */
 
 Avv_z(v,theta,d):=Romog(v,theta).Tomog(v,d)$
+
 Avv_x(u,alpha,a):=Romog(u,alpha).Tomog(u,a)$
+
 e_x:transpose([1,0,0])$
+
 e_z:transpose([0,0,1])$
 
 Cin_dir_Den_Hart(tabDH):= block(
@@ -227,31 +232,37 @@ port_cartesiana:matrix(
     [-%pi/2,q_2,-%pi/2,0],
     [0,q_3,0,0]
     )$
+
 port_RRR_planare:matrix(
     [q_1,0,0,D_1],
     [q_2,0,0,D_2],
     [q_3,0,0,D_3]
     )$
+
 port_cilindrica:matrix(
     [q_1,L_1,0,0],
     [0,q_2,-%pi/2,0],
     [0,q_3,0,0]
     )$
+
 port_SCARA:matrix(
     [q_1,L_1,0,D_1],
     [q_2,L_2,0,D_2],
     [0,q_3,%pi,0]
     )$
+
 port_sferica:matrix(
     [q_1,L_1,%pi/2,0],
     [q_2,0,%pi/2,D_2],
     [0,q_3,0,0]
     )$
+
 manip_Stanford:matrix(
     [q_1,L_1,-%pi/2,0],
     [q_2,L_2,%pi/2,0],
     [-%pi/2,q_3,0,0]
     )$
+
 port_antropomorfo:matrix(
     [q_1,L_1,%pi/2,0],
     [q_2,0,0,D_2],
@@ -276,6 +287,7 @@ robot_cartesiano:matrix(
     [q_5,0,%pi/2,0],
     [q_6,L_6,0,0]
     )$
+
 robot_RRR_planare:matrix(
     [q_1,0,0,D_1],
     [q_2,0,0,D_2],
@@ -284,6 +296,7 @@ robot_RRR_planare:matrix(
     [q_5,0,%pi/2,0],
     [q_6,L_6,0,0]
     )$
+
 robot_cilindrico:matrix(
     [q_1,L_1,0,0],
     [0,q_2,-%pi/2,0],
@@ -292,6 +305,7 @@ robot_cilindrico:matrix(
     [q_5,0,%pi/2,0],
     [q_6,L_6,0,0]
     )$
+
 robot_SCARA:matrix(
     [q_1,L_1,0,D_1],
     [q_2,L_2,0,D_2],
@@ -300,6 +314,7 @@ robot_SCARA:matrix(
     [q_5,0,%pi/2,0],
     [q_6,L_6,0,0]
     )$
+
 robot_sferico:matrix(
     [q_1,L_1,%pi/2,0],
     [q_2,0,%pi/2,D_2],
@@ -308,6 +323,7 @@ robot_sferico:matrix(
     [q_5,0,%pi/2,0],
     [q_6,L_6,0,0]
     )$
+
 robot_Stanford:matrix(
     [q_1,L_1,-%pi/2,0],
     [q_2,L_2,%pi/2,0],
@@ -316,6 +332,7 @@ robot_Stanford:matrix(
     [q_5,0,%pi/2,0],
     [q_6,L_6,0,0]
     )$
+
 robot_antropomorfo:matrix(
     [q_1,L_1,%pi/2,0],
     [q_2,0,0,D_2],

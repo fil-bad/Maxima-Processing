@@ -1,0 +1,97 @@
+Cartesiano:
+
+$$\pmatrix{0&0&1&q_{3}\cr 0&-1&0&q_{2}\cr 1&0&0&q_{1}\cr 0&0&0&1\cr }$$
+
+RRR Planare:
+$$\pmatrix{\cos \left(q_{3}+q_{2}+q_{1}\right)&-\sin \left(q_{3}+
+ q_{2}+q_{1}\right)&0&D_{3}\,\cos \left(q_{3}+q_{2}+q_{1}\right)+
+ D_{2}\,\cos \left(q_{2}+q_{1}\right)+D_{1}\,\cos q_{1}\cr \sin 
+ \left(q_{3}+q_{2}+q_{1}\right)&\cos \left(q_{3}+q_{2}+q_{1}\right)&0
+ &D_{3}\,\sin \left(q_{3}+q_{2}+q_{1}\right)+D_{2}\,\sin \left(q_{2}+
+ q_{1}\right)+D_{1}\,\sin q_{1}\cr 0&0&1&0\cr 0&0&0&1\cr }$$
+
+Cilindrico:
+
+$$\pmatrix{\cos q_{1}&0&-\sin q_{1}&-\sin q_{1}\,q_{3}\cr \sin q_{1}&
+ 0&\cos q_{1}&\cos q_{1}\,q_{3}\cr 0&-1&0&q_{2}+L_{1}\cr 0&0&0&1\cr }$$
+
+
+Scara:
+
+$$\pmatrix{\cos \left(q_{2}+q_{1}\right)&\sin \left(q_{2}+q_{1}
+ \right)&0&D_{2}\,\cos \left(q_{2}+q_{1}\right)+D_{1}\,\cos q_{1}\cr 
+ \sin \left(q_{2}+q_{1}\right)&-\cos \left(q_{2}+q_{1}\right)&0&D_{2}
+ \,\sin \left(q_{2}+q_{1}\right)+D_{1}\,\sin q_{1}\cr 0&0&-1&q_{3}+
+ L_{2}+L_{1}\cr 0&0&0&1\cr }$$
+
+Sferico 1:
+
+$$\pmatrix{{{\cos \left(q_{2}+q_{1}\right)+\cos \left(q_{2}-q_{1}
+ \right)}\over{2}}&\sin q_{1}&{{\sin \left(q_{2}+q_{1}\right)+\sin 
+ \left(q_{2}-q_{1}\right)}\over{2}}&{{\left(\sin \left(q_{2}+q_{1}
+ \right)+\sin \left(q_{2}-q_{1}\right)\right)\,q_{3}+D_{2}\,\left(
+ \cos \left(q_{2}+q_{1}\right)+\cos \left(q_{2}-q_{1}\right)\right)
+ }\over{2}}\cr {{\sin \left(q_{2}+q_{1}\right)-\sin \left(q_{2}-q_{1}
+ \right)}\over{2}}&-\cos q_{1}&-{{\cos \left(q_{2}+q_{1}\right)-\cos 
+ \left(q_{2}-q_{1}\right)}\over{2}}&-{{\left(\cos \left(q_{2}+q_{1}
+ \right)-\cos \left(q_{2}-q_{1}\right)\right)\,q_{3}+D_{2}\,\left(
+ \sin \left(q_{2}-q_{1}\right)-\sin \left(q_{2}+q_{1}\right)\right)
+ }\over{2}}\cr \sin q_{2}&0&-\cos q_{2}&-\cos q_{2}\,q_{3}+D_{2}\,
+ \sin q_{2}+L_{1}\cr 0&0&0&1\cr }$$
+
+Sferico di Stanford:
+
+$$\pmatrix{\sin q_{1}&{{\cos \left(q_{2}+q_{1}\right)+\cos \left(
+ q_{2}-q_{1}\right)}\over{2}}&{{\sin \left(q_{2}+q_{1}\right)+\sin 
+ \left(q_{2}-q_{1}\right)}\over{2}}&{{\left(\sin \left(q_{2}+q_{1}
+ \right)+\sin \left(q_{2}-q_{1}\right)\right)\,q_{3}-2\,L_{2}\,\sin 
+ q_{1}}\over{2}}\cr -\cos q_{1}&{{\sin \left(q_{2}+q_{1}\right)-\sin 
+ \left(q_{2}-q_{1}\right)}\over{2}}&-{{\cos \left(q_{2}+q_{1}\right)-
+ \cos \left(q_{2}-q_{1}\right)}\over{2}}&-{{\left(\cos \left(q_{2}+
+ q_{1}\right)-\cos \left(q_{2}-q_{1}\right)\right)\,q_{3}-2\,L_{2}\,
+ \cos q_{1}}\over{2}}\cr 0&-\sin q_{2}&\cos q_{2}&\cos q_{2}\,q_{3}+
+ L_{1}\cr 0&0&0&1\cr }$$
+
+Antropomorfo:
+
+$$\pmatrix{{{\cos \left(q_{3}+q_{2}+q_{1}\right)+\cos \left(q_{3}+
+ q_{2}-q_{1}\right)}\over{2}}&-{{\sin \left(q_{3}+q_{2}+q_{1}\right)+
+ \sin \left(q_{3}+q_{2}-q_{1}\right)}\over{2}}&\sin q_{1}&{{D_{3}\,
+ \left(\cos \left(q_{3}+q_{2}+q_{1}\right)+\cos \left(q_{3}+q_{2}-
+ q_{1}\right)\right)+D_{2}\,\left(\cos \left(q_{2}+q_{1}\right)+\cos 
+ \left(q_{2}-q_{1}\right)\right)}\over{2}}\cr {{\sin \left(q_{3}+
+ q_{2}+q_{1}\right)-\sin \left(q_{3}+q_{2}-q_{1}\right)}\over{2}}&{{
+ \cos \left(q_{3}+q_{2}+q_{1}\right)-\cos \left(q_{3}+q_{2}-q_{1}
+ \right)}\over{2}}&-\cos q_{1}&{{D_{3}\,\left(\sin \left(q_{3}+q_{2}+
+ q_{1}\right)-\sin \left(q_{3}+q_{2}-q_{1}\right)\right)+D_{2}\,
+ \left(\sin \left(q_{2}+q_{1}\right)-\sin \left(q_{2}-q_{1}\right)
+ \right)}\over{2}}\cr \sin \left(q_{3}+q_{2}\right)&\cos \left(q_{3}+
+ q_{2}\right)&0&D_{3}\,\sin \left(q_{3}+q_{2}\right)+D_{2}\,\sin 
+ q_{2}+L_{1}\cr 0&0&0&1\cr }$$
+
+Polso Sferico:
+
+$$\pmatrix{{{\cos \left(q_{6}+q_{5}+q_{4}\right)+\cos \left(q_{6}+
+ q_{5}-q_{4}\right)+\cos \left(q_{6}-q_{5}+q_{4}\right)+\cos \left(
+ q_{6}-q_{5}-q_{4}\right)+2\,\cos \left(q_{6}+q_{4}\right)-2\,\cos 
+ \left(q_{6}-q_{4}\right)}\over{4}}&-{{\sin \left(q_{6}+q_{5}+q_{4}
+ \right)+\sin \left(q_{6}+q_{5}-q_{4}\right)+\sin \left(q_{6}-q_{5}+
+ q_{4}\right)+\sin \left(q_{6}-q_{5}-q_{4}\right)+2\,\sin \left(q_{6}
+ +q_{4}\right)-2\,\sin \left(q_{6}-q_{4}\right)}\over{4}}&{{\sin 
+ \left(q_{5}+q_{4}\right)+\sin \left(q_{5}-q_{4}\right)}\over{2}}&{{
+ L_{6}\,\left(\sin \left(q_{5}+q_{4}\right)+\sin \left(q_{5}-q_{4}
+ \right)\right)}\over{2}}\cr {{\sin \left(q_{6}+q_{5}+q_{4}\right)-
+ \sin \left(q_{6}+q_{5}-q_{4}\right)+\sin \left(q_{6}-q_{5}+q_{4}
+ \right)-\sin \left(q_{6}-q_{5}-q_{4}\right)+2\,\sin \left(q_{6}+
+ q_{4}\right)+2\,\sin \left(q_{6}-q_{4}\right)}\over{4}}&{{\cos 
+ \left(q_{6}+q_{5}+q_{4}\right)-\cos \left(q_{6}+q_{5}-q_{4}\right)+
+ \cos \left(q_{6}-q_{5}+q_{4}\right)-\cos \left(q_{6}-q_{5}-q_{4}
+ \right)+2\,\cos \left(q_{6}+q_{4}\right)+2\,\cos \left(q_{6}-q_{4}
+ \right)}\over{4}}&-{{\cos \left(q_{5}+q_{4}\right)-\cos \left(q_{5}-
+ q_{4}\right)}\over{2}}&-{{L_{6}\,\left(\cos \left(q_{5}+q_{4}\right)
+ -\cos \left(q_{5}-q_{4}\right)\right)}\over{2}}\cr -{{\sin \left(
+ q_{6}+q_{5}\right)-\sin \left(q_{6}-q_{5}\right)}\over{2}}&-{{\cos 
+ \left(q_{6}+q_{5}\right)-\cos \left(q_{6}-q_{5}\right)}\over{2}}&
+ \cos q_{5}&L_{6}\,\cos q_{5}\cr 0&0&0&1\cr }$$
+
+
