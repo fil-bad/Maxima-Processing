@@ -1,41 +1,43 @@
+%& -shell-escape
 \documentclass[a4paper,11pt]{article}
 \usepackage[latin1]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[italian]{babel}
+\usepackage{python}
+
+
+\author{Alfano Emanuele \\ Badalamenti Filippo \\ Vitti Gabriele}
+
+
+\newcommand{\DHTable}{
+	\begin{tabular}{c|c|c|c|c|}
+		\cline{2-5} &
+		\multicolumn{2}{|c|}{$A_z(\theta,d)$} &
+		\multicolumn{2}{|c|}{$A_x(\alpha,a)$} \\
+		\hline
+		\multicolumn{1}{|c|}{R1} &  &  &  &  \\
+		\hline
+		\multicolumn{1}{|c|}{R2} &  &  &  &  \\
+		\hline
+		\multicolumn{1}{|c|}{R3} &  &  &  &  \\
+		\hline
+	\end{tabular}
+}
+
+
 \begin{document}
-Questo `e il mio primo documento con \LaTeX.
+\title{Cinematiche Dirette Robot}
+\maketitle
+\pagebreak
 
-Ecco un paragrafo molto breve.
-Qui comincia un altro paragrafo. Come potete vedere,
-i ritorni a capo non hanno alcuna importanza nella
-formattazione del paragrafo: contano solo le linee bianche.
-Quest'ultimo paragrafo chiude l'esempio.
+\section*{Cartesiano}
+\DHTable
 
-Ecco un esempio di testo, con qualche spazio.
 
-Ecco un esempio
-di testo, con
-qualche spazio.
+\begin{python}
+	
+	print("Hello \LaTeX!")
+	
+\end{python}
 
-Questo `e testo normale. % questo `e un commento aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-Questo `e il resto del testo.
-
-Prova dei comandi \TeX e \LaTeX in un testo
-
-Prova dei comandi \TeX\ e \LaTeX\ in un testo.
-
-Prova dei comandi \TeX{} e \LaTeX{} in un testo.
-
-Prova dei comandi {\TeX} e {\LaTeX} in un testo.
-
-Io mi {\itshape chiamo {\bfseries Gigi}}.
-
-Io mi {\itshape chiamo \bfseries Gigi}.
-
-Io mi {\itshape chiamo} {\bfseries Gigi}.
-
-Metto la parola che segue in \textit{corsivo}.
-Il resto del testo `e normale
-
-\b
 \end{document}
