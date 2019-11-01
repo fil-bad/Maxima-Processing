@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.9.30)  1 NOV 2019 16:47
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.9.30)  1 NOV 2019 18:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -211,7 +211,7 @@ Overfull \vbox (137.03343pt too high) has occurred while \output is active []
 
 
 [4 <./Sorgenti/Strutture/Cilindrico.png>])
-<Sorgenti/Strutture/RRRplanare.png, id=31, 775.39688pt x 252.945pt>
+<Sorgenti/Strutture/RRRplanare.png, id=30, 775.39688pt x 252.945pt>
 File: Sorgenti/Strutture/RRRplanare.png Graphic file (type png)
 <use Sorgenti/Strutture/RRRplanare.png>
 Package pdftex.def Info: Sorgenti/Strutture/RRRplanare.png  used on input line 
@@ -223,12 +223,12 @@ Overfull \hbox (415.39499pt too wide) in paragraph at lines 41--13
  []
 
 
-Overfull \hbox (1004.38245pt too wide) detected at line 33
+Overfull \hbox (1180.37584pt too wide) detected at line 30
 []
  []
 
 )
-<Sorgenti/Strutture/Sferico1.png, id=32, 500.62032pt x 566.115pt>
+<Sorgenti/Strutture/Sferico1.png, id=31, 500.62032pt x 566.115pt>
 File: Sorgenti/Strutture/Sferico1.png Graphic file (type png)
 <use Sorgenti/Strutture/Sferico1.png>
 Package pdftex.def Info: Sorgenti/Strutture/Sferico1.png  used on input line 45
@@ -244,7 +244,7 @@ Overfull \vbox (102.40414pt too high) has occurred while \output is active []
 
 
 [6 <./Sorgenti/Strutture/Sferico1.png>])
-<Sorgenti/Strutture/SfericoStanford.png, id=41, 417.81094pt x 566.115pt>
+<Sorgenti/Strutture/SfericoStanford.png, id=40, 417.81094pt x 566.115pt>
 File: Sorgenti/Strutture/SfericoStanford.png Graphic file (type png)
 <use Sorgenti/Strutture/SfericoStanford.png>
 Package pdftex.def Info: Sorgenti/Strutture/SfericoStanford.png  used on input 
@@ -261,7 +261,7 @@ Overfull \vbox (102.40414pt too high) has occurred while \output is active []
 
 
 [8 <./Sorgenti/Strutture/SfericoStanford.png>])
-<Sorgenti/Strutture/Antropomorfo.png, id=50, 964.35281pt x 608.2725pt>
+<Sorgenti/Strutture/Antropomorfo.png, id=49, 964.35281pt x 608.2725pt>
 File: Sorgenti/Strutture/Antropomorfo.png Graphic file (type png)
 <use Sorgenti/Strutture/Antropomorfo.png>
 Package pdftex.def Info: Sorgenti/Strutture/Antropomorfo.png  used on input lin
@@ -274,7 +274,7 @@ Overfull \hbox (604.35046pt too wide) in paragraph at lines 53--13
  []
 
 
-Overfull \hbox (346.14725pt too wide) detected at line 26
+Overfull \hbox (336.31958pt too wide) detected at line 24
 []
  []
 
@@ -283,7 +283,7 @@ Overfull \vbox (147.36086pt too high) has occurred while \output is active []
 
 
 [10 <./Sorgenti/Strutture/Antropomorfo.png>])
-<Sorgenti/Strutture/PolsoSferico.png, id=58, 275.52937pt x 609.77812pt>
+<Sorgenti/Strutture/PolsoSferico.png, id=57, 275.52937pt x 609.77812pt>
 File: Sorgenti/Strutture/PolsoSferico.png Graphic file (type png)
 <use Sorgenti/Strutture/PolsoSferico.png>
 Package pdftex.def Info: Sorgenti/Strutture/PolsoSferico.png  used on input lin
@@ -318,7 +318,7 @@ Overfull \hbox (358.93419pt too wide) in paragraph at lines 61--13
  []
 
 
-Overfull \hbox (131.22556pt too wide) detected at line 21
+Overfull \hbox (211.57408pt too wide) detected at line 20
 []
  []
 
@@ -340,7 +340,7 @@ Overfull \hbox (326.56332pt too wide) in paragraph at lines 65--13
  []
 
 
-Overfull \hbox (616.80786pt too wide) detected at line 31
+Overfull \hbox (735.40979pt too wide) detected at line 28
 []
  []
 
@@ -362,7 +362,7 @@ Overfull \hbox (872.35107pt too wide) in paragraph at lines 69--13
  []
 
 
-Overfull \hbox (7508.46245pt too wide) detected at line 139
+Overfull \hbox (8242.9925pt too wide) detected at line 114
 []
  []
 
@@ -379,7 +379,7 @@ Overfull \hbox (615.64262pt too wide) in paragraph at lines 73--13
  []
 
 
-Overfull \hbox (1578.022pt too wide) detected at line 50
+Overfull \hbox (1815.14581pt too wide) detected at line 44
 []
  []
 
@@ -402,7 +402,7 @@ Overfull \hbox (99.96732pt too wide) in paragraph at lines 77--13
  []
 
 
-Overfull \hbox (1534.42767pt too wide) detected at line 49
+Overfull \hbox (1749.69145pt too wide) detected at line 43
 []
  []
 
@@ -425,7 +425,7 @@ Overfull \hbox (711.24957pt too wide) in paragraph at lines 81--13
  []
 
 
-Overfull \hbox (3883.27814pt too wide) detected at line 105
+Overfull \hbox (4394.5224pt too wide) detected at line 89
 []
  []
 
@@ -438,7 +438,7 @@ Overfull \vbox (8.84369pt too high) has occurred while \output is active []
 Here is how much of TeX's memory you used:
  2605 strings out of 492982
  36597 string characters out of 6134896
- 136236 words of memory out of 5000000
+ 136027 words of memory out of 5000000
  6107 multiletter control sequences out of 15000+600000
  11136 words of font info for 31 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -454,7 +454,7 @@ nts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/public/cm
 -super/sfbx1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1095.pfb>
 </usr/share/texmf/fonts/type1/public/cm-super/sfrm1200.pfb></usr/share/texmf/fo
 nts/type1/public/cm-super/sfrm1728.pfb>
-Output written on cinematiche-dirette.pdf (23 pages, 447991 bytes).
+Output written on cinematiche-dirette.pdf (23 pages, 448018 bytes).
 PDF statistics:
  150 PDF objects out of 1000 (max. 8388607)
  87 compressed objects within 1 object stream
