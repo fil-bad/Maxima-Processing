@@ -1,5 +1,5 @@
-# Procedure Maxima
-Anno 2019 primo semestre corso di Robotica Industriale a cura del professore: Antonio Tornambè
+# Procedure Maxima e Processing
+Anno 2019 1° semestre, corso di Robotica Industriale a cura del professore: Antonio Tornambè
 
 A cura degli studenti
 1. Alfano Emanuele
