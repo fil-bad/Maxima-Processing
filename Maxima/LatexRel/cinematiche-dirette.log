@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.9.30)  1 NOV 2019 18:00
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.9.30)  3 NOV 2019 16:05
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -8,8 +8,8 @@ LaTeX2e <2017-04-15>
 Babel <3.18> and hyphenation patterns for 84 language(s) loaded.
 (/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2014/09/29 v1.4h Standard LaTeX document class
-(/usr/share/texlive/texmf-dist/tex/latex/base/size11.clo
-File: size11.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
+(/usr/share/texlive/texmf-dist/tex/latex/base/size12.clo
+File: size12.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
 )
 \c@part=\count79
 \c@section=\count80
@@ -23,10 +23,40 @@ File: size11.clo 2014/09/29 v1.4h Standard LaTeX file (size option)
 \belowcaptionskip=\skip42
 \bibindent=\dimen102
 )
+(/usr/share/texlive/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2010/09/12 v5.6 Page Geometry
+
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
+Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
+\KV@toks@=\toks14
+)
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2017/03/15 v3.2 Provides the ifpdf switch
+)
+(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifvtex.sty
+Package: ifvtex 2016/05/16 v1.6 Detect VTeX and its facilities (HO)
+Package ifvtex Info: VTeX not detected.
+)
+(/usr/share/texlive/texmf-dist/tex/generic/ifxetex/ifxetex.sty
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+\Gm@cnth=\count87
+\Gm@cntv=\count88
+\c@Gm@tempcnt=\count89
+\Gm@bindingoffset=\dimen103
+\Gm@wd@mp=\dimen104
+\Gm@odd@mp=\dimen105
+\Gm@even@mp=\dimen106
+\Gm@layoutwidth=\dimen107
+\Gm@layoutheight=\dimen108
+\Gm@layouthoffset=\dimen109
+\Gm@layoutvoffset=\dimen110
+\Gm@dimlist=\toks15
+)
 (/usr/share/texlive/texmf-dist/tex/latex/base/inputenc.sty
 Package: inputenc 2015/03/17 v1.2c Input encoding file
-\inpenc@prehook=\toks14
-\inpenc@posthook=\toks15
+\inpenc@prehook=\toks16
+\inpenc@posthook=\toks17
 
 (/usr/share/texlive/texmf-dist/tex/latex/base/latin1.def
 File: latin1.def 2015/03/17 v1.2c Input encoding file
@@ -49,20 +79,31 @@ Language: italian 2015/03/26 v1.3n Italian support from the babel system
 
 (/usr/share/texlive/texmf-dist/tex/generic/babel/babel.def
 File: babel.def 2018/02/14 3.18 Babel common definitions
-\babel@savecnt=\count87
-\U@D=\dimen103
+\babel@savecnt=\count90
+\U@D=\dimen111
 
 (/usr/share/texlive/texmf-dist/tex/generic/babel/txtbabel.def)
-\bbl@dirlevel=\count88
+\bbl@dirlevel=\count91
 )
-\it@lettering=\count89
-\it@doublequoteactive=\count90
-\it@ISOcompliance=\count91
+\it@lettering=\count92
+\it@doublequoteactive=\count93
+\it@ISOcompliance=\count94
 ))
 (/usr/share/texlive/texmf-dist/tex/latex/etoolbox/etoolbox.sty
 Package: etoolbox 2018/02/11 v2.5e e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count92
+\etb@tempcnta=\count95
 )
+(/usr/share/texlive/texmf-dist/tex/latex/wrapfig/wrapfig.sty
+\wrapoverhang=\dimen112
+\WF@size=\dimen113
+\c@WF@wrappedlines=\count96
+\WF@box=\box26
+\WF@everypar=\toks18
+Package: wrapfig 2003/01/31  v 3.6
+)
+(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2017/06/01 v1.1a Enhanced LaTeX Graphics (DPC,SPQR)
+
 (/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
 Package: graphics 2017/06/25 v1.2c Standard LaTeX Graphics (DPC,SPQR)
 
@@ -77,37 +118,94 @@ Package graphics Info: Driver file: pdftex.def on input line 99.
 (/usr/share/texlive/texmf-dist/tex/latex/graphics-def/pdftex.def
 File: pdftex.def 2018/01/08 v1.0l Graphics/color driver for pdftex
 ))
+\Gin@req@height=\dimen114
+\Gin@req@width=\dimen115
+)
+(/usr/share/texlive/texmf-dist/tex/latex/enumitem/enumitem.sty
+Package: enumitem 2011/09/28 v3.5.2 Customized lists
+\labelindent=\skip43
+\enit@outerparindent=\dimen116
+\enit@toks=\toks19
+\enit@inbox=\box27
+\enitdp@description=\count97
+)
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/pifont.sty
+Package: pifont 2005/04/12 PSNFSS-v9.2a Pi font support (SPQR) 
+LaTeX Font Info:    Try loading font information for U+pzd on input line 63.
+
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/upzd.fd
+File: upzd.fd 2001/06/04 font definitions for U/pzd.
+)
+LaTeX Font Info:    Try loading font information for U+psy on input line 64.
+
+(/usr/share/texlive/texmf-dist/tex/latex/psnfss/upsy.fd
+File: upsy.fd 2001/06/04 font definitions for U/psy.
+))
 (./cinematiche-dirette.aux)
 \openout1 = `cinematiche-dirette.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 27.
-LaTeX Font Info:    ... okay on input line 27.
-LaTeX Info: Redefining \it@ocap on input line 27.
-LaTeX Info: Redefining \it@ccap on input line 27.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 15.
+LaTeX Font Info:    ... okay on input line 15.
 
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: legalpaper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(42.67912pt, 528.93675pt, 42.67912pt)
+* v-part:(T,H,B)=(42.67912pt, 926.42175pt, 42.67912pt)
+* \paperwidth=614.295pt
+* \paperheight=1011.78pt
+* \textwidth=528.93675pt
+* \textheight=926.42175pt
+* \oddsidemargin=-29.59087pt
+* \evensidemargin=-29.59087pt
+* \topmargin=-66.59087pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=12.0pt
+* \footskip=30.0pt
+* \marginparwidth=35.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.8pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+LaTeX Info: Redefining \it@ocap on input line 15.
+LaTeX Info: Redefining \it@ccap on input line 15.
 (/usr/share/texlive/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count93
-\scratchdimen=\dimen104
-\scratchbox=\box26
-\nofMPsegments=\count94
-\nofMParguments=\count95
-\everyMPshowfont=\toks16
-\MPscratchCnt=\count96
-\MPscratchDim=\dimen105
-\MPnumerator=\count97
-\makeMPintoPDFobject=\count98
-\everyMPtoPDFconversion=\toks17
+\scratchcounter=\count98
+\scratchdimen=\dimen117
+\scratchbox=\box28
+\nofMPsegments=\count99
+\nofMParguments=\count100
+\everyMPshowfont=\toks20
+\MPscratchCnt=\count101
+\MPscratchDim=\dimen118
+\MPnumerator=\count102
+\makeMPintoPDFobject=\count103
+\everyMPtoPDFconversion=\toks21
 ) (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
@@ -126,10 +224,6 @@ Package: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
 (/usr/share/texlive/texmf-dist/tex/latex/oberdiek/kvoptions.sty
 Package: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
 
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
-Package: keyval 2014/10/28 v1.15 key=value parser (DPC)
-\KV@toks@=\toks18
-)
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
 Package: kvsetkeys 2016/05/16 v1.17 Key value parser (HO)
 
@@ -148,10 +242,6 @@ Package etexcmds Info: Could not find \expanded.
 (/usr/share/texlive/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2018/01/21 v0.26 Utility functions of pdfTeX for LuaTeX (HO
 )
-
-(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifpdf.sty
-Package: ifpdf 2017/03/15 v3.2 Provides the ifpdf switch
-)
 Package pdftexcmds Info: LuaTeX not detected.
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
@@ -169,295 +259,258 @@ File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 29.
+(Font)              <14.4> on input line 17.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 29.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 29.
+(Font)              <7> on input line 17.
+<./Sorgenti/scorbot.jpg, id=1, 78.0516pt x 67.9338pt>
+File: ./Sorgenti/scorbot.jpg Graphic file (type jpg)
+<use ./Sorgenti/scorbot.jpg>
+Package pdftex.def Info: ./Sorgenti/scorbot.jpg  used on input line 18.
+(pdftex.def)             Requested size: 528.93675pt x 460.67384pt.
+
+Overfull \hbox (17.62482pt too wide) in paragraph at lines 18--20
+[][]
+ []
 
 [1
 
-{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-<Sorgenti/Strutture/Cartesiano.png, id=9, 510.40688pt x 462.22687pt>
-File: Sorgenti/Strutture/Cartesiano.png Graphic file (type png)
-<use Sorgenti/Strutture/Cartesiano.png>
-Package pdftex.def Info: Sorgenti/Strutture/Cartesiano.png  used on input line 
-33.
-(pdftex.def)             Requested size: 510.40562pt x 462.22574pt.
-
-(./Sorgenti/Strutture/Cartesiano.tex
+{/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map} <./Sorgenti/scorbot.jpg>]
+<./Sorgenti/tipiGiunti.jpg, id=10, 505.89pt x 179.16937pt>
+File: ./Sorgenti/tipiGiunti.jpg Graphic file (type jpg)
+<use ./Sorgenti/tipiGiunti.jpg>
+Package pdftex.def Info: ./Sorgenti/tipiGiunti.jpg  used on input line 23.
+(pdftex.def)             Requested size: 528.93675pt x 187.33508pt.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 36.
+(/usr/share/texlive/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 36.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 1.
+(Font)              <12> on input line 36.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 36.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 36.
 
-Overfull \hbox (150.40562pt too wide) in paragraph at lines 33--13
+Underfull \hbox (badness 10000) in paragraph at lines 44--45
+[]\T1/cmr/m/n/12 Se $\OML/cmm/m/it/12 Z[] [] Z[]$ \T1/cmr/m/n/12 al-lo-ra $[][]
+\OMS/cmsy/m/n/12 !
+ []
+
+<./Sorgenti/deanavit-hattemberg.png, id=11, 609.77812pt x 420.82219pt>
+File: ./Sorgenti/deanavit-hattemberg.png Graphic file (type png)
+<use ./Sorgenti/deanavit-hattemberg.png>
+Package pdftex.def Info: ./Sorgenti/deanavit-hattemberg.png  used on input line
+ 57.
+(pdftex.def)             Requested size: 275.04936pt x 189.82413pt.
+
+Overfull \hbox (20.23529pt too wide) in paragraph at lines 63--84
+[]$[]$  $[]$ 
+ []
+
+<./Sorgenti/Strutture/Cartesiano.png, id=13, 510.40688pt x 462.22687pt>
+File: ./Sorgenti/Strutture/Cartesiano.png Graphic file (type png)
+<use ./Sorgenti/Strutture/Cartesiano.png>
+Package pdftex.def Info: ./Sorgenti/Strutture/Cartesiano.png  used on input lin
+e 91.
+(pdftex.def)             Requested size: 264.46837pt x 239.51299pt.
+(./Sorgenti/Strutture/Cartesiano.tex)
+Overfull \hbox (3.04218pt too wide) in paragraph at lines 90--98
+$[]$  $[]$ 
+ []
+
+[2 <./Sorgenti/tipiGiunti.jpg> <./Sorgenti/deanavit-hattemberg.png>]
+<./Sorgenti/Strutture/Cilindrico.png, id=30, 457.71pt x 600.74437pt>
+File: ./Sorgenti/Strutture/Cilindrico.png Graphic file (type png)
+<use ./Sorgenti/Strutture/Cilindrico.png>
+Package pdftex.def Info: ./Sorgenti/Strutture/Cilindrico.png  used on input lin
+e 102.
+(pdftex.def)             Requested size: 264.46837pt x 347.13033pt.
+
+(./Sorgenti/Strutture/Cilindrico.tex)
+Overfull \hbox (3.04218pt too wide) in paragraph at lines 101--109
+$[]$  $[]$ 
+ []
+
+<./Sorgenti/Strutture/RRRplanare.png, id=31, 775.39688pt x 252.945pt>
+File: ./Sorgenti/Strutture/RRRplanare.png Graphic file (type png)
+<use ./Sorgenti/Strutture/RRRplanare.png>
+Package pdftex.def Info: ./Sorgenti/Strutture/RRRplanare.png  used on input lin
+e 113.
+(pdftex.def)             Requested size: 528.93675pt x 172.54839pt.
+(./Sorgenti/Strutture/RRRplanare.tex
+Overfull \hbox (1426.99521pt too wide) detected at line 30
 []
  []
 
-) [2 <./Sorgenti/Strutture/Cartesiano.png>]
-<Sorgenti/Strutture/Cilindrico.png, id=22, 457.71pt x 600.74437pt>
-File: Sorgenti/Strutture/Cilindrico.png Graphic file (type png)
-<use Sorgenti/Strutture/Cilindrico.png>
-Package pdftex.def Info: Sorgenti/Strutture/Cilindrico.png  used on input line 
-37.
-(pdftex.def)             Requested size: 457.7089pt x 600.7429pt.
-
-(./Sorgenti/Strutture/Cilindrico.tex
-Overfull \hbox (97.7089pt too wide) in paragraph at lines 37--13
-[]
- []
-
-[3]
-Overfull \vbox (137.03343pt too high) has occurred while \output is active []
-
-
-[4 <./Sorgenti/Strutture/Cilindrico.png>])
-<Sorgenti/Strutture/RRRplanare.png, id=30, 775.39688pt x 252.945pt>
-File: Sorgenti/Strutture/RRRplanare.png Graphic file (type png)
-<use Sorgenti/Strutture/RRRplanare.png>
-Package pdftex.def Info: Sorgenti/Strutture/RRRplanare.png  used on input line 
-41.
-(pdftex.def)             Requested size: 775.39499pt x 252.94438pt.
- (./Sorgenti/Strutture/RRRplanare.tex
-Overfull \hbox (415.39499pt too wide) in paragraph at lines 41--13
-[]
- []
-
-
-Overfull \hbox (1180.37584pt too wide) detected at line 30
+[3 <./Sorgenti/Strutture/Cartesiano.png> <./Sorgenti/Strutture/Cilindrico.png>]
+)
+<./Sorgenti/Strutture/Sferico1.png, id=38, 500.62032pt x 566.115pt>
+File: ./Sorgenti/Strutture/Sferico1.png Graphic file (type png)
+<use ./Sorgenti/Strutture/Sferico1.png>
+Package pdftex.def Info: ./Sorgenti/Strutture/Sferico1.png  used on input line 
+121.
+(pdftex.def)             Requested size: 185.13109pt x 209.34697pt.
+ (./Sorgenti/Strutture/Sferico1.tex
+Overfull \hbox (81.90773pt too wide) detected at line 18
 []
  []
 
 )
-<Sorgenti/Strutture/Sferico1.png, id=31, 500.62032pt x 566.115pt>
-File: Sorgenti/Strutture/Sferico1.png Graphic file (type png)
-<use Sorgenti/Strutture/Sferico1.png>
-Package pdftex.def Info: Sorgenti/Strutture/Sferico1.png  used on input line 45
-.
-(pdftex.def)             Requested size: 500.6191pt x 566.11362pt.
- (./Sorgenti/Strutture/Sferico1.tex
-Overfull \hbox (140.6191pt too wide) in paragraph at lines 45--13
+<./Sorgenti/Strutture/SfericoStanford.png, id=39, 417.81094pt x 566.115pt>
+File: ./Sorgenti/Strutture/SfericoStanford.png Graphic file (type png)
+<use ./Sorgenti/Strutture/SfericoStanford.png>
+Package pdftex.def Info: ./Sorgenti/Strutture/SfericoStanford.png  used on inpu
+t line 132.
+(pdftex.def)             Requested size: 264.46837pt x 358.3647pt.
+ (./Sorgenti/Strutture/SfericoStanford.tex
+Overfull \hbox (138.13461pt too wide) detected at line 17
 []
  []
 
-[5 <./Sorgenti/Strutture/RRRplanare.png>]
-Overfull \vbox (102.40414pt too high) has occurred while \output is active []
-
-
-[6 <./Sorgenti/Strutture/Sferico1.png>])
-<Sorgenti/Strutture/SfericoStanford.png, id=40, 417.81094pt x 566.115pt>
-File: Sorgenti/Strutture/SfericoStanford.png Graphic file (type png)
-<use Sorgenti/Strutture/SfericoStanford.png>
-Package pdftex.def Info: Sorgenti/Strutture/SfericoStanford.png  used on input 
-line 49.
-(pdftex.def)             Requested size: 417.80992pt x 566.11362pt.
-
-(./Sorgenti/Strutture/SfericoStanford.tex
-Overfull \hbox (57.80992pt too wide) in paragraph at lines 49--13
-[]
- []
-
-[7]
-Overfull \vbox (102.40414pt too high) has occurred while \output is active []
-
-
-[8 <./Sorgenti/Strutture/SfericoStanford.png>])
-<Sorgenti/Strutture/Antropomorfo.png, id=49, 964.35281pt x 608.2725pt>
-File: Sorgenti/Strutture/Antropomorfo.png Graphic file (type png)
-<use Sorgenti/Strutture/Antropomorfo.png>
-Package pdftex.def Info: Sorgenti/Strutture/Antropomorfo.png  used on input lin
-e 53.
-(pdftex.def)             Requested size: 964.35046pt x 608.27103pt.
-
+) [4 <./Sorgenti/Strutture/RRRplanare.png> <./Sorgenti/Strutture/Sferico1.png>]
+<./Sorgenti/Strutture/Antropomorfo.png, id=45, 964.35281pt x 608.2725pt>
+File: ./Sorgenti/Strutture/Antropomorfo.png Graphic file (type png)
+<use ./Sorgenti/Strutture/Antropomorfo.png>
+Package pdftex.def Info: ./Sorgenti/Strutture/Antropomorfo.png  used on input l
+ine 143.
+(pdftex.def)             Requested size: 264.46837pt x 166.81602pt.
 (./Sorgenti/Strutture/Antropomorfo.tex
-Overfull \hbox (604.35046pt too wide) in paragraph at lines 53--13
+Overfull \hbox (617.74292pt too wide) detected at line 24
 []
  []
 
-
-Overfull \hbox (336.31958pt too wide) detected at line 24
-[]
- []
-
-[9]
-Overfull \vbox (147.36086pt too high) has occurred while \output is active []
-
-
-[10 <./Sorgenti/Strutture/Antropomorfo.png>])
-<Sorgenti/Strutture/PolsoSferico.png, id=57, 275.52937pt x 609.77812pt>
-File: Sorgenti/Strutture/PolsoSferico.png Graphic file (type png)
-<use Sorgenti/Strutture/PolsoSferico.png>
-Package pdftex.def Info: Sorgenti/Strutture/PolsoSferico.png  used on input lin
-e 57.
-(pdftex.def)             Requested size: 275.52869pt x 609.77663pt.
+) [5 <./Sorgenti/Strutture/SfericoStanford.png>]
+<./Sorgenti/Strutture/PolsoSferico.png, id=50, 275.52937pt x 609.77812pt>
+File: ./Sorgenti/Strutture/PolsoSferico.png Graphic file (type png)
+<use ./Sorgenti/Strutture/PolsoSferico.png>
+Package pdftex.def Info: ./Sorgenti/Strutture/PolsoSferico.png  used on input l
+ine 154.
+(pdftex.def)             Requested size: 264.46837pt x 585.35243pt.
 
 (./Sorgenti/Strutture/PolsoSferico.tex
-Overfull \hbox (44.25996pt too wide) in paragraph at lines 57--13
-[] [] 
- []
-
-
-Overfull \hbox (89.954pt too wide) detected at line 21
+Overfull \hbox (290.04222pt too wide) detected at line 21
 []
  []
 
-[11]
-Overfull \vbox (114.3297pt too high) has occurred while \output is active []
+) [6 <./Sorgenti/Strutture/Antropomorfo.png>]
+<./Sorgenti/Strutture+Polso/Cartesiano+p.png, id=55, 718.93594pt x 492.33937pt>
 
-
-[12 <./Sorgenti/Strutture/PolsoSferico.png>])
-<Sorgenti/Strutture+Polso/Cartesiano+p.png, id=66, 718.93594pt x 492.33937pt>
-File: Sorgenti/Strutture+Polso/Cartesiano+p.png Graphic file (type png)
-<use Sorgenti/Strutture+Polso/Cartesiano+p.png>
-Package pdftex.def Info: Sorgenti/Strutture+Polso/Cartesiano+p.png  used on inp
-ut line 61.
-(pdftex.def)             Requested size: 718.93419pt x 492.33815pt.
+File: ./Sorgenti/Strutture+Polso/Cartesiano+p.png Graphic file (type png)
+<use ./Sorgenti/Strutture+Polso/Cartesiano+p.png>
+Package pdftex.def Info: ./Sorgenti/Strutture+Polso/Cartesiano+p.png  used on i
+nput line 165.
+(pdftex.def)             Requested size: 264.46837pt x 181.11847pt.
 
 (./Sorgenti/Strutture+Polso/Cartesiano+p.tex
-Overfull \hbox (358.93419pt too wide) in paragraph at lines 61--13
+Overfull \hbox (458.74501pt too wide) detected at line 20
 []
  []
 
-
-Overfull \hbox (211.57408pt too wide) detected at line 20
-[]
- []
-
-[13]
-Overfull \vbox (28.62868pt too high) has occurred while \output is active []
-
-
-[14 <./Sorgenti/Strutture+Polso/Cartesiano+p.png>])
-<Sorgenti/Strutture+Polso/Cilindrico+p.png, id=75, 686.565pt x 517.935pt>
-File: Sorgenti/Strutture+Polso/Cilindrico+p.png Graphic file (type png)
-<use Sorgenti/Strutture+Polso/Cilindrico+p.png>
-Package pdftex.def Info: Sorgenti/Strutture+Polso/Cilindrico+p.png  used on inp
-ut line 65.
-(pdftex.def)             Requested size: 686.56332pt x 517.93372pt.
+) [7 <./Sorgenti/Strutture/PolsoSferico.png>]
+<./Sorgenti/Strutture+Polso/Cilindrico+p.png, id=61, 686.565pt x 517.935pt>
+File: ./Sorgenti/Strutture+Polso/Cilindrico+p.png Graphic file (type png)
+<use ./Sorgenti/Strutture+Polso/Cilindrico+p.png>
+Package pdftex.def Info: ./Sorgenti/Strutture+Polso/Cilindrico+p.png  used on i
+nput line 176.
+(pdftex.def)             Requested size: 264.46837pt x 199.50436pt.
 
 (./Sorgenti/Strutture+Polso/Cilindrico+p.tex
-Overfull \hbox (326.56332pt too wide) in paragraph at lines 65--13
-[]
- []
-
-
-Overfull \hbox (735.40979pt too wide) detected at line 28
-[]
- []
-
-[15]
-Overfull \vbox (54.22424pt too high) has occurred while \output is active []
-
-
-[16 <./Sorgenti/Strutture+Polso/Cilindrico+p.png>])
-<Sorgenti/Strutture+Polso/RRRplanare+p.png, id=83, 1232.35406pt x 298.11375pt>
-File: Sorgenti/Strutture+Polso/RRRplanare+p.png Graphic file (type png)
-<use Sorgenti/Strutture+Polso/RRRplanare+p.png>
-Package pdftex.def Info: Sorgenti/Strutture+Polso/RRRplanare+p.png  used on inp
-ut line 69.
-(pdftex.def)             Requested size: 1232.35107pt x 298.11302pt.
-
-(./Sorgenti/Strutture+Polso/RRRplanare+p.tex
-Overfull \hbox (872.35107pt too wide) in paragraph at lines 69--13
-[]
- []
-
-
-Overfull \hbox (8242.9925pt too wide) detected at line 114
+Overfull \hbox (1123.8413pt too wide) detected at line 28
 []
  []
 
 )
-<Sorgenti/Strutture+Polso/Sferico1+p.png, id=84, 975.645pt x 634.62094pt>
-File: Sorgenti/Strutture+Polso/Sferico1+p.png Graphic file (type png)
-<use Sorgenti/Strutture+Polso/Sferico1+p.png>
-Package pdftex.def Info: Sorgenti/Strutture+Polso/Sferico1+p.png  used on input
- line 73.
-(pdftex.def)             Requested size: 975.64262pt x 634.61938pt.
+<./Sorgenti/Strutture+Polso/RRRplanare+p.png, id=62, 1232.35406pt x 298.11375pt
+>
+File: ./Sorgenti/Strutture+Polso/RRRplanare+p.png Graphic file (type png)
+<use ./Sorgenti/Strutture+Polso/RRRplanare+p.png>
+Package pdftex.def Info: ./Sorgenti/Strutture+Polso/RRRplanare+p.png  used on i
+nput line 187.
+(pdftex.def)             Requested size: 264.46837pt x 63.97493pt.
+ (./Sorgenti/Strutture+Polso/RRRplanare+p.tex
+Overfull \hbox (10674.48698pt too wide) detected at line 114
+[]
+ []
+
+) [8 <./Sorgenti/Strutture+Polso/Cartesiano+p.png> <./Sorgenti/Strutture+Polso/
+Cilindrico+p.png>]
+<./Sorgenti/Strutture+Polso/Sferico1+p.png, id=68, 975.645pt x 634.62094pt>
+File: ./Sorgenti/Strutture+Polso/Sferico1+p.png Graphic file (type png)
+<use ./Sorgenti/Strutture+Polso/Sferico1+p.png>
+Package pdftex.def Info: ./Sorgenti/Strutture+Polso/Sferico1+p.png  used on inp
+ut line 198.
+(pdftex.def)             Requested size: 264.46837pt x 172.02779pt.
  (./Sorgenti/Strutture+Polso/Sferico1+p.tex
-Overfull \hbox (615.64262pt too wide) in paragraph at lines 73--13
+Overfull \hbox (2498.98543pt too wide) detected at line 44
 []
  []
 
+)
+<./Sorgenti/Strutture+Polso/SfericoStanford+p.png, id=69, 459.96844pt x 1065.98
+25pt>
+File: ./Sorgenti/Strutture+Polso/SfericoStanford+p.png Graphic file (type png)
+<use ./Sorgenti/Strutture+Polso/SfericoStanford+p.png>
+Package pdftex.def Info: ./Sorgenti/Strutture+Polso/SfericoStanford+p.png  used
+ on input line 208.
+(pdftex.def)             Requested size: 199.8741pt x 463.21088pt.
+ (./Sorgenti/Strutture+Polso/SfericoStanford+p.tex
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 1.
 
-Overfull \hbox (1815.14581pt too wide) detected at line 44
+Overfull \hbox (962.94406pt too wide) detected at line 43
 []
  []
 
-[17 <./Sorgenti/Strutture+Polso/RRRplanare+p.png>]
-Overfull \vbox (170.90991pt too high) has occurred while \output is active []
-
-
-[18 <./Sorgenti/Strutture+Polso/Sferico1+p.png>])
-<Sorgenti/Strutture+Polso/SfericoStanford+p.png, id=93, 459.96844pt x 1065.9825
-pt>
-File: Sorgenti/Strutture+Polso/SfericoStanford+p.png Graphic file (type png)
-<use Sorgenti/Strutture+Polso/SfericoStanford+p.png>
-Package pdftex.def Info: Sorgenti/Strutture+Polso/SfericoStanford+p.png  used o
-n input line 77.
-(pdftex.def)             Requested size: 459.96732pt x 1065.9799pt.
-
-(./Sorgenti/Strutture+Polso/SfericoStanford+p.tex
-Overfull \hbox (99.96732pt too wide) in paragraph at lines 77--13
+[9 <./Sorgenti/Strutture+Polso/RRRplanare+p.png> <./Sorgenti/Strutture+Polso/Sf
+erico1+p.png>])
+<./Sorgenti/Strutture+Polso/Antropomorfo+p.png, id=75, 1071.25218pt x 469.755pt
+>
+File: ./Sorgenti/Strutture+Polso/Antropomorfo+p.png Graphic file (type png)
+<use ./Sorgenti/Strutture+Polso/Antropomorfo+p.png>
+Package pdftex.def Info: ./Sorgenti/Strutture+Polso/Antropomorfo+p.png  used on
+ input line 215.
+(pdftex.def)             Requested size: 264.46837pt x 115.96904pt.
+ (./Sorgenti/Strutture+Polso/Antropomorfo+p.tex
+Overfull \hbox (5778.79419pt too wide) detected at line 89
 []
  []
 
-
-Overfull \hbox (1749.69145pt too wide) detected at line 43
-[]
- []
-
-[19]
-Overfull \vbox (602.27043pt too high) has occurred while \output is active []
-
-
-[20 <./Sorgenti/Strutture+Polso/SfericoStanford+p.png>])
-<Sorgenti/Strutture+Polso/Antropomorfo+p.png, id=102, 1071.25218pt x 469.755pt>
-
-File: Sorgenti/Strutture+Polso/Antropomorfo+p.png Graphic file (type png)
-<use Sorgenti/Strutture+Polso/Antropomorfo+p.png>
-Package pdftex.def Info: Sorgenti/Strutture+Polso/Antropomorfo+p.png  used on i
-nput line 81.
-(pdftex.def)             Requested size: 1071.24957pt x 469.75386pt.
-
-(./Sorgenti/Strutture+Polso/Antropomorfo+p.tex
-Overfull \hbox (711.24957pt too wide) in paragraph at lines 81--13
-[]
- []
-
-
-Overfull \hbox (4394.5224pt too wide) detected at line 89
-[]
- []
-
-[21]
-Overfull \vbox (8.84369pt too high) has occurred while \output is active []
-
-
-[22 <./Sorgenti/Strutture+Polso/Antropomorfo+p.png>]) [23]
-(./cinematiche-dirette.aux) ) 
+) [10 <./Sorgenti/Strutture+Polso/SfericoStanford+p.png> <./Sorgenti/Strutture+
+Polso/Antropomorfo+p.png>] (./cinematiche-dirette.aux) ) 
 Here is how much of TeX's memory you used:
- 2605 strings out of 492982
- 36597 string characters out of 6134896
- 136027 words of memory out of 5000000
- 6107 multiletter control sequences out of 15000+600000
- 11136 words of font info for 31 fonts, out of 8000000 for 9000
+ 3576 strings out of 492982
+ 51795 string characters out of 6134896
+ 169818 words of memory out of 5000000
+ 7031 multiletter control sequences out of 15000+600000
+ 12594 words of font info for 34 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 41i,10n,25p,805b,201s stack positions out of 5000i,500n,10000p,200000b,80000s
-{/usr/share/texmf/fonts/enc/dvips/cm-super/cm-supe
-r-t1.enc}</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.p
-fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></u
+ 41i,12n,32p,804b,310s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/share/texmf/fonts
+/enc/dvips/cm-super/cm-super-t1.enc}</usr/share/texlive/texmf-dist/fonts/type1/
+public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.
+pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></u
 sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf
--dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texmf/fonts/type1/public/cm
--super/sfbx1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1095.pfb>
-</usr/share/texmf/fonts/type1/public/cm-super/sfrm1200.pfb></usr/share/texmf/fo
-nts/type1/public/cm-super/sfrm1728.pfb>
-Output written on cinematiche-dirette.pdf (23 pages, 448018 bytes).
+ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/f
+onts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/publi
+c/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
+cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.p
+fb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1728.pfb></usr/share/texmf
+/fonts/type1/public/cm-super/sfrm1200.pfb></usr/share/texmf/fonts/type1/public/
+cm-super/sfrm1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm2074.pf
+b></usr/share/texlive/texmf-dist/fonts/type1/urw/zapfding/uzdr.pfb>
+Output written on cinematiche-dirette.pdf (10 pages, 665495 bytes).
 PDF statistics:
- 150 PDF objects out of 1000 (max. 8388607)
- 87 compressed objects within 1 object stream
+ 153 PDF objects out of 1000 (max. 8388607)
+ 89 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 66 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 81 words of extra memory for PDF output out of 10000 (max. 10000000)
 

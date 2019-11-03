@@ -1,85 +1,224 @@
 %& -shell-escape
-\documentclass[a4paper,11pt]{article}
+\documentclass[a4paper,12pt]{article}
+\usepackage[legalpaper, portrait , margin=1.5cm]{geometry}
 \usepackage[latin1]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[italian]{babel}
-\usepackage{graphics}
+\usepackage{wrapfig}
+\usepackage{graphicx}
+\graphicspath{ {./Sorgenti/} }
+\usepackage{enumitem}
+\usepackage{pifont}
 
 \author{Alfano Emanuele \\ Badalamenti Filippo \\ Vitti Gabriele}
 
+\begin{document}
+\title{Cinematiche Dirette Robot}
+\maketitle
+\includegraphics[width=\textwidth]{scorbot.jpg}
+\pagebreak
 
-\newcommand{\DHTable}{
-	\begin{tabular}{c|c|c|c|c|}
+\section*{Metodo di Denavit Hartenberg}
+
+	\includegraphics[width=\textwidth]{tipiGiunti.jpg}
+
+Il metodo di D-H standardizza un metodo per ottenere la cinematica diretta di un qualunque robot 3D.
+
+Conoscendo uno schema dei giunti di un robot, tutti presi a 1 DOF (Degree of Freedom) è possibile ricostruire qualsiasi struttura.
+
+Posizionando i vari sistemi di riferimento con la procedura di D-H è possibile automatizzare il processo di ottenimento della cinematica diretta.
+Considerando due [[giunto (meccanica)|giunti]] consecutivi:
+
+
+\begin{itemize}
+
+
+	\item L'asse $Z_{i-1}$ si sceglie coincidente con l'asse del giunto $i$, l'asse $Z_i$ coincidente con l'asse del giunto $i+1$;
+	
+	\item L'asse $X_{i}$ deve essere scelto in base a come si posizionano tra di loro gli assi $i$ e $i-1$:
+	
+	
+	
+	\begin{minipage}{0.4\textwidth}
+		\begin{itemize}[label=\ding{212}]
+			\item Se $Z_{i} \cong Z_{i-1}$  allora $\longrightarrow X_{i}=~Z_{i-1}\perp Z_{i}$ e orientamento a piacere.
+			
+			\item Se $Z_{i} \parallel Z_{i-1}$ ma non sovrapposto $\longrightarrow X_{i}=~Z_{i-1}\perp Z_{i}$ dove in questo caso
+			 è la prosecuzione di uno dei segmenti di minima distanza.
+			
+			\item Se $Z_{i}$ coincide in un punto soltanto con $Z_{i-1}$, quello sarà $O_{i} \longrightarrow X_{i}=~Z_{i-1}\perp Z_{i}$ 
+			
+			\item Se $Z_{i}$ è sghemba con $Z_{i-1}$, $O_{i}$ è preso lungo il segmento di minima distanza che li unisce e $X_{i}$ si
+			trova lungo questo asse 
+		\end{itemize}
+	\end{minipage}
+	\hfill % dice al compilatore di non andare a capo ma di mettere tanti spazi quanto necessario per far toccare il successivo blocco a destra, il compilatore potrebbe mettere anche 0 e quello che c'è dopo finisce fuori pagina, ma cmq non va a capo
+	\begin{minipage}{0.52\textwidth}% adapt widths of minipages to your needs
+			\centering{\includegraphics[width=\textwidth]{deanavit-hattemberg.png}}
+	\end{minipage}%
+		
+	\item I restanti assi $Y_{n-1}$ e $Y_n$ sono scelti in modo da completare le rispettive terne affinché diventino destre.
+\end{itemize}
+
+\begin{minipage}{0.7\textwidth}
+ Una volta fatto ciò bisogna risalire i sistemi di riferimento portando a far coincidere il sistema $R_{i-1}$ con il sistema $R_{i}$
+ muovendo nell'ordine le variabili: $\theta, d ,\alpha, a$ e salvando nella tabella i valori:
+ 
+ A questo punto basterà montare tra di loro le varie matrici di avvitamento ottenendo la matrice della cinematica diretta:
+\end{minipage}
+\hfill
+\begin{minipage}{0.3\textwidth}
+\begin{tabular}{p{0.5cm}|p{0.5cm}|p{0.5cm}|p{0.5cm}|p{0.5cm}|}
 		\cline{2-5} &
 		\multicolumn{2}{|c|}{$A_z(\theta,d)$} &
 		\multicolumn{2}{|c|}{$A_x(\alpha,a)$} \\
 		\hline
 		\multicolumn{1}{|c|}{$R_1$} &  &  &  &  \\
 		\hline
-		\multicolumn{1}{|c|}{R2} &  &  &  &  \\
+		\multicolumn{1}{|c|}{$R_{...}$} &  &  &  &  \\
 		\hline
-		\multicolumn{1}{|c|}{R3} &  &  &  &  \\
+		\multicolumn{1}{|c|}{$R_n$} &  &  &  &  \\
 		\hline
-	\end{tabular}
-}
+\end{tabular}
+\end{minipage}
 
+\large $Q_{0,n}=A_z(\theta,d)_{R_1} \cdot A_x(\alpha,a)_{R_1} \cdot A_z(\theta,d)_{R_2} \cdot A_x(\alpha,a)_{R_2} \cdot ... \cdot A_z(\theta,d)_{R_n} \cdot A_x(\alpha,a)_{R_n}$
+	
 
-\begin{document}
-\title{Cinematiche Dirette Robot}
-\maketitle
-\pagebreak
 
 \section*{Cartesiano}
-\includegraphics{Sorgenti/Strutture/Cartesiano.png}
+\begin{minipage}{0.5\textwidth}
+\includegraphics[width=\textwidth]{Strutture/Cartesiano.png}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
+\centering
 \input{Sorgenti/Strutture/Cartesiano.tex}
+\end{minipage}
+
 
 \section*{Cilindrico}
-\includegraphics{Sorgenti/Strutture/Cilindrico.png}
+\begin{minipage}{0.5\textwidth}
+\includegraphics[width=\textwidth]{Strutture/Cilindrico.png}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
+\centering
 \input{Sorgenti/Strutture/Cilindrico.tex}
+\end{minipage}
+
 
 \section*{RRR Planare}
-\includegraphics{Sorgenti/Strutture/RRRplanare.png}
+
+\includegraphics[width=\textwidth]{Strutture/RRRplanare.png}
+\centering
 \input{Sorgenti/Strutture/RRRplanare.tex}
 
+
+
 \section*{Sferico 1}
-\includegraphics{Sorgenti/Strutture/Sferico1.png}
+\begin{minipage}{0.35\textwidth}
+\includegraphics[width=\textwidth]{Strutture/Sferico1.png}
+\end{minipage}
+\hfill
+\begin{minipage}{0.65\textwidth}
+\centering
 \input{Sorgenti/Strutture/Sferico1.tex}
+\end{minipage}
+
 
 \section*{Sferico di Stanford}
-\includegraphics{Sorgenti/Strutture/SfericoStanford.png}
+\begin{minipage}{0.5\textwidth}
+\includegraphics[width=\textwidth]{Strutture/SfericoStanford.png}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
+\centering
 \input{Sorgenti/Strutture/SfericoStanford.tex}
+\end{minipage}
+
 
 \section*{Antropomorfo}
-\includegraphics{Sorgenti/Strutture/Antropomorfo.png}
+\begin{minipage}{0.5\textwidth}
+\includegraphics[width=\textwidth]{Strutture/Antropomorfo.png}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
+\centering
 \input{Sorgenti/Strutture/Antropomorfo.tex}
+\end{minipage}
+
 
 \section*{Polso Sferico}
-\includegraphics{Sorgenti/Strutture/PolsoSferico.png}
+\begin{minipage}{0.5\textwidth}
+\includegraphics[width=\textwidth]{Strutture/PolsoSferico.png}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
+\centering
 \input{Sorgenti/Strutture/PolsoSferico.tex}
+\end{minipage}
+
 
 \section*{Cartesiano con Polso}
-\includegraphics{Sorgenti/Strutture+Polso/Cartesiano+p.png}
+\begin{minipage}{0.5\textwidth}
+\includegraphics[width=\textwidth]{Strutture+Polso/Cartesiano+p.png}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
+\centering
 \input{Sorgenti/Strutture+Polso/Cartesiano+p.tex}
+\end{minipage}
+
 
 \section*{Cilindrico con Polso}
-\includegraphics{Sorgenti/Strutture+Polso/Cilindrico+p.png}
+\begin{minipage}{0.5\textwidth}
+\includegraphics[width=\textwidth]{Strutture+Polso/Cilindrico+p.png}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
+\centering
 \input{Sorgenti/Strutture+Polso/Cilindrico+p.tex}
+\end{minipage}
+
 
 \section*{RRR Planare con Polso}
-\includegraphics{Sorgenti/Strutture+Polso/RRRplanare+p.png}
+\begin{minipage}{0.5\textwidth}
+\includegraphics[width=\textwidth]{Strutture+Polso/RRRplanare+p.png}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
+\centering
 \input{Sorgenti/Strutture+Polso/RRRplanare+p.tex}
+\end{minipage}
+
 
 \section*{Sferico 1 con Polso}
-\includegraphics{Sorgenti/Strutture+Polso/Sferico1+p.png}
+\begin{minipage}{0.5\textwidth}
+\includegraphics[width=\textwidth]{Strutture+Polso/Sferico1+p.png}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
+\centering
 \input{Sorgenti/Strutture+Polso/Sferico1+p.tex}
+\end{minipage}
+
 
 \section*{Sferico di Stanford con Polso}
-\includegraphics{Sorgenti/Strutture+Polso/SfericoStanford+p.png}
-\input{Sorgenti/Strutture+Polso/SfericoStanford+p.tex}
+\includegraphics[height=0.5\textheight]{Strutture+Polso/SfericoStanford+p.png}
+\centering{\tiny{\input{Sorgenti/Strutture+Polso/SfericoStanford+p.tex}}}
+
+
 
 \section*{Antropomorfo con Polso}
-\includegraphics{Sorgenti/Strutture+Polso/Antropomorfo+p.png}
+\begin{minipage}{0.5\textwidth}
+\includegraphics[width=\textwidth]{Strutture+Polso/Antropomorfo+p.png}
+\end{minipage}
+\hfill
+\begin{minipage}{0.5\textwidth}
+\centering
 \input{Sorgenti/Strutture+Polso/Antropomorfo+p.tex}
+\end{minipage}
 
 
 \end{document}
