@@ -40,17 +40,61 @@ Rz(gamma):=matrix(
     [0,0,1]
 )$
 
-Rxyz(alpha,beta,gamma):=Rx(alpha).Ry(beta).Rz(gamma)$
+/* Combinazioni coordinate nautiche per matrici relative: */
 
-Rxzy(alpha,beta,gamma):=Rx(alpha).Ry(beta).Rz(gamma)$
+Rxyz(α,β,γ):= Rx(α).Ry(β).Rz(γ)$
 
-Ryxz(alpha,beta,gamma):=Ry(alpha).Rx(beta).Rz(gamma)$
+Rxzy(α,β,γ):= Rx(α).Rz(β).Ry(γ)$
 
-Ryzx(alpha,beta,gamma):=Ry(alpha).Rz(beta).Rx(gamma)$
+Ryxz(α,β,γ):= Ry(α).Rx(β).Rz(γ)$
 
-Rzxy(alpha,beta,gamma):=Rz(alpha).Rx(beta).Ry(gamma)$
+Ryzx(α,β,γ):= Ry(α).Rz(β).Rx(γ)$
 
-Rzyx(alpha,beta,gamma):=Rz(alpha).Ry(beta).Rx(gamma)$
+Rzxy(α,β,γ):= Rz(α).Rx(β).Ry(γ)$
+
+Rzyx(α,β,γ):= Rz(α).Ry(β).Rx(γ)$
+
+/* Combinazioni angoli di Eulero per matrici relative: */
+
+Rxyx(α,β,γ):= Rx(α).Ry(β).Rx(γ)$
+
+Rxzx(α,β,γ):= Rx(α).Rz(β).Rx(γ)$
+
+Ryxy(α,β,γ):= Ry(α).Rx(β).Ry(γ)$
+
+Ryzy(α,β,γ):= Ry(α).Rz(β).Ry(γ)$
+
+Rzxz(α,β,γ):= Rz(α).Rx(β).Rz(γ)$
+
+Rzyz(α,β,γ):= Rz(α).Ry(β).Rz(γ)$
+
+/* Combinazioni coordinate nautiche per matrici assolute: */
+
+Rxyz(α,β,γ):= Rz(γ).Ry(β).Rx(α)$
+
+Rxzy(α,β,γ):= Ry(γ).Rz(β).Rx(α)$
+
+Ryxz(α,β,γ):= Rz(γ).Rx(β).Ry(α)$
+
+Ryzx(α,β,γ):= Rx(γ).Rz(β).Ry(α)$
+
+Rzxy(α,β,γ):= Ry(γ).Rx(β).Rz(α)$
+
+Rzyx(α,β,γ):= Rx(γ).Ry(β).Rz(α)$
+
+/* Combinazioni angoli di Eulero per matrici assolute: */
+
+Rxyx(α,β,γ):= Rx(γ).Ry(β).Rx(α)$
+
+Rxzx(α,β,γ):= Rx(γ).Rz(β).Rx(α)$
+
+Ryxy(α,β,γ):= Ry(γ).Rx(β).Ry(α)$
+
+Ryzy(α,β,γ):= Ry(γ).Rz(β).Ry(α)$
+
+Rzxz(α,β,γ):= Rz(γ).Rx(β).Rz(α)$
+
+Rzyz(α,β,γ):= Rz(γ).Ry(β).Rz(α)$
 
 /* [wxMaxima: section start ]
 Procedura 3/10/19
@@ -127,12 +171,8 @@ vetRot(matR):=block(
     vect: nullspace(matR - Id),
     vr:args(vect)[1],
     for row thru length(vr) do (
-        if (vr[row][1]#0) then (
-            result: vr*1/(vr[row][1])
-        )
-    ),
-    result
-)$
+    if (vr[row][1]#0) then result: vr*1/(vr[row][1])
+    ))$
 
 /* Determino l'angolo di rotazione: */
 
@@ -165,9 +205,9 @@ Procedura 14/10/19 - 17/10/19
    [wxMaxima: section end   ] */
 
 
-/* Procedura di creazione della matrice di avvitamento attraverso l'utilizzo della matrice omogenea di rotazione e di
+/*Procedura di creazione della matrice di avvitamento attraverso l'utilizzo della matrice omogenea di rotazione e di
 traslazione con l'utilizzo di variabili locali all'interno delle funzioni che le definiscono; la matrice di rotazione
-presente nel primo blocco della matrice di rotazione omogenea è stata ricavata con Rodriguez */
+presente nel primo blocco della matrice di rotazione omogenea è stata ricavata con Rodriguez*/
 
 Romog(v,theta):=block( 
     [ROm, Rot: Rrodr(v, theta) ],    
@@ -189,9 +229,10 @@ Tomog(v,d):=block(
     return(TOm)
 )$
 
-/* Procedura di creazione della matrice di avvitamento attraverso l'utilizzo della matrice omogenea di rotazione e di
+
+/*Procedura di creazione della matrice di avvitamento attraverso l'utilizzo della matrice omogenea di rotazione e di
 traslazione senza l'utilizzo di variabili locali all'interno delle funzioni che le definiscono; la matrice di rotazione
-presente nel primo blocco della matrice di rotazione omogenea è stata ricavata con Laplace */
+presente nel primo blocco della matrice di rotazione omogenea è stata ricavata con Laplace*/
 
 Romog(v,theta):=block(
     Romog:matrix ([R(v,theta), zeromatrix( length(R(v,theta)), 1)],[ zeromatrix(1,  length(R(v,theta))) , matrix([1]) ]),
@@ -204,25 +245,23 @@ Tomog(v,d):=block(
     Tomog:mat_unblocker (Tomog)
 )$
 
-/* Definizione della matrice di avvitamento */
+
+/*Definizione della matrice di avvitamento*/
 
 Avv(v,theta,d):= Romog(v,theta).Tomog(v,d)$
 
 /* Matrici di Denavit-Hartenberg: */
 
 Avv_z(v,theta,d):=Romog(v,theta).Tomog(v,d)$
-
 Avv_x(u,alpha,a):=Romog(u,alpha).Tomog(u,a)$
-
 e_x:transpose([1,0,0])$
-
 e_z:transpose([0,0,1])$
 
 Cin_dir_Den_Hart(tabDH):= block(
     [result:1],
     for row thru length(tabDH) do(
         result:result.(Avv_z(e_z,tabDH[row,1],tabDH[row,2]).Avv_x(e_x,tabDH[row,3],tabDH[row,4]))),
-    return(trigreduce(trigreduce(result)))
+    return(factor(trigexpand(result)))
         );
 
 /* Esamino la cinematica diretta, con il metodo di Denavit-Hartenberg, delle strutture portanti. */
@@ -232,37 +271,31 @@ port_cartesiana:matrix(
     [-%pi/2,q_2,-%pi/2,0],
     [0,q_3,0,0]
     )$
-
 port_RRR_planare:matrix(
     [q_1,0,0,D_1],
     [q_2,0,0,D_2],
     [q_3,0,0,D_3]
     )$
-
 port_cilindrica:matrix(
     [q_1,L_1,0,0],
     [0,q_2,-%pi/2,0],
     [0,q_3,0,0]
     )$
-
 port_SCARA:matrix(
     [q_1,L_1,0,D_1],
     [q_2,L_2,0,D_2],
     [0,q_3,%pi,0]
     )$
-
 port_sferica:matrix(
     [q_1,L_1,%pi/2,0],
     [q_2,0,%pi/2,D_2],
     [0,q_3,0,0]
     )$
-
 manip_Stanford:matrix(
     [q_1,L_1,-%pi/2,0],
     [q_2,L_2,%pi/2,0],
     [-%pi/2,q_3,0,0]
     )$
-
 port_antropomorfo:matrix(
     [q_1,L_1,%pi/2,0],
     [q_2,0,0,D_2],
@@ -287,7 +320,6 @@ robot_cartesiano:matrix(
     [q_5,0,%pi/2,0],
     [q_6,L_6,0,0]
     )$
-
 robot_RRR_planare:matrix(
     [q_1,0,0,D_1],
     [q_2,0,0,D_2],
@@ -296,7 +328,6 @@ robot_RRR_planare:matrix(
     [q_5,0,%pi/2,0],
     [q_6,L_6,0,0]
     )$
-
 robot_cilindrico:matrix(
     [q_1,L_1,0,0],
     [0,q_2,-%pi/2,0],
@@ -305,7 +336,6 @@ robot_cilindrico:matrix(
     [q_5,0,%pi/2,0],
     [q_6,L_6,0,0]
     )$
-
 robot_SCARA:matrix(
     [q_1,L_1,0,D_1],
     [q_2,L_2,0,D_2],
@@ -314,7 +344,6 @@ robot_SCARA:matrix(
     [q_5,0,%pi/2,0],
     [q_6,L_6,0,0]
     )$
-
 robot_sferico:matrix(
     [q_1,L_1,%pi/2,0],
     [q_2,0,%pi/2,D_2],
@@ -323,7 +352,6 @@ robot_sferico:matrix(
     [q_5,0,%pi/2,0],
     [q_6,L_6,0,0]
     )$
-
 robot_Stanford:matrix(
     [q_1,L_1,-%pi/2,0],
     [q_2,L_2,%pi/2,0],
@@ -332,7 +360,6 @@ robot_Stanford:matrix(
     [q_5,0,%pi/2,0],
     [q_6,L_6,0,0]
     )$
-
 robot_antropomorfo:matrix(
     [q_1,L_1,%pi/2,0],
     [q_2,0,0,D_2],
