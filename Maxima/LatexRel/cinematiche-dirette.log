@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.9.30)  4 NOV 2019 12:00
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017/Debian) (preloaded format=pdflatex 2019.9.30)  11 NOV 2019 10:51
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -343,11 +343,26 @@ e 115.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 1.
 
-Overfull \hbox (558.57945pt too wide) detected at line 18
+Overfull \hbox (136.47118pt too wide) detected at line 10
 []
  []
 
 [3 <./Sorgenti/Strutture/Cartesiano.png> <./Sorgenti/Strutture/Cilindrico.png>]
+
+Overfull \hbox (52.61266pt too wide) detected at line 20
+[]
+ []
+
+
+Overfull \hbox (136.47118pt too wide) detected at line 32
+[]
+ []
+
+
+Overfull \hbox (53.73134pt too wide) detected at line 43
+[]
+ []
+
 )
 <./Sorgenti/Strutture/Sferico1.png, id=38, 500.62032pt x 566.115pt>
 File: ./Sorgenti/Strutture/Sferico1.png Graphic file (type png)
@@ -364,14 +379,14 @@ t line 135.
 (pdftex.def)             Requested size: 264.46837pt x 358.3647pt.
  (./Sorgenti/Strutture/SfericoStanford.tex) [4 <./Sorgenti/Strutture/RRRplanare
 .png> <./Sorgenti/Strutture/Sferico1.png>]
-<./Sorgenti/Strutture/Antropomorfo.png, id=50, 964.35281pt x 608.2725pt>
+<./Sorgenti/Strutture/Antropomorfo.png, id=47, 964.35281pt x 608.2725pt>
 File: ./Sorgenti/Strutture/Antropomorfo.png Graphic file (type png)
 <use ./Sorgenti/Strutture/Antropomorfo.png>
 Package pdftex.def Info: ./Sorgenti/Strutture/Antropomorfo.png  used on input l
 ine 146.
 (pdftex.def)             Requested size: 264.46837pt x 166.81602pt.
 (./Sorgenti/Strutture/Antropomorfo.tex)
-<./Sorgenti/Strutture/PolsoSferico.png, id=51, 275.52937pt x 609.77812pt>
+<./Sorgenti/Strutture/PolsoSferico.png, id=48, 275.52937pt x 609.77812pt>
 File: ./Sorgenti/Strutture/PolsoSferico.png Graphic file (type png)
 <use ./Sorgenti/Strutture/PolsoSferico.png>
 Package pdftex.def Info: ./Sorgenti/Strutture/PolsoSferico.png  used on input l
@@ -379,7 +394,7 @@ ine 157.
 (pdftex.def)             Requested size: 264.46837pt x 585.35243pt.
  (./Sorgenti/Strutture/PolsoSferico.tex) [5 <./Sorgenti/Strutture/SfericoStanfo
 rd.png> <./Sorgenti/Strutture/Antropomorfo.png>]
-<./Sorgenti/Strutture+Polso/Cartesiano+p.png, id=57, 718.93594pt x 492.33937pt>
+<./Sorgenti/Strutture+Polso/Cartesiano+p.png, id=54, 718.93594pt x 492.33937pt>
 
 File: ./Sorgenti/Strutture+Polso/Cartesiano+p.png Graphic file (type png)
 <use ./Sorgenti/Strutture+Polso/Cartesiano+p.png>
@@ -387,7 +402,7 @@ Package pdftex.def Info: ./Sorgenti/Strutture+Polso/Cartesiano+p.png  used on i
 nput line 168.
 (pdftex.def)             Requested size: 264.46837pt x 181.11847pt.
  (./Sorgenti/Strutture+Polso/Cartesiano+p.tex)
-<./Sorgenti/Strutture+Polso/Cilindrico+p.png, id=58, 686.565pt x 517.935pt>
+<./Sorgenti/Strutture+Polso/Cilindrico+p.png, id=55, 686.565pt x 517.935pt>
 File: ./Sorgenti/Strutture+Polso/Cilindrico+p.png Graphic file (type png)
 <use ./Sorgenti/Strutture+Polso/Cilindrico+p.png>
 Package pdftex.def Info: ./Sorgenti/Strutture+Polso/Cilindrico+p.png  used on i
@@ -396,7 +411,7 @@ nput line 179.
 
 (./Sorgenti/Strutture+Polso/Cilindrico+p.tex) [6 <./Sorgenti/Strutture/PolsoSfe
 rico.png> <./Sorgenti/Strutture+Polso/Cartesiano+p.png>]
-<./Sorgenti/Strutture+Polso/RRRplanare+p.png, id=64, 1232.35406pt x 298.11375pt
+<./Sorgenti/Strutture+Polso/RRRplanare+p.png, id=61, 1232.35406pt x 298.11375pt
 >
 File: ./Sorgenti/Strutture+Polso/RRRplanare+p.png Graphic file (type png)
 <use ./Sorgenti/Strutture+Polso/RRRplanare+p.png>
@@ -405,7 +420,7 @@ nput line 190.
 (pdftex.def)             Requested size: 264.46837pt x 63.97493pt.
 
 (./Sorgenti/Strutture+Polso/RRRplanare+p.tex)
-<./Sorgenti/Strutture+Polso/Sferico1+p.png, id=65, 975.645pt x 634.62094pt>
+<./Sorgenti/Strutture+Polso/Sferico1+p.png, id=62, 975.645pt x 634.62094pt>
 File: ./Sorgenti/Strutture+Polso/Sferico1+p.png Graphic file (type png)
 <use ./Sorgenti/Strutture+Polso/Sferico1+p.png>
 Package pdftex.def Info: ./Sorgenti/Strutture+Polso/Sferico1+p.png  used on inp
@@ -413,7 +428,7 @@ ut line 201.
 (pdftex.def)             Requested size: 264.46837pt x 172.02779pt.
 
 (./Sorgenti/Strutture+Polso/Sferico1+p.tex)
-<./Sorgenti/Strutture+Polso/SfericoStanford+p.png, id=66, 459.96844pt x 1065.98
+<./Sorgenti/Strutture+Polso/SfericoStanford+p.png, id=63, 459.96844pt x 1065.98
 25pt>
 File: ./Sorgenti/Strutture+Polso/SfericoStanford+p.png Graphic file (type png)
 <use ./Sorgenti/Strutture+Polso/SfericoStanford+p.png>
@@ -424,7 +439,7 @@ Package pdftex.def Info: ./Sorgenti/Strutture+Polso/SfericoStanford+p.png  used
 (./Sorgenti/Strutture+Polso/SfericoStanford+p.tex) [7 <./Sorgenti/Strutture+Pol
 so/Cilindrico+p.png> <./Sorgenti/Strutture+Polso/RRRplanare+p.png> <./Sorgenti/
 Strutture+Polso/Sferico1+p.png>]
-<./Sorgenti/Strutture+Polso/Antropomorfo+p.png, id=74, 1071.25218pt x 469.755pt
+<./Sorgenti/Strutture+Polso/Antropomorfo+p.png, id=71, 1071.25218pt x 469.755pt
 >
 File: ./Sorgenti/Strutture+Polso/Antropomorfo+p.png Graphic file (type png)
 <use ./Sorgenti/Strutture+Polso/Antropomorfo+p.png>
@@ -435,11 +450,11 @@ Package pdftex.def Info: ./Sorgenti/Strutture+Polso/Antropomorfo+p.png  used on
 /SfericoStanford+p.png> <./Sorgenti/Strutture+Polso/Antropomorfo+p.png>] (./cin
 ematiche-dirette.aux) ) 
 Here is how much of TeX's memory you used:
- 3585 strings out of 492982
- 52047 string characters out of 6134896
- 134818 words of memory out of 5000000
- 7031 multiletter control sequences out of 15000+600000
- 12594 words of font info for 34 fonts, out of 8000000 for 9000
+ 3587 strings out of 492982
+ 52067 string characters out of 6134896
+ 138818 words of memory out of 5000000
+ 7032 multiletter control sequences out of 15000+600000
+ 13358 words of font info for 35 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  41i,12n,32p,804b,310s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texmf/fonts/enc/dvips/cm-super/cm-super-t1.e
@@ -456,16 +471,15 @@ s/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
 6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></
 usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texl
-ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf/fonts/type1/
-public/cm-super/sfbx1728.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm
-1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1440.pfb></usr/share
-/texmf/fonts/type1/public/cm-super/sfrm2074.pfb></usr/share/texlive/texmf-dist/
-fonts/type1/urw/zapfding/uzdr.pfb>
-Output written on cinematiche-dirette.pdf (8 pages, 653881 bytes).
+ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texmf/fonts
+/type1/public/cm-super/sfbx1728.pfb></usr/share/texmf/fonts/type1/public/cm-sup
+er/sfrm1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1440.pfb></us
+r/share/texmf/fonts/type1/public/cm-super/sfrm2074.pfb></usr/share/texlive/texm
+f-dist/fonts/type1/urw/zapfding/uzdr.pfb>
+Output written on cinematiche-dirette.pdf (8 pages, 649947 bytes).
 PDF statistics:
- 147 PDF objects out of 1000 (max. 8388607)
- 85 compressed objects within 1 object stream
+ 143 PDF objects out of 1000 (max. 8388607)
+ 82 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  81 words of extra memory for PDF output out of 10000 (max. 10000000)
 
