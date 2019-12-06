@@ -1,0 +1,296 @@
+%& -shell-escape
+\documentclass[a4paper,12pt]{article}
+\usepackage[legalpaper, portrait , margin=1.5cm]{geometry}
+\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[italian]{babel}
+\usepackage{wrapfig}
+\usepackage{graphicx}
+\graphicspath{ {./Sorgenti/} }
+\usepackage{enumitem}
+\usepackage{pifont}
+\usepackage{amsmath}
+
+\author{Alfano Emanuele \\ Badalamenti Filippo \\ Vitti Gabriele}
+
+\begin{document}
+\title{Cinematiche inverse Disaccoppiate}
+\maketitle
+
+In questa relazione andremo a vedere come si calcolano le cinematiche
+  inverse totali di 2 robot:
+
+\begin{itemize}
+\item Stanford + Polso Sferico
+\item Antropomorfo + Polso Sferico
+\end{itemize}
+
+Per prima cosa è necessario trovare i 2 termini costanti che permettono la
+disaccoppiazione della struttura con il polso
+\pagebreak
+
+\section{Calcolo costanti Polso Sferico}
+Data la matrice totale del polso sferico:
+
+\begin{center}
+$Q_{46}$ =$\begin{pmatrix}
+{c_{{q_4}}} {c_{{q_5}}} {c_{{q_6}}}-{s_{{q_4}}} {s_{{q_6}}} & -{c_{{q_4}}} {c_{{q_5}}} {s_{{q_6}}}-{s_{{q_4}}} {c_{{q_6}}} & {c_{{q_4}}} {s_{{q_5}}} & {L_6} {c_{{q_4}}} {s_{{q_5}}}\\
+{c_{{q_4}}} {s_{{q_6}}}+{s_{{q_4}}} {c_{{q_5}}} {c_{{q_6}}} & {c_{{q_4}}} {c_{{q_6}}}-{s_{{q_4}}} {c_{{q_5}}} {s_{{q_6}}} & {s_{{q_4}}} {s_{{q_5}}} & {L_6} {s_{{q_4}}} {s_{{q_5}}}\\
+-{s_{{q_5}}} {c_{{q_6}}} & {s_{{q_5}}} {s_{{q_6}}} & {c_{{q_5}}} & {L_6} {c_{{q_5}}}\\
+0 & 0 & 0 & 1
+\end{pmatrix}$
+\end{center}
+Abbiamo che:
+
+\begin{center}
+$R_{46}$ = $\begin{pmatrix}{c_{{q_4}}} {c_{{q_5}}} {c_{{q_6}}}-{s_{{q_4}}} {s_{{q_6}}} & -{c_{{q_4}}} {c_{{q_5}}} {s_{{q_6}}}-{s_{{q_4}}} {c_{{q_6}}} & {c_{{q_4}}} {s_{{q_5}}}\\
+{c_{{q_4}}} {s_{{q_6}}}+{s_{{q_4}}} {c_{{q_5}}} {c_{{q_6}}} & {c_{{q_4}}} {c_{{q_6}}}-{s_{{q_4}}} {c_{{q_5}}} {s_{{q_6}}} & {s_{{q_4}}} {s_{{q_5}}}\\
+-{s_{{q_5}}} {c_{{q_6}}} & {s_{{q_5}}} {s_{{q_6}}} & {c_{{q_5}}}\end{pmatrix}$
+\space\space\space\space\space   
+$d_{46}$ = $\begin{pmatrix}{L_6} {c_{{q_4}}} {s_{{q_5}}}\\
+{L_6} {s_{{q_4}}} {s_{{q_5}}}\\
+{L_6} {c_{{q_5}}}\end{pmatrix}$
+\end{center}
+
+Da queste 2 matrici cerchiamo di trovare le 2 costanti che rendono vera la seguente equazione:
+
+$$ d_{36} = R_{36} \cdot d_1 + d_0 $$
+
+Trovando queste 2 costanti sarà infatti possibile disaccoppiare la soluzione delle 2 cinematiche inverse.
+
+
+
+
+
+\begin{center}
+$\begin{pmatrix}{L_6} {c_{{q_4}}} {s_{{q_5}}}\\
+{L_6} {s_{{q_4}}} {s_{{q_5}}}\\
+{L_6} {c_{{q_5}}}\end{pmatrix}$
+=
+$\begin{pmatrix}{c_{{q_4}}} {c_{{q_5}}} {c_{{q_6}}}-{s_{{q_4}}} {s_{{q_6}}} & -{c_{{q_4}}} {c_{{q_5}}} {s_{{q_6}}}-{s_{{q_4}}} {c_{{q_6}}} & {c_{{q_4}}} {s_{{q_5}}}\\
+{c_{{q_4}}} {s_{{q_6}}}+{s_{{q_4}}} {c_{{q_5}}} {c_{{q_6}}} & {c_{{q_4}}} {c_{{q_6}}}-{s_{{q_4}}} {c_{{q_5}}} {s_{{q_6}}} & {s_{{q_4}}} {s_{{q_5}}}\\
+-{s_{{q_5}}} {c_{{q_6}}} & {s_{{q_5}}} {s_{{q_6}}} & {c_{{q_5}}}\end{pmatrix}$
+$\cdot$
+$\begin{pmatrix}\mathit{a1}\\
+\mathit{b1}\\
+\mathit{c1}\end{pmatrix}$
++
+$\begin{pmatrix}\mathit{a0}\\
+\mathit{b0}\\
+\mathit{c0}\end{pmatrix}$
+\end{center}
+
+Dove:
+\begin{center}
+$ d_1 $=$\begin{pmatrix}\mathit{a1}\\
+\mathit{b1}\\
+\mathit{c1}\end{pmatrix}$
+\space
+$ d_0 $=$\begin{pmatrix}\mathit{a0}\\
+\mathit{b0}\\
+\mathit{c0}\end{pmatrix}$
+\end{center}
+
+
+Risolvendo sia con $d_1$ che con $d_2$ si ottengono $\infty$ sol, ma si vede anche a occhio che una soluzione semplice è:
+
+\begin{center}
+$ d_1 $=$\begin{pmatrix}
+0\\
+0\\
+L_6\end{pmatrix}$
+\space
+$ d_0 $=$\begin{pmatrix}
+0\\
+0\\
+0\end{pmatrix}$
+\end{center}
+
+\section{Orientamento inverso Polso Sferico}
+Per calcolare l'orientamento inverso del polso sferico non ci serve sapere null'altro all'infuori dell'orientamento stesso.
+Con le costanti potremo calcolare quindi l'obiettivo, ma le forumule sono note a prescindere, calcoliamo quindi subito l'orientamento inverso cosi  da poter riprendere i calcoli dopo.
+
+
+Nel calcolo disaccoppiato avremo che la matrice del polso sferico dovrà essere pari a:
+
+\begin{center}
+$ R_{03}^T(q_a) \cdot R = R_{36}(q_b) $
+ \end{center}
+
+
+Essedo la matrice di orientamento del polso sferico($R_{36}$) esattamentepari alla matrice di orientamento della terna $ R_{zyz} $ nei 5 campi semplici,trovare $ \alpha,\beta,\gamma $ della matrice $ R_{zyz}(\alpha,\beta,\gamma) $ equivale a trovare $q_4,q_5,q_6$ 
+
+\begin{center}
+$ R_{zyz}(\alpha,\beta,\gamma)$ = $\begin{pmatrix}\operatorname{c}\left( \alpha \right)  \operatorname{c}\left( \beta \right)  \operatorname{c}\left( \gamma \right) -\operatorname{s}\left( \alpha \right)  \operatorname{s}\left( \gamma \right)  & -\operatorname{c}\left( \alpha \right)  \operatorname{s}\left( \gamma \right) -\operatorname{s}\left( \alpha \right)  \operatorname{c}\left( \beta \right)  \operatorname{c}\left( \gamma \right)  & \operatorname{s}\left( \beta \right)  \operatorname{c}\left( \gamma \right) \\
+\operatorname{c}\left( \alpha \right)  \operatorname{c}\left( \beta \right)  \operatorname{s}\left( \gamma \right) +\operatorname{s}\left( \alpha \right)  \operatorname{c}\left( \gamma \right)  & \operatorname{c}\left( \alpha \right)  \operatorname{c}\left( \gamma \right) -\operatorname{s}\left( \alpha \right)  \operatorname{c}\left( \beta \right)  \operatorname{s}\left( \gamma \right)  & \operatorname{s}\left( \beta \right)  \operatorname{s}\left( \gamma \right) \\
+-\operatorname{c}\left( \alpha \right)  \operatorname{s}\left( \beta \right)  & \operatorname{s}\left( \alpha \right)  \operatorname{s}\left( \beta \right)  & \operatorname{c}\left( \beta \right) \end{pmatrix}$
+\end{center}
+
+
+Definito: $R_{03}^T(q_a) \cdot R$ = $\begin{pmatrix}{r_{11}} & {r_{12}} & {r_{13}}\\
+{r_{21}} & {r_{22}} & {r_{23}}\\
+{r_{31}} & {r_{32}} & {r_{33}}\end{pmatrix}$.
+Avremo che $q_4,q_5,q_6$ sono:
+
+\begin{itemize}
+\item $c_{q_5} = r_{33} \Longrightarrow s_{q_5} = \pm \sqrt{1-r_{33}^2}
+		\hfill \longrightarrow \hfill
+		q_5 = atan2 (\pm \sqrt{1-r_{33}^2},r_{33}) = \left \{ \begin{array}{rl}
+		q_5\\
+		-q_5
+		\end{array}
+		\right.$
+\end{itemize}
+Se $q_5 \neq 0$
+\begin{itemize}	
+
+\item $\left \{ \begin{array}{rl}
+		s_{q_4}s_{q_5}=r_{32} \\
+		-c_{q_4}s_{q_5}=r_{31}
+		\end{array}
+		\right. %il punto serve per non far chiamare errore
+		\longrightarrow
+		\left \{ \begin{array}{rl}
+		s_{q_4}=\dfrac{r_{32}}{s_{q_5}} \\
+		-c_{q_4}=\dfrac{r_{31}}{s_{q_5}}
+		\end{array}
+		\right.
+		\longrightarrow
+		\left \{ \begin{array}{rl}
+		s_{q_4}=\pm r_{32}\\
+		c_{q_4}=\mp r_{31}
+		\end{array}
+		\right.
+		\longrightarrow $
+				
+		$q_4 = atan2 (\pm r_{32},\mp r_{31}) =
+		\left \{ \begin{array}{rl}
+		q_4\\
+		q_4+\pi
+		\end{array}
+		\right.$
+		
+		
+\item $\left \{ \begin{array}{rl}
+		s_{q_5}c_{q_6}=r_{13} \\
+		s_{q_5}s_{q_6}=r_{23}
+		\end{array}
+		\right. %il punto serve per non far chiamare errore
+		\longrightarrow
+		\left \{ \begin{array}{rl}
+		s_{q_6}=\dfrac{r_{13}}{s_{q_5}} \\
+		c_{q_6}=\dfrac{r_{23}}{s_{q_5}}
+		\end{array}
+		\right.
+		\longrightarrow
+		\left \{ \begin{array}{rl}
+		s_{q_4}=\pm r_{13}\\
+		-c_{q_4}=\pm r_{23}
+		\end{array}
+		\right.
+		\longrightarrow $
+				
+		$q_6 = atan2 (\pm r_{13},\mp r_{23}) =
+		\left \{ \begin{array}{rl}
+		q_6\\
+		q_6+\pi
+		\end{array}
+		\right.$		
+\end{itemize}
+\newpage
+\section{Stanford + Polso Sferico}
+\subsection{Calcolo posizione disaccoppiata}
+
+Avendo noi già calcolato le 2 costanti di disaccoppiamento possiamo calcolare subito che:
+
+Dati: $d_f=\begin{pmatrix}{{\mathit{df}}_1}\\
+{{\mathit{df}}_2}\\
+{{\mathit{df}}_3}\end{pmatrix}$ e $R_f=\begin{pmatrix}{r_{11}} & {r_{12}} & {r_{13}}\\
+{r_{21}} & {r_{22}} & {r_{23}}\\
+{r_{31}} & {r_{32}} & {r_{33}}\end{pmatrix}$
+
+
+L'equazione per ottenere le coordinate obiettivo della struttura e':
+\begin{center}
+$d_f- R_f \cdot d_1 = R_{03}(q_a) \cdot d_0 + d_{03}(q_a)$ 
+
+Ovvero sia, svolgendo il calcolo:
+
+$\begin{pmatrix}{{\mathit{df}}_1}-{L_6} {r_{13}}\\
+{{\mathit{df}}_2}-{L_6} {r_{23}}\\
+{{\mathit{df}}_3}-{L_6} {r_{33}}\end{pmatrix}=\begin{pmatrix}-{L_2} {s_{{q_1}}}+{c_{{q_1}}} {s_{{q_2}}} {q_3}\\
+{L_2} {c_{{q_1}}}+{s_{{q_1}}} {s_{{q_2}}} {q_3}\\
+{L_1}+{c_{{q_2}}} {q_3}\end{pmatrix}$
+\end{center}
+
+Applicando la cinematica inversa dello stanford viene quindi fuori:
+\begin{itemize}
+%\item $q_3 = \sqrt{(df_1-L_6 r_{13})^2 +(df_2-L_6 r_{23})^2+(df_3-L_6 r_{33}-L_1)-L_2^2}$
+\item $q_3 = \sqrt{x^2 +y^2+(z-L_1)-L_2^2}$
+\item $q_2 = atan2(\pm\sqrt{\dfrac{x^2+y^2-L2^2}{q_3^2}},\dfrac{z-L_1}{q_3})$
+\item $q_1 = atan2(q_3 s_{q_2}y-L_2x,q_3s_{q2}x+L_2y)$
+\end{itemize}
+
+\subsection{Calcolo Orientamento disaccoppiato}
+Arrivati qui basta calcolare il risultato di $ R_{03}^T(q_a) \cdot R $ per ottenere la matrice da eguagliare a $R_{36}(q_b)$
+Calcolato il risultato e' possibile risalire quindi anche ai valori degli ultimi 3 giunti
+
+\newpage
+
+\section{Puma (Antropomorfo + Polso Sferico)}
+\subsection{Calcolo posizione disaccoppiata}
+Come prima procediamo calcolando la posizione che il braccio dovra' avere dati:
+\begin{center}
+ $d_f=\begin{pmatrix}{{\mathit{df}}_1}\\
+{{\mathit{df}}_2}\\
+{{\mathit{df}}_3}\end{pmatrix}$ e $R_f=\begin{pmatrix}{r_{11}} & {r_{12}} & {r_{13}}\\
+{r_{21}} & {r_{22}} & {r_{23}}\\
+{r_{31}} & {r_{32}} & {r_{33}}\end{pmatrix}$
+\end{center}
+
+L'equazione per ottenere le coordinate obiettivo della struttura e':
+\begin{center}
+$d_f- R_f \cdot d_1 = R_{03}(q_a) \cdot d_0 + d_{03}(q_a)$ 
+
+Ovvero sia, svolgendo il calcolo:
+
+$\begin{pmatrix}{{\mathit{df}}_1}-{L_6} {r_{13}}\\
+{{\mathit{df}}_2}-{L_6} {r_{23}}\\
+{{\mathit{df}}_3}-{L_6} {r_{33}}\end{pmatrix}=\begin{pmatrix}{D_2} {c_{{q_1}}} {c_{{q_2}}}+{D_3} {c_{{q_1}}} {c_{{q_2}}} {c_{{q_3}}}+-{D_3} {c_{{q_1}}} {s_{{q_2}}} {s_{{q_3}}}\\
+{D_2} {s_{{q_1}}} {c_{{q_2}}}+{D_3} {s_{{q_1}}} {c_{{q_2}}} {c_{{q_3}}}+-{D_3} {s_{{q_1}}} {s_{{q_2}}} {s_{{q_3}}}\\
+{L_1}+{D_2} {s_{{q_2}}}+{D_3} {s_{{q_2}}} {c_{{q_3}}}+{D_3} {c_{{q_2}}} {s_{{q_3}}}\end{pmatrix}$
+\end{center}
+
+Applicando la cinematica inversa dell'antropomorfo viene quindi fuori:
+\begin{itemize}
+%\item $q_3 = \sqrt{(df_1-L_6 r_{13})^2 +(df_2-L_6 r_{23})^2+(df_3-L_6 r_{33}-L_1)-L_2^2}$
+\item $q_3 = atan2(\pm\sqrt{1-a^2},a) \leftarrow a=\dfrac{x^2+y^2+(z-L_1)^2-D_3^2-D_2^2}{2D_2D_3}$
+\item $q_2 = atan2(zD_3c_{q_3} + zD_2 - L_1D_3c_{q_3} - L_1D_2 \pm \sqrt{x^2+y^2}D_3s_{q_3},$
+
+\hspace{20mm} $ \mp \sqrt{x^2+y^2}D_3s_{q_3} \mp \sqrt{x^2+y^2}D_2 + zD_3s_{q_3} - L_1D_3c_{q_3})$
+\item $q_1 = atan2(\dfrac{y}{-a},\dfrac{x}{-a})$
+\end{itemize}
+
+\subsection{Calcolo Orientamento disaccoppiato}
+Arrivati qui basta calcolare il risultato di $ R_{03}^T(q_a) \cdot R $ per ottenere la matrice da eguagliare a $R_{36}(q_b)$
+Calcolato il risultato e' possibile risalire quindi anche ai valori degli ultimi 3 giunti
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
