@@ -1,7 +1,7 @@
 %& -shell-escape
 \documentclass[a4paper,12pt]{article}
 \usepackage[legalpaper, portrait , margin=1.5cm]{geometry}
-\usepackage[latin1]{inputenc}
+\usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage[italian]{babel}
 \usepackage{wrapfig}
@@ -11,29 +11,60 @@
 \usepackage{pifont}
 \usepackage{amsmath}
 
+
 \author{Alfano Emanuele \\ Badalamenti Filippo \\ Vitti Gabriele}
 
 \begin{document}
-\title{Cinematiche inverse Disaccoppiate}
+\title{Cinematiche inverse complete}
 \maketitle
 
 In questa relazione andremo a vedere come si calcolano le cinematiche
-  inverse totali di 2 robot:
+  inverse complete di due robot attraverso il disaccoppiamento polso-strutura portante in cui, se sono soddisfatti certi vincoli algebrici e geometrici, allora il problema completo della cinematica inversa può essere ricondotto ai due sotto-problemi di cinematica inversa di posizione e di orientamento separati:
 
 \begin{itemize}
-\item Stanford + Polso Sferico
-\item Antropomorfo + Polso Sferico
+\item Manipolatore di Stanford + Polso Sferico
+\item Antropomorfo + Polso Sferico (Puma)
 \end{itemize}
 
-Per prima cosa è necessario trovare i 2 termini costanti che permettono la
-disaccoppiazione della struttura con il polso
-\pagebreak
-
-\section{Calcolo costanti Polso Sferico}
-Data la matrice totale del polso sferico:
+Risolvere un problema di cinematica inversa completa vuol dire che, assegnata una matrice di trasformazione del tipo:
 
 \begin{center}
-$Q_{46}$ =$\begin{pmatrix}
+$\begin{pmatrix}
+{r_{11}} & {r_{12}} & {r_{13}} & {{\mathit{df}}_1}\\
+{r_{21}} & {r_{22}} & {r_{23}}&{{\mathit{df}}_2}\\
+{r_{31}} & {r_{32}} & {r_{33}} & {{\mathit{df}}_3}\\
+0 & 0 & 0 & 1
+\end{pmatrix}$
+\end{center}
+
+Sapendo che:
+
+\begin{center}
+$d_f=\begin{pmatrix}{{\mathit{df}}_1}\\
+{{\mathit{df}}_2}\\
+{{\mathit{df}}_3}\end{pmatrix}$ e $R_f=\begin{pmatrix}{r_{11}} & {r_{12}} & {r_{13}}\\
+{r_{21}} & {r_{22}} & {r_{23}}\\
+{r_{31}} & {r_{32}} & {r_{33}}\end{pmatrix}$
+\end{center}
+
+dove $d_f$ è il vettore posizione del punto terminale del robot completo di Stanford (manipolatore + polso sferico), ricavato con la cinematica diretta del robot, rispetto al sistema di riferimento inerziale e $R_f$ è la matrice di rotazione che indica l'orientamento del punto terminale del robot completo di Stanford rispetto al sistema di riferimento inerziale.\\
+ Bisogna determinare due vettori (almeno) $q_a$ e $q_b$ tali che: \\
+
+		$\left\{ \begin{array} {ll} 
+		R_f  = R_{03}(q_a) \cdot  R_{36}(q_b) \\
+		d_f = R_{03}(q_a) \cdot d_{36}(q_b) + d_{03}(q_a)
+		\end{array}
+		\right.$ \\
+
+dove $q_a$ è l'insieme delle variabili di giunto $q_1, q_2, q_3$ che servono per posizionare il punto terminale e $q_b$ è l'insieme delle variabili di giunto $q_4, q_5, q_6$ che servono per orientare il punto terminale.
+
+\pagebreak
+
+\section{Calcolo costanti attraverso la matrice di trasformazione del polso sferico}
+Per prima cosa è necessario trovare i due termini costanti ($d_0$ e $d_1$) che permettono il disaccoppiamento polso-struttura portante. Data la matrice di trasformazione del polso sferico:
+
+\begin{center}
+$Q_{36}$ =$\begin{pmatrix}
 {c_{{q_4}}} {c_{{q_5}}} {c_{{q_6}}}-{s_{{q_4}}} {s_{{q_6}}} & -{c_{{q_4}}} {c_{{q_5}}} {s_{{q_6}}}-{s_{{q_4}}} {c_{{q_6}}} & {c_{{q_4}}} {s_{{q_5}}} & {L_6} {c_{{q_4}}} {s_{{q_5}}}\\
 {c_{{q_4}}} {s_{{q_6}}}+{s_{{q_4}}} {c_{{q_5}}} {c_{{q_6}}} & {c_{{q_4}}} {c_{{q_6}}}-{s_{{q_4}}} {c_{{q_5}}} {s_{{q_6}}} & {s_{{q_4}}} {s_{{q_5}}} & {L_6} {s_{{q_4}}} {s_{{q_5}}}\\
 -{s_{{q_5}}} {c_{{q_6}}} & {s_{{q_5}}} {s_{{q_6}}} & {c_{{q_5}}} & {L_6} {c_{{q_5}}}\\
@@ -43,20 +74,20 @@ $Q_{46}$ =$\begin{pmatrix}
 Abbiamo che:
 
 \begin{center}
-$R_{46}$ = $\begin{pmatrix}{c_{{q_4}}} {c_{{q_5}}} {c_{{q_6}}}-{s_{{q_4}}} {s_{{q_6}}} & -{c_{{q_4}}} {c_{{q_5}}} {s_{{q_6}}}-{s_{{q_4}}} {c_{{q_6}}} & {c_{{q_4}}} {s_{{q_5}}}\\
+$R_{36}$ = $\begin{pmatrix}{c_{{q_4}}} {c_{{q_5}}} {c_{{q_6}}}-{s_{{q_4}}} {s_{{q_6}}} & -{c_{{q_4}}} {c_{{q_5}}} {s_{{q_6}}}-{s_{{q_4}}} {c_{{q_6}}} & {c_{{q_4}}} {s_{{q_5}}}\\
 {c_{{q_4}}} {s_{{q_6}}}+{s_{{q_4}}} {c_{{q_5}}} {c_{{q_6}}} & {c_{{q_4}}} {c_{{q_6}}}-{s_{{q_4}}} {c_{{q_5}}} {s_{{q_6}}} & {s_{{q_4}}} {s_{{q_5}}}\\
 -{s_{{q_5}}} {c_{{q_6}}} & {s_{{q_5}}} {s_{{q_6}}} & {c_{{q_5}}}\end{pmatrix}$
 \space\space\space\space\space   
-$d_{46}$ = $\begin{pmatrix}{L_6} {c_{{q_4}}} {s_{{q_5}}}\\
+$d_{36}$ = $\begin{pmatrix}{L_6} {c_{{q_4}}} {s_{{q_5}}}\\
 {L_6} {s_{{q_4}}} {s_{{q_5}}}\\
 {L_6} {c_{{q_5}}}\end{pmatrix}$
 \end{center}
 
-Da queste 2 matrici cerchiamo di trovare le 2 costanti che rendono vera la seguente equazione:
+Da queste due matrici cerchiamo di ricavare le due costanti ($d_0$ e $d_1$) che rendono vera la seguente equazione:
 
 $$ d_{36} = R_{36} \cdot d_1 + d_0 $$
 
-Trovando queste 2 costanti sarà infatti possibile disaccoppiare la soluzione delle 2 cinematiche inverse.
+Trovando $d_0$ e $d_1$ sarà possibile disaccoppiare la soluzione delle due cinematiche inverse di posizione e di orientamento.
 
 
 
@@ -92,7 +123,7 @@ $ d_0 $=$\begin{pmatrix}\mathit{a0}\\
 \end{center}
 
 
-Risolvendo sia con $d_1$ che con $d_2$ si ottengono $\infty$ sol, ma si vede anche a occhio che una soluzione semplice è:
+Risolvendo sia con $d_0$ che con $d_1$ si ottengono $\infty$ soluzioni, ma si vede anche a occhio che una soluzione semplice è:
 
 \begin{center}
 $ d_1 $=$\begin{pmatrix}
@@ -106,19 +137,21 @@ $ d_0 $=$\begin{pmatrix}
 0\end{pmatrix}$
 \end{center}
 
-\section{Orientamento inverso Polso Sferico}
-Per calcolare l'orientamento inverso del polso sferico non ci serve sapere null'altro all'infuori dell'orientamento stesso.
-Con le costanti potremo calcolare quindi l'obiettivo, ma le forumule sono note a prescindere, calcoliamo quindi subito l'orientamento inverso cosi  da poter riprendere i calcoli dopo.
+\section{Orientamento inverso del Polso Sferico}
+Nel calcolo disaccoppiato, in seguito al calcolo di $R_{03}(q_a)$ con la cinematica inversa di pura posizione (come fatto nel capitolo 3.1: Calcolo posizione disaccoppiata), sono in grado di ricavare la matrice di orientamento del polso sferico $R_{36}(q_b)$.
+Portandoci avanti, siamo già in grado di ricavare $R_{36}(q_b)$ e le variabili $q_4,q_5,q_6$ (le quali servono per determinare l'orientamento del polso sferico) attraverso una cinematica inversa di puro orientamento. Useremo i risultati, che ora ricaveremo, nel capitolo 3.2: Calcolo orientamento disaccoppiato.
 
 
-Nel calcolo disaccoppiato avremo che la matrice del polso sferico dovrà essere pari a:
+Nel calcolo disaccoppiato risulta che l'orientamento del polso sferico è pari a:
 
 \begin{center}
-$ R_{03}^T(q_a) \cdot R = R_{36}(q_b) $
+$ R_{36}(q_b) =  R_{03}^T(q_a) \cdot R_f $
  \end{center}
 
 
-Essedo la matrice di orientamento del polso sferico($R_{36}$) esattamentepari alla matrice di orientamento della terna $ R_{zyz} $ nei 5 campi semplici,trovare $ \alpha,\beta,\gamma $ della matrice $ R_{zyz}(\alpha,\beta,\gamma) $ equivale a trovare $q_4,q_5,q_6$ 
+Essendo però la matrice di orientamento del polso sferico $R_{36}(q_b)$ esattamente
+pari alla matrice di orientamento della terna di Eulero $ R_{zyz} $,
+trovare $ \alpha,\beta,\gamma $ della matrice $ R_{zyz}(\alpha,\beta,\gamma) $ equivale a trovare $q_4,q_5,q_6$ della matrice $R_{36}(q_b)$:
 
 \begin{center}
 $ R_{zyz}(\alpha,\beta,\gamma)$ = $\begin{pmatrix}\operatorname{c}\left( \alpha \right)  \operatorname{c}\left( \beta \right)  \operatorname{c}\left( \gamma \right) -\operatorname{s}\left( \alpha \right)  \operatorname{s}\left( \gamma \right)  & -\operatorname{c}\left( \alpha \right)  \operatorname{s}\left( \gamma \right) -\operatorname{s}\left( \alpha \right)  \operatorname{c}\left( \beta \right)  \operatorname{c}\left( \gamma \right)  & \operatorname{s}\left( \beta \right)  \operatorname{c}\left( \gamma \right) \\
@@ -133,37 +166,37 @@ Definito: $R_{03}^T(q_a) \cdot R$ = $\begin{pmatrix}{r_{11}} & {r_{12}} & {r_{13
 Avremo che $q_4,q_5,q_6$ sono:
 
 \begin{itemize}
-\item $c_{q_5} = r_{33} \Longrightarrow s_{q_5} = \pm \sqrt{1-r_{33}^2}
+\item  $c(\beta) = r_{33} \Longrightarrow s(\beta) = \pm \sqrt{1-r_{33}^2}
 		\hfill \longrightarrow \hfill
-		q_5 = atan2 (\pm \sqrt{1-r_{33}^2},r_{33}) = \left \{ \begin{array}{rl}
+		\beta = atan2 (\pm s_5, c_5) = \left \{ \begin{array}{rl}
 		q_5\\
 		-q_5
 		\end{array}
 		\right.$
 \end{itemize}
-Se $q_5 \neq 0$
+Se $q_5 \neq 0,\pi$ (non sono dunque in singolarità):
 \begin{itemize}	
 
 \item $\left \{ \begin{array}{rl}
-		s_{q_4}s_{q_5}=r_{32} \\
-		-c_{q_4}s_{q_5}=r_{31}
+		s(\beta)c(\gamma)=r_{13} \\
+		s(\beta)s(\gamma)=r_{23}
 		\end{array}
 		\right. %il punto serve per non far chiamare errore
 		\longrightarrow
 		\left \{ \begin{array}{rl}
-		s_{q_4}=\dfrac{r_{32}}{s_{q_5}} \\
-		-c_{q_4}=\dfrac{r_{31}}{s_{q_5}}
+		c(\gamma)=\dfrac{r_{13}}{s(\beta)} \\
+		s(\gamma)=\dfrac{r_{23}}{s(\beta)}
 		\end{array}
 		\right.
 		\longrightarrow
 		\left \{ \begin{array}{rl}
-		s_{q_4}=\pm r_{32}\\
-		c_{q_4}=\mp r_{31}
+		s(\gamma)=\pm s_4\\
+		c(\gamma)=\pm c_4
 		\end{array}
 		\right.
 		\longrightarrow $
 				
-		$q_4 = atan2 (\pm r_{32},\mp r_{31}) =
+		$\gamma = atan2 (\pm s_4,\pm c_4) =
 		\left \{ \begin{array}{rl}
 		q_4\\
 		q_4+\pi
@@ -172,50 +205,59 @@ Se $q_5 \neq 0$
 		
 		
 \item $\left \{ \begin{array}{rl}
-		s_{q_5}c_{q_6}=r_{13} \\
-		s_{q_5}s_{q_6}=r_{23}
+		-s(\beta)c(\alpha)=r_{31} \\
+		s(\beta)s(\alpha)=r_{32}
 		\end{array}
 		\right. %il punto serve per non far chiamare errore
 		\longrightarrow
 		\left \{ \begin{array}{rl}
-		s_{q_6}=\dfrac{r_{13}}{s_{q_5}} \\
-		c_{q_6}=\dfrac{r_{23}}{s_{q_5}}
+		c(\alpha)=\dfrac{r_{31}}{s(\beta)} \\
+		s(\alpha)=\dfrac{r_{32}}{s(\beta)}
 		\end{array}
 		\right.
 		\longrightarrow
 		\left \{ \begin{array}{rl}
-		s_{q_4}=\pm r_{13}\\
-		-c_{q_4}=\pm r_{23}
+		c(\alpha)=\pm c_6\\
+		s(\alpha)=\pm s_6
 		\end{array}
 		\right.
 		\longrightarrow $
 				
-		$q_6 = atan2 (\pm r_{13},\mp r_{23}) =
+		$\alpha = atan2 (\pm s_6,\pm c_6) =
 		\left \{ \begin{array}{rl}
 		q_6\\
 		q_6+\pi
 		\end{array}
-		\right.$		
+		\right.$
+
+N.B. Il segno meno di $-s(\beta)$ si semplifica in quanto ${ r_{31}}$ risulta pari a ${-s_5 c_6}$.
 \end{itemize}
 \newpage
-\section{Stanford + Polso Sferico}
+\section{Cinematica inversa completa: Manipolatore di Stanford + Polso Sferico}
 \subsection{Calcolo posizione disaccoppiata}
 
-Avendo noi già calcolato le 2 costanti di disaccoppiamento possiamo calcolare subito che:
+Avendo già calcolato le due costanti che permettono il disaccoppiamento polso-struttura portante possiamo dire subito che: dati
 
-Dati: $d_f=\begin{pmatrix}{{\mathit{df}}_1}\\
+\begin{center}
+$d_f=\begin{pmatrix}{{\mathit{df}}_1}\\
 {{\mathit{df}}_2}\\
 {{\mathit{df}}_3}\end{pmatrix}$ e $R_f=\begin{pmatrix}{r_{11}} & {r_{12}} & {r_{13}}\\
 {r_{21}} & {r_{22}} & {r_{23}}\\
 {r_{31}} & {r_{32}} & {r_{33}}\end{pmatrix}$
+\end{center}
 
+\begin{flushleft}
+dove $d_f$ è il vettore posizione del punto terminale del robot completo di Stanford (manipolatore + polso sferico), ricavato con la cinematica diretta del robot, rispetto al sistema di riferimento inerziale e $R_f$ è la matrice di rotazione che indica l'orientamento del punto terminale del robot completo di Stanford rispetto al sistema di riferimento inerziale. \\
+L'equazione per ottenere le variabili $q_a$ che servono per posizionare il punto terminale del manipolatore di Stanford (cioè il polso sferico, infatti con $d_f- R_f \cdot d_1$ mi trovo sul polso) rispetto al sistema di riferimento di base è:
+\end{flushleft}
 
-L'equazione per ottenere le coordinate obiettivo della struttura e':
 \begin{center}
 $d_f- R_f \cdot d_1 = R_{03}(q_a) \cdot d_0 + d_{03}(q_a)$ 
+\end{center}
 
-Ovvero sia, svolgendo il calcolo:
+Svolgendo i calcoli:
 
+\begin{center}
 $\begin{pmatrix}{{\mathit{df}}_1}-{L_6} {r_{13}}\\
 {{\mathit{df}}_2}-{L_6} {r_{23}}\\
 {{\mathit{df}}_3}-{L_6} {r_{33}}\end{pmatrix}=\begin{pmatrix}-{L_2} {s_{{q_1}}}+{c_{{q_1}}} {s_{{q_2}}} {q_3}\\
@@ -223,7 +265,7 @@ $\begin{pmatrix}{{\mathit{df}}_1}-{L_6} {r_{13}}\\
 {L_1}+{c_{{q_2}}} {q_3}\end{pmatrix}$
 \end{center}
 
-Applicando la cinematica inversa dello stanford viene quindi fuori:
+Applicando la cinematica inversa del Manipolatore di Stanford ricavo il valore delle variabili di giunto che servono per posizionare il polso sferico rispetto al sistema di riferimento di base:
 \begin{itemize}
 %\item $q_3 = \sqrt{(df_1-L_6 r_{13})^2 +(df_2-L_6 r_{23})^2+(df_3-L_6 r_{33}-L_1)-L_2^2}$
 \item $q_3 = \sqrt{x^2 +y^2+(z-L_1)-L_2^2}$
@@ -232,28 +274,43 @@ Applicando la cinematica inversa dello stanford viene quindi fuori:
 \end{itemize}
 
 \subsection{Calcolo Orientamento disaccoppiato}
-Arrivati qui basta calcolare il risultato di $ R_{03}^T(q_a) \cdot R $ per ottenere la matrice da eguagliare a $R_{36}(q_b)$
-Calcolato il risultato e' possibile risalire quindi anche ai valori degli ultimi 3 giunti
+Arrivati a questo punto basta calcolare il risultato di $ R_{03}^T(q_a) \cdot R_f $ per ottenere la matrice di orientamento del polso sferico $R_{36}(q_b)$. Calcolata la matrice $R_{36}(q_b)$ è possibile risalire (grazie alla cinematica inversa fatta nel capitolo 2: Orientamento inverso del Polso Sferico) ai valori degli ultimi tre giunti $q_4,q_5,q_6$ necessari per determinare l'orientamento del polso sferico.
+
+\subsection{Conclusione}
+Attraverso la conoscenza di $q_a$ e $q_b$ sono in grado di determinare l'orientamento e la posizione del punto terminale del robot:\\
+
+		$\left\{ \begin{array} {ll} %ll (doppia elle) mi permette di inserire i due elementi presenti all'interno 			della parentesi graffa entrambi a sinistra
+		R_f  = R_{03}(q_a) \cdot  R_{36}(q_b) \\
+		d_f = R_{03}(q_a) \cdot d_{36}(q_b) + d_{03}(q_a)
+		\end{array}
+		\right.$
 
 \newpage
 
-\section{Puma (Antropomorfo + Polso Sferico)}
+\section{Cinematica inversa completa: Antropomorfo + Polso Sferico (Puma)}
 \subsection{Calcolo posizione disaccoppiata}
-Come prima procediamo calcolando la posizione che il braccio dovra' avere dati:
+Avendo già calcolato le due costanti che permettono il disaccoppiamento polso-struttura portante possiamo dire subito che: dati
+
 \begin{center}
- $d_f=\begin{pmatrix}{{\mathit{df}}_1}\\
+$d_f=\begin{pmatrix}{{\mathit{df}}_1}\\
 {{\mathit{df}}_2}\\
 {{\mathit{df}}_3}\end{pmatrix}$ e $R_f=\begin{pmatrix}{r_{11}} & {r_{12}} & {r_{13}}\\
 {r_{21}} & {r_{22}} & {r_{23}}\\
 {r_{31}} & {r_{32}} & {r_{33}}\end{pmatrix}$
 \end{center}
 
-L'equazione per ottenere le coordinate obiettivo della struttura e':
+\begin{flushleft}
+dove $d_f$ è il vettore posizione del punto terminale del robot completo di Stanford (manipolatore + polso sferico), ricavato con la cinematica diretta del robot, rispetto al sistema di riferimento inerziale e $R_f$ è la matrice di rotazione che indica l'orientamento del punto terminale del robot completo di Stanford rispetto al sistema di riferimento inerziale. \\
+L'equazione per ottenere le variabili $q_a$ che servono per posizionare il punto terminale dell'antropomorfo (cioè il polso sferico, infatti con $d_f- R_f \cdot d_1$ mi trovo sul polso) rispetto al sistema di riferimento di base è:
+\end{flushleft}
+
 \begin{center}
 $d_f- R_f \cdot d_1 = R_{03}(q_a) \cdot d_0 + d_{03}(q_a)$ 
+\end{center}
 
-Ovvero sia, svolgendo il calcolo:
+Svolgendo i calcoli:
 
+\begin{center}
 $\begin{pmatrix}{{\mathit{df}}_1}-{L_6} {r_{13}}\\
 {{\mathit{df}}_2}-{L_6} {r_{23}}\\
 {{\mathit{df}}_3}-{L_6} {r_{33}}\end{pmatrix}=\begin{pmatrix}{D_2} {c_{{q_1}}} {c_{{q_2}}}+{D_3} {c_{{q_1}}} {c_{{q_2}}} {c_{{q_3}}}+-{D_3} {c_{{q_1}}} {s_{{q_2}}} {s_{{q_3}}}\\
@@ -261,7 +318,7 @@ $\begin{pmatrix}{{\mathit{df}}_1}-{L_6} {r_{13}}\\
 {L_1}+{D_2} {s_{{q_2}}}+{D_3} {s_{{q_2}}} {c_{{q_3}}}+{D_3} {c_{{q_2}}} {s_{{q_3}}}\end{pmatrix}$
 \end{center}
 
-Applicando la cinematica inversa dell'antropomorfo viene quindi fuori:
+Applicando la cinematica inversa dell'Antropomorfo ricavo il valore delle variabili di giunto che servono per posizionare il polso sferico rispetto al sistema di riferimento di base:
 \begin{itemize}
 %\item $q_3 = \sqrt{(df_1-L_6 r_{13})^2 +(df_2-L_6 r_{23})^2+(df_3-L_6 r_{33}-L_1)-L_2^2}$
 \item $q_3 = atan2(\pm\sqrt{1-a^2},a) \leftarrow a=\dfrac{x^2+y^2+(z-L_1)^2-D_3^2-D_2^2}{2D_2D_3}$
@@ -272,8 +329,16 @@ Applicando la cinematica inversa dell'antropomorfo viene quindi fuori:
 \end{itemize}
 
 \subsection{Calcolo Orientamento disaccoppiato}
-Arrivati qui basta calcolare il risultato di $ R_{03}^T(q_a) \cdot R $ per ottenere la matrice da eguagliare a $R_{36}(q_b)$
-Calcolato il risultato e' possibile risalire quindi anche ai valori degli ultimi 3 giunti
+Arrivati a questo punto basta calcolare il risultato di $ R_{03}^T(q_a) \cdot R_f $ per ottenere la matrice di orientamento del polso sferico $R_{36}(q_b)$. Calcolata la matrice $R_{36}(q_b)$ è possibile risalire (grazie alla cinematica inversa fatta nel capitolo 2: Orientamento inverso del Polso Sferico) ai valori degli ultimi tre giunti $q_4,q_5,q_6$ necessari per determinare l'orientamento del polso sferico.
+
+\subsection{Conclusione}
+Attraverso la conoscenza di $q_a$ e $q_b$ sono in grado di determinare l'orientamento e la posizione del punto terminale del robot:\\
+
+		$\left\{ \begin{array} {ll} %ll (doppia elle) mi permette di inserire i due elementi presenti all'interno 			della parentesi graffa entrambi a sinistra
+		R_f  = R_{03}(q_a) \cdot  R_{36}(q_b) \\
+		d_f = R_{03}(q_a) \cdot d_{36}(q_b) + d_{03}(q_a)
+		\end{array}
+		\right.$
 
 
 
