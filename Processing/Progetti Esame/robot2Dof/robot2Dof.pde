@@ -1,10 +1,57 @@
+import grafica.*;
+public GPlot plot2;
+
+int xOff, yOff;
+int nPointPlot=500;
+GPointsArray q1p = new GPointsArray(nPointPlot);
+GPointsArray q2p = new GPointsArray(nPointPlot);
+GPointsArray qr1p = new GPointsArray(nPointPlot);
+GPointsArray qr2p = new GPointsArray(nPointPlot);
+GPointsArray qn1p = new GPointsArray(nPointPlot);
+GPointsArray qn2p = new GPointsArray(nPointPlot);
+GPointsArray qg1p = new GPointsArray(nPointPlot);
+GPointsArray qg2p = new GPointsArray(nPointPlot);
 
 void setup() {
-  size(800, 800);
+  size(800, 600);
+  xOff=width/4;
+  yOff=2*height/3;
+  plot2 = new GPlot(this);
+  plot2.setPos(width/2, height/3);
+  plot2.setDim(250, 250);
+  plot2.getTitle().setText("Link state");
+  plot2.getXAxis().getAxisLabel().setText("t");
+  plot2.getYAxis().getAxisLabel().setText("Rad");
+
+  plot2.addLayer("objQ1", q1p);
+  plot2.getLayer("objQ1").setPointColor(cRfin);
+  plot2.addLayer("objQ2", q2p);
+  plot2.getLayer("objQ2").setPointColor(cRfin);
+
+  plot2.addLayer("inverseQ1", qr1p);
+  plot2.getLayer("inverseQ1").setPointColor(cRinv);
+  plot2.addLayer("inverseQ2", qr2p); 
+  plot2.getLayer("inverseQ2").setPointColor(cRinv);
+
+  plot2.addLayer("newtonQ1", qn1p);
+  plot2.getLayer("newtonQ1").setPointColor(cRnewton);
+  plot2.addLayer("newtonQ2", qn2p);
+  plot2.getLayer("newtonQ2").setPointColor(cRnewton);
+
+  plot2.addLayer("gradientQ1", qg1p); 
+  plot2.getLayer("gradientQ1").setPointColor(cRGradiente);
+  plot2.addLayer("gradientQ2", qg1p);
+  plot2.getLayer("gradientQ2").setPointColor(cRGradiente);
+
+  //plot2.activateZooming(1.5);
 }
-int L1=150;  //lunghezza link1
-int L2=125;  //lunghezza link2
+
+//Geometric variable
+int L1=100;  //lunghezza link1
+int L2=75;  //lunghezza link2
 int R=30;    //raggio link
+
+//State variable
 float q1, q2;
 float q1r, q2r;  //obiettivo da cinematica inversa
 float q1n=1, q2n=1;  //obiettivo da algoritmo di newton
@@ -15,22 +62,24 @@ float kp=0.05; //k controllo proporzionale
 float gomito=1;
 float x=50, y=50;
 
+//Color reconition
 color cRed=color(255, 0, 0, 125);
 color cGreen=color(0, 255, 0, 125);
-
 color cRfin=color(60, 125);
 color cRinv=color(0, 255, 0, 125);
 color cRnewton=color(50, 75, 230, 125);
 color cRGradiente=color(150, 75, 230, 125);
 
+//Plotting variable
+int k=0;  //numero di iterazioni
 void draw() {
   // Graphic command
   background(#B9FDFF);
 
   // Input data
   if (mousePressed) {
-    x=mouseX-width/2;
-    y=-(mouseY-height/2);
+    x=mouseX-xOff;
+    y=-(mouseY-yOff);
   }
 
   //Inverse Cinematic
@@ -82,8 +131,8 @@ void draw() {
   //Gradient algoritm
   /*
   Si incarta quando ci si mette (apposta) esattamente dall'altro lato di una singolarità
-  In questa condizione rallenta fino a fermarsi, ma NON DIVERGE
-  */
+   In questa condizione rallenta fino a fermarsi, ma NON DIVERGE
+   */
   float q1GNew, q2GNew;
   float[][] jt = new float[2][2];
   float[] errG = new float[2]; //P-h(q)
@@ -106,9 +155,61 @@ void draw() {
   q1G+=q1GNew/5000; //incremento troppo grande
   q2G+=q2GNew/5000; //incremento troppo grandes
 
+  //data plot
+  // Add a new point to the second plot if the mouse moves significantly
+  q1p.add(k, q1);
+  q2p.add(k, q2);
+  qr1p.add(k, q1r);
+  qr2p.add(k, q2r);
+  qn1p.add(k, q1n);
+  qn2p.add(k, q2n);
+  qg1p.add(k, q1G);
+  qg2p.add(k, q2G);
+  if (k>300) {
+    q1p.remove(0);
+    q2p.remove(0);
+    qr1p.remove(0);
+    qr2p.remove(0);
+    qn1p.remove(0);
+    qn2p.remove(0);
+    qg1p.remove(0);
+    qg2p.remove(0);
+  }
+
+  plot2.setPoints(q1p);
+  plot2.getLayer("objQ1").setPoints(q1p);
+  plot2.getLayer("objQ2").setPoints(q2p);
+
+  plot2.getLayer("inverseQ1").setPoints(qr1p);
+  plot2.getLayer("inverseQ2").setPoints(qr2p);
+
+  plot2.getLayer("newtonQ1").setPoints(qn1p);
+  plot2.getLayer("newtonQ2").setPoints(qn2p);
+
+  plot2.getLayer("gradientQ1").setPoints(qg1p);
+  plot2.getLayer("gradientQ2").setPoints(qg2p);
+
+
+
+  // Draw the plot  
+  plot2.beginDraw();
+  plot2.drawBackground();
+  plot2.drawBox();
+  plot2.drawXAxis();
+  plot2.drawYAxis();
+  plot2.drawTitle();
+  plot2.drawGridLines(GPlot.BOTH);
+  plot2.drawLines();
+  //plot2.drawPoints(star);
+  plot2.endDraw();
+  plot2.activatePanning(); // Activate the panning (only for the first plot)
+
+  k++;    //iterazione finita
+
   // Robot draw
   pushMatrix();
-  translate(width/2, height/2);
+  translate(xOff, yOff);
+  println(xOff);
   scale(1, -1);
 
   SR(50);
@@ -152,17 +253,18 @@ void draw() {
   legend+="Algoritmo del Gradiente discreto:\n";
   pushStyle();
   textAlign(RIGHT);
-  textLeading(15);  // Set leading to 10
+  textSize(15);
+  textLeading(16);  // Set leading to 10
   fill(50);
   text(legend, width-50, 20);
   fill(cRfin);
-  rect(width-40, 20-textAscent(), textAscent(), textAscent());
+  rect(width-40, 20-textAscent()-5, textAscent(), textAscent());
   fill(cRinv);
   rect(width-40, 20, textAscent(), textAscent());
   fill(cRnewton);
-  rect(width-40, 20+textAscent(), textAscent(), textAscent());
+  rect(width-40, 20+textAscent()+5, textAscent(), textAscent());
   fill(cRGradiente);
-  rect(width-40, 20+2*textAscent(), textAscent(), textAscent());
+  rect(width-40, 20+2*textAscent()+10, textAscent(), textAscent());
   popStyle();
 
   //pushStyle();
