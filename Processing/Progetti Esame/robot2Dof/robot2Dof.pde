@@ -8,8 +8,9 @@ int R=30;    //raggio link
 float q1, q2;
 float q1r, q2r;  //obiettivo da cinematica inversa
 float q1n=1, q2n=1;  //obiettivo da algoritmo di newton
+float q1G=1, q2G=1;  //obiettivo da algoritmo del Gradiente
 float increase=0.5;
-float lamda=0.005;
+float lamda=0.05;
 float kp=0.05; //k controllo proporzionale
 float gomito=1;
 float x=50, y=50;
@@ -20,6 +21,7 @@ color cGreen=color(0, 255, 0, 125);
 color cRfin=color(60, 125);
 color cRinv=color(0, 255, 0, 125);
 color cRnewton=color(50, 75, 230, 125);
+color cRGradiente=color(150, 75, 230, 125);
 
 void draw() {
   // Graphic command
@@ -38,8 +40,15 @@ void draw() {
   float b2=sin(q2r)*L2;
   q1r=atan2(-b2*x+b1*y, b1*x+b2*y);
 
+  // Dinamic proportional Controll
+  q1=q1-kp*(q1-q1r);
+  q2=q2-kp*(q2-q2r);
+
+  //Numerical algoritm
   //Newton Algoritm
   float q1nNew, q2nNew;
+  float[][] jInv = new float[2][2];
+  float[] errN = new float[2]; //P-h(q)
 
 
   //variabili di calcolo di appoggio:
@@ -47,7 +56,6 @@ void draw() {
   float numY = (y-L2*sin(q2n+q1n)-L1*sin(q1n));
   float numX = (x-L2*cos(q2n+q1n)-L1*cos(q1n));
 
-  float[][] jInv = new float[2][2];
 
   jInv[0][0]=cos(q2n+q1n)/(L1*denTrig);
   jInv[0][1]=sin(q2n+q1n)/(L1*denTrig);
@@ -57,39 +65,51 @@ void draw() {
   float numX2 = (L2*cos(q2n+q1n)+L1*cos(q1n));
 
   jInv[1][0]=-numX2/(L1*L2*denTrig);
-  jInv[1][0]=-numY2/(L1*L2*denTrig);
+  jInv[1][1]=-numY2/(L1*L2*denTrig);
   println("jInv[1][0]="+jInv[1][0] + " jInv[1][1]=" + jInv[1][1]);
 
-  float[]err = new float[2]; //P-h(q)
-  err[0]= x-L2*cos(q2n+q1n)-L1*cos(q1n);
-  err[1]= y-L2*sin(q2n+q1n)-L1*sin(q1n);
-  println("err[0]="+err[0] + " err[1]=" + err[1]);
 
+  errN[0]= x-L2*cos(q2n+q1n)-L1*cos(q1n);
+  errN[1]= y-L2*sin(q2n+q1n)-L1*sin(q1n);
+  println("errN[0]="+errN[0] + " errN[1]=" + errN[1]);
 
-
-  q1nNew = (lamda/2) * (jInv[0][0] * err[0] + jInv[0][1] * err[1]);
-  q2nNew = (lamda/2) * (jInv[1][0] * err[0] + jInv[1][1] * err[1]);
+  q1nNew = (lamda/2) * (jInv[0][0] * errN[0] + jInv[0][1] * errN[1]);
+  q2nNew = (lamda/2) * (jInv[1][0] * errN[0] + jInv[1][1] * errN[1]);
+  println("q1nNew="+q1nNew + " q2nNew=" + q2nNew);
   q1n+=q1nNew;
   q2n+=q2nNew;
-  println("q1nNew="+q1nNew + " q2nNew=" + q2nNew);
 
-  //println("denTrig="+denTrig + " numY=" + numY+" numX="+numX);
-  //println("numY2="+numY2 + " numX2=" + numX2);
-  //q1nNew = q1n + (lamda/2) * 1/(((sin(q2n+q1n)*numY)/(L1*denTrig)) + ((cos(q2n+q1n)*numX)/(L1*denTrig))); 
+  //Gradient algoritm
+  /*
+  Si incarta quando ci si mette (apposta) esattamente dall'altro lato di una singolarità
+  In questa condizione rallenta fino a fermarsi, ma NON DIVERGE
+  */
+  float q1GNew, q2GNew;
+  float[][] jt = new float[2][2];
+  float[] errG = new float[2]; //P-h(q)
 
-  //q2nNew = q2n + (lamda/2) * 1/((-(numY2*numY)/(L1*L2*denTrig)) - ((numX2*numX)/(L1*L2*denTrig))); 
+  jt[0][0]=-L2*sin(q2G+q1G)-L1*sin(q1G);
+  jt[0][1]= L2*cos(q2G+q1G)+L1*cos(q1G);
+  println("jt[0][0]="+jt[0][0] + " jt[0][1]=" + jt[0][1]);
 
+  jt[1][0]=-L2*sin(q2G+q1G);
+  jt[1][1]= L2*cos(q2G+q1G);
+  println("jt[1][0]="+jt[1][0] + " jt[1][1]=" + jt[1][1]);
 
+  errG[0]= x-L2*cos(q2G+q1G)-L1*cos(q1G);
+  errG[1]= y-L2*sin(q2G+q1G)-L1*sin(q1G);
+  println("errG[0]="+errG[0] + " errG[1]=" + errG[1]);
 
-  // Dinamic proportional Controll
-  q1=q1-kp*(q1-q1r);
-  q2=q2-kp*(q2-q2r);
+  q1GNew = (lamda/2) * (jt[0][0] * errG[0] + jt[0][1] * errG[1]);
+  q2GNew = (lamda/2) * (jt[1][0] * errG[0] + jt[1][1] * errG[1]);
+  println("q1GNew="+q1GNew + " q1GNew=" + q1GNew);
+  q1G+=q1GNew/5000; //incremento troppo grande
+  q2G+=q2GNew/5000; //incremento troppo grandes
 
   // Robot draw
   pushMatrix();
   translate(width/2, height/2);
   scale(1, -1);
-  //rotate(PI/2);
 
   SR(50);
   fill(255, 125);
@@ -106,6 +126,7 @@ void draw() {
   robot(q1r, q2r, cRfin);
   robot(q1, q2, cRinv);
   robot(q1n, q2n, cRnewton);
+  robot(q1G, q2G, cRGradiente);
 
   popMatrix();
 
@@ -115,8 +136,8 @@ void draw() {
   stats+= "L1="+L1+"\n";
   stats+= "L2="+L2+"\n";
   stats+= "x="+round(x*rd)/rd+"   y="+round(y*rd)/rd+"\n";
-  stats+= "q1="+round(q1*rd)/rd+"rad   q1r="+round(q1r*rd)/rd+"rad     q1n="+round(q1n*rd)/rd+"rad"+"\n";
-  stats+= "q2="+round(q2*rd)/rd+"rad   q2r="+round(q2r*rd)/rd+"rad     q2n="+round(q2n*rd)/rd+"rad"+"\n";
+  stats+= "q1="+round(q1*rd)/rd+"rad   q1r="+round(q1r*rd)/rd+"rad     q1n="+round(q1n*rd)/rd+"rad     q1G="+round(q1G*rd)/rd+"rad"+"\n";
+  stats+= "q2="+round(q2*rd)/rd+"rad   q2r="+round(q2r*rd)/rd+"rad     q2n="+round(q2n*rd)/rd+"rad     q2G="+round(q2G*rd)/rd+"rad"+"\n";
   stats+= "inc="+round(increase*rd)/rd+"     kp="+round(kp*rd)/rd+"     lambda="+round(lamda*rd)/rd+"\n";
   pushStyle();
   fill(50);
@@ -128,6 +149,7 @@ void draw() {
   String legend = "Posizione finale cin inv:\n";
   legend+="Movimento legge proporzionale:\n";
   legend+="Algoritmo di newton discreto:\n";
+  legend+="Algoritmo del Gradiente discreto:\n";
   pushStyle();
   textAlign(RIGHT);
   textLeading(15);  // Set leading to 10
@@ -139,6 +161,8 @@ void draw() {
   rect(width-40, 20, textAscent(), textAscent());
   fill(cRnewton);
   rect(width-40, 20+textAscent(), textAscent(), textAscent());
+  fill(cRGradiente);
+  rect(width-40, 20+2*textAscent(), textAscent(), textAscent());
   popStyle();
 
   //pushStyle();
@@ -198,6 +222,7 @@ void keyPressed() {
   if (key=='r') {  //state reset
     y=x=60;
     q1n=q2n=1;
+    q1G=q2G=1;
     increase=0.5;
     kp=0.05;
     gomito=1;
