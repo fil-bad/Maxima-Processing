@@ -1,0 +1,19 @@
+--Processing
+1)Modifica 2 Dof
+2)Modifica D-H 3D
+3)Sulle strutture 2D variabili desiderate e attuali, testuali e con oscilloscopio
+4)Strutture 3D, cineamatica inversa su tutte le strutture portanti, fornendo la tabella di D-H (per il disegno)
+
+--Progetto da fare in processing
+
+
+--Matlab
+1)Lezione 21:su un 2Dof planare
+ -Implementare cinematica inversa
+ -Implementare algoritmo di Newton e gradiente
+ -Implementare un algoritmo numerico ibrido
+ 
+2)Simulare i 2 sistemi meccanici lineari, matlab e simulink
+
+--Maxima
+1) Dinamica di un robot dato D-H
