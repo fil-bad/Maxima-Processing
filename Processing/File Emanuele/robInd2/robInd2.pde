@@ -7,7 +7,7 @@ int R=30;    //raggio link
 float q1, q2;
 float q1r, q2r;
 float increase=0.5;
-float step=0.5;
+float step=0.05;
 float gomito=1;
 float x, y;
 
