@@ -1,5 +1,4 @@
 import processing.core.*;
-import java.lang.Object;
 
 public class Test_3D extends PApplet {
 
@@ -21,15 +20,15 @@ public class Test_3D extends PApplet {
     private float passo = (float) 0.5;  // vede i numeri con la virgola solo come double
     private int giunto = 1;
 
- //  private int[] hexToRGB(String colorStr) {
- //      // NECESSARIA, Java non può prendere un Hex direttamente, ma deve scomporre
- //      int[] RGBArray = new int[3];
- //
- //      RGBArray[0] =  Integer.valueOf( colorStr.substring( 1, 3 ), 16 );
- //      RGBArray[1] =  Integer.valueOf( colorStr.substring( 3, 5 ), 16 );
- //      RGBArray[2] =  Integer.valueOf( colorStr.substring( 5, 7 ), 16 );
- //      return RGBArray;
- //  }
+    private int[] hexToRGB(String colorStr) {
+        // NECESSARIA, Java non può prendere un Hex direttamente, ma deve scomporre
+        int[] RGBArray = new int[3];
+
+        RGBArray[0] =  Integer.valueOf( colorStr.substring( 1, 3 ), 16 );
+        RGBArray[1] =  Integer.valueOf( colorStr.substring( 3, 5 ), 16 );
+        RGBArray[2] =  Integer.valueOf( colorStr.substring( 5, 7 ), 16 );
+        return RGBArray;
+    }
 
 
 
@@ -49,7 +48,7 @@ public class Test_3D extends PApplet {
     public void draw() {
         // TODO: Do your drawing for each frame here
         clear();
-        int[] rgbBackGr = {150, 252, 250};//hexToRGB("#96FCFA");
+        int[] rgbBackGr = hexToRGB("#96FCFA");
         background(rgbBackGr[0], rgbBackGr[1], rgbBackGr[2]);
         translate(225, 255, -200);
         rotateY(-angY);
@@ -83,7 +82,7 @@ public class Test_3D extends PApplet {
     void link(float theta, float d, float alfa, float a, int alpha) {
         //disegno seguendo l'ordine dei passi di D-H
 
-        int[] rgbFillBody = {82, 190, 255};//hexToRGB("#52BEFF");
+        int[] rgbFillBody = hexToRGB("#52BEFF");
         fill(rgbFillBody[0], rgbFillBody[1], rgbFillBody[2], alpha);
         rotateZ(theta);
         noStroke();
@@ -96,7 +95,7 @@ public class Test_3D extends PApplet {
         sphere(25);
         stroke(0);
 
-        int[] rgbFillHead = {255, 82, 82};//hexToRGB("#FF5252");
+        int[] rgbFillHead = hexToRGB("#FF5252");
         fill(rgbFillHead[0], rgbFillHead[1], rgbFillHead[2], alpha);
         rotateX(alfa);
         noStroke();

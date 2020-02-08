@@ -15,5 +15,10 @@
  
 2)Simulare i 2 sistemi meccanici lineari, matlab e simulink
 
+3)Visione artificiale
+4) Lez.34, legge bang-bang su plot di una pallina lungo curve di commutazione.
+
+
+
 --Maxima
 1) Dinamica di un robot dato D-H
