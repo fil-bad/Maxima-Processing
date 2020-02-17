@@ -1,0 +1,12 @@
+Separating Axis Theorem (SAT) (we'll use this to find if two polygons intersect):
+https://www.youtube.com/watch?v=Ap5eBYKlGDo
+
+Code for SAT (see the Java comment):
+https://stackoverflow.com/questions/10962379/how-to-check-intersection-between-2-rotated-rectangles
+
+For partitioning space:
+https://en.wikipedia.org/wiki/Quadtree
+
+So, we start with the largest partition; each time we find an intersection, we use the QuadTree approach
+in order to reduce the size of the partition. On the reduced one, we apply recursively this method (until
+the size of the cell is equal or below that of the robot).
