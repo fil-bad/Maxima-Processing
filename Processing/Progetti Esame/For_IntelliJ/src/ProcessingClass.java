@@ -1,10 +1,10 @@
 
 import processing.core.*;
 
-public class ExampleApplet extends PApplet {
+public class ProcessingClass extends PApplet {
 
     public static void main(String[] args) {
-        PApplet.main("ExampleApplet");
+        PApplet.main("ProcessingClass");
     }
 
     @Override

@@ -1,5 +1,5 @@
 <component name="libraryTable">
-  <library name="lib">
+  <library name="Processing">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/gluegen-rt-natives-macosx-universal.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/jogl-all-natives-linux-i586.jar!/" />

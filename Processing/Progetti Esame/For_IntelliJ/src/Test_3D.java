@@ -3,7 +3,7 @@ import processing.core.*;
 public class Test_3D extends PApplet {
 
     public static void main(String[] args) {
-        PApplet.main("Test_3D");
+        PApplet.main("Test_3D");    // è una reflaction, serve il nome del file processing
     }
 
     //il prof traduce gli spostamenti del mouse come rotazioni
