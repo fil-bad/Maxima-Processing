@@ -2,84 +2,106 @@ package processingElement;
 
 import processing.core.PApplet;
 
-public class CommonDraw extends PApplet {
+import java.util.concurrent.ExecutionException;
 
-    private static CommonDraw instance = new CommonDraw();
+public class CommonDraw {
 
-    private CommonDraw() {
+    private static CommonDraw instance = null;
+    PApplet win = null;
+
+    private CommonDraw(PApplet win) {
+        this.win = win;
     }
 
-    public static CommonDraw getInstance() {
+    public static CommonDraw getInstance() throws RuntimeException {
+        if (instance == null)
+            throw new RuntimeException("Impossible generate object, unknown windows (PApllet)");
         return instance;
     }
 
+    public static CommonDraw getInstance(PApplet win) {
+        if (instance == null)
+            instance = new CommonDraw(win);
+        return instance;
+    }
+
+    public int[] hexToRGB(String colorStr) {
+        // NECESSARIA, Java non può prendere un Hex direttamente, ma deve scomporre
+        int[] RGBArray = new int[3];
+
+        RGBArray[0] =  Integer.valueOf( colorStr.substring( 1, 3 ), 16 );
+        RGBArray[1] =  Integer.valueOf( colorStr.substring( 3, 5 ), 16 );
+        RGBArray[2] =  Integer.valueOf( colorStr.substring( 5, 7 ), 16 );
+        return RGBArray;
+    }
+
     // Funzione visualizzazione asse
-    private int p = 100;   //profondità
-    private int b = 10;    //base
-    private int h = 10;     //altezza
-    private int lF = 10;   //lunghezza semi lato freccia
+    private int p = 50;   //profondità
+    private int b = 5;    //base
+    private int h = 5;     //altezza
+    private int lF = 5;   //lunghezza semi lato freccia
 
     public void assi(float alfa) {
-        pushStyle();
-        strokeWeight((float) 0.5);
-        fill(255, 0, 0, alfa); // rosso = x
-        pushMatrix();
-        rotateY(PI / 2);
-        translate(0, 0, p >> 1);  //disegno in base
-        box(h, b, p);
-        translate(0, 0, p >> 1);  //sposto origine alla fine
+        win.pushStyle();
+        win.strokeWeight(0.5f);
+        win.fill(255, 0, 0, alfa); // rosso = x
+        win.pushMatrix();
+        win.rotateY(win.PI / 2);
+        win.translate(0, 0, p / 2.0f);  //disegno in base
+        win.box(h, b, p);
+        win.translate(0, 0, p / 2.0f);  //sposto origine alla fine
         piramide(lF);
-        popMatrix();
+        win.popMatrix();
 
-        fill(0, 255, 0, alfa); // verde = y
-        pushMatrix();
-        rotateX(-PI / 2);
-        translate(0, 0, p >> 1);  //disegno in base
-        box(h, b, p);
-        translate(0, 0, p >> 1);  //sposto origine alla fine
+        win.fill(0, 255, 0, alfa); // verde = y
+        win.pushMatrix();
+        win.rotateX(-win.PI / 2.0f);
+        win.translate(0, 0, p / 2.0f);  //disegno in base
+        win.box(h, b, p);
+        win.translate(0, 0, p / 2.0f);  //sposto origine alla fine
         piramide(lF);
-        popMatrix();
+        win.popMatrix();
 
-        fill(0, 0, 255, alfa); // blu = z
-        pushMatrix();
-        translate(0, 0, p >> 1);  //disegno in base
-        box(h, b, p);
-        translate(0, 0, p >> 1);  //sposto origine alla fine
+        win.fill(0, 0, 255, alfa); // blu = z
+        win.pushMatrix();
+        win.translate(0, 0, p / 2.0f);  //disegno in base
+        win.box(h, b, p);
+        win.translate(0, 0, p / 2.0f);  //sposto origine alla fine
         piramide(lF);
-        popMatrix();
-        popStyle();
+        win.popMatrix();
+        win.popStyle();
     }
 
     private void piramide(int h) {
-        beginShape();
-        vertex(-h, -h);
-        vertex(+h, -h);
-        vertex(0, 0, 2 * h);
-        endShape(CLOSE);
+        win.beginShape();
+        win.vertex(-h, -h);
+        win.vertex(+h, -h);
+        win.vertex(0, 0, 2 * h);
+        win.endShape(win.CLOSE);
 
-        beginShape();
-        vertex(+h, -h);
-        vertex(+h, +h);
-        vertex(0, 0, 2 * h);
-        endShape(CLOSE);
+        win.beginShape();
+        win.vertex(+h, -h);
+        win.vertex(+h, +h);
+        win.vertex(0, 0, 2 * h);
+        win.endShape(win.CLOSE);
 
-        beginShape();
-        vertex(+h, +h);
-        vertex(-h, +h);
-        vertex(0, 0, 2 * h);
-        endShape(CLOSE);
+        win.beginShape();
+        win.vertex(+h, +h);
+        win.vertex(-h, +h);
+        win.vertex(0, 0, 2 * h);
+        win.endShape(win.CLOSE);
 
-        beginShape();
-        vertex(-h, +h);
-        vertex(-h, -h);
-        vertex(0, 0, 2 * h);
-        endShape(CLOSE);
+        win.beginShape();
+        win.vertex(-h, +h);
+        win.vertex(-h, -h);
+        win.vertex(0, 0, 2 * h);
+        win.endShape(win.CLOSE);
 
-        beginShape();
-        vertex(-h, -h);
-        vertex(+h, -h);
-        vertex(+h, +h);
-        vertex(-h, +h);
-        endShape(CLOSE);
+        win.beginShape();
+        win.vertex(-h, -h);
+        win.vertex(+h, -h);
+        win.vertex(+h, +h);
+        win.vertex(-h, +h);
+        win.endShape(win.CLOSE);
     }
 }

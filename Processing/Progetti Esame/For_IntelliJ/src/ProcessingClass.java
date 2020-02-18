@@ -23,8 +23,8 @@ public class ProcessingClass extends PApplet {
         clear();
         cameraInit();
 
-        ob = new Box(this, 10,10,10);
-        com = CommonDraw.getInstance();
+        com = CommonDraw.getInstance(this);
+        ob = new Box(this, 50,40,10, color(255,0,0));
     }
 
 
@@ -35,19 +35,15 @@ public class ProcessingClass extends PApplet {
         clear();
         cameraSet();
         pushMatrix();
-        if(com == null)
-            println("nullo");
-        else
-            println("ok");
+
         //com.assi(150);
         popMatrix();
 
         //Oggetti da graficare
         fill(0,255,0);
         box(400,800,1);
-        translate(100,100,0);
-        if(ob == null)
-            println("nullo");
+        translate(100,100,1);
+
         ob.draw();
     }
 
@@ -59,16 +55,6 @@ public class ProcessingClass extends PApplet {
     }
 
 
-
-    private int[] hexToRGB(String colorStr) {
-        // NECESSARIA, Java non può prendere un Hex direttamente, ma deve scomporre
-        int[] RGBArray = new int[3];
-
-        RGBArray[0] =  Integer.valueOf( colorStr.substring( 1, 3 ), 16 );
-        RGBArray[1] =  Integer.valueOf( colorStr.substring( 3, 5 ), 16 );
-        RGBArray[2] =  Integer.valueOf( colorStr.substring( 5, 7 ), 16 );
-        return RGBArray;
-    }
     private float eyeX,eyeY,eyeZ;
     private float centerX,centerY, centerZ;
     private float Zrot;
@@ -87,8 +73,9 @@ public class ProcessingClass extends PApplet {
     }
     private void cameraSet(){
         //Fondale da disegnare
-        int[] rgbBackGr = hexToRGB("#96FCFA");
+        int[] rgbBackGr = com.hexToRGB("#96FCFA");
         background(rgbBackGr[0], rgbBackGr[1], rgbBackGr[2]);
+//        background(color("#96FCFA"));
         directionalLight(223, 126, 126, 0, 0, (float) 0.7);
         ambientLight(200, 200, 200);
 

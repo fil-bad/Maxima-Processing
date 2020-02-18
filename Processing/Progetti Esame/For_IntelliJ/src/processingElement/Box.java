@@ -4,23 +4,33 @@ import processing.core.PApplet;
 import org.ejml.simple.SimpleMatrix;
 
 public class Box implements Obj3D, Obstacle {
-    private int w,l,h;
     private PApplet win;
-    private CommonDraw common = CommonDraw.getInstance();
-    public Box (PApplet win, int w, int l, int h) {
+    private CommonDraw com = CommonDraw.getInstance();
+
+    private int w,l,h;
+    private int color;
+    public Box (PApplet win, int w, int l, int h, int color) {
         this.w = w;
         this.l = l;
         this.h = h;
         this.win = win;
+        this.color = color;
     }
 
     @Override
     public void draw() {
-        //pushMatrix();
-        //translate(w/2.0f,l/2.0f,h/2.0f);
+        win.pushMatrix();
+        win.pushStyle();
+
+        win.translate(w/2.0f,l/2.0f,h/2.0f);
+        win.fill(color);
         win.box(w,l,h);
-        //common.assi(100);
-        //popMatrix();
+        com.assi(100);
+        win.translate(0,0,h);
+        com.assi(100);
+
+        win.popStyle();
+        win.popMatrix();
     }
 
     @Override
