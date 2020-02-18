@@ -4,9 +4,10 @@ import org.ejml.dense.row.DMatrixComponent;
 
 public interface Obj3D {
     void draw();
+    void highlight(boolean b);
+
     SimpleMatrix getD();         // Position risp R0
-    SimpleMatrix getR();         // Rotation risp R0
+    double getR();         // Rotation risp R0
     void setD(SimpleMatrix m);   // Position risp R0
-    void setR(SimpleMatrix m);   // Rotation risp R0
-    void highlight();
+    void setR(double rad);       // Rotation risp R0
 }

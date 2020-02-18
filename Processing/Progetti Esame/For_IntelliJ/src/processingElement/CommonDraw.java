@@ -1,5 +1,6 @@
 package processingElement;
 
+import org.ejml.simple.SimpleMatrix;
 import processing.core.PApplet;
 
 import java.util.concurrent.ExecutionException;
@@ -103,5 +104,12 @@ public class CommonDraw {
         win.vertex(+h, +h);
         win.vertex(-h, +h);
         win.endShape(win.CLOSE);
+    }
+
+    public void setEnvMatrix(SimpleMatrix Q){
+        win.applyMatrix((float)Q.get(0,0),(float)Q.get(0,1),(float)Q.get(0,2),(float)Q.get(0,3),
+                (float)Q.get(1,0),(float)Q.get(1,1),(float)Q.get(1,2),(float)Q.get(1,3),
+                (float)Q.get(2,0),(float)Q.get(2,1),(float)Q.get(2,2),(float)Q.get(2,3),
+                (float)Q.get(3,0),(float)Q.get(3,1),(float)Q.get(3,2),(float)Q.get(3,3));
     }
 }
