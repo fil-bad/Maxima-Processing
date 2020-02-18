@@ -369,4 +369,20 @@ robot_antropomorfo:matrix(
     [q_6,L_6,0,0]
     )$
 
+/* [wxMaxima: section start ]
+Spostamento nel baricentro
+   [wxMaxima: section end   ] */
+
+
+MatrBar(vett,cost):=block( /*matrice che mi permette di spostarte il sistema di riferimento del corpo considerato nel suo baricentro*/ 
+    [ MatrB, Id:diagmatrix(3,1) ],
+    /*identifico la matrice che mi permetterà di spostarmi nel baricentro del corpo considerato*/
+    MatrB: matrix(
+        [ Id, (vett*cost)], /*traslo di una quantità fissa d lungo le coordinate di un vettore v le cui coordinate le decido io */
+        [ zeromatrix(1,  length(Id)) , matrix([1]) ]
+    ),
+    MatrB: mat_unblocker(MatrB),
+    return(MatrB)
+)$
+
 
