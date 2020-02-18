@@ -6,23 +6,13 @@ import java.util.List;
 
 public abstract class Sat {
 
-    public static Boolean hasCollided(Polygon poly1, Polygon poly2, Double maxDist) {
+    public static Boolean haveCollided(Polygon poly1, Polygon poly2) {
 
         Vertex[] vert_poly1 = poly1.getVertices(); // this two lines were added due to compatibility reasons
         Vertex[] vert_poly2 = poly2.getVertices();
-
         // Do an optimization check using the maxDist
-        if (maxDist != null) {
-            if (distance(vert_poly1, vert_poly2) <= Math.pow(maxDist, 2)) {
-                // Collision is possible so run SAT on the polys
-                return runSAT(vert_poly1, vert_poly2);
-            } else {
-                return false;
-            }
-        } else {
-            // No maxDist so run SAT on the polys
-            return runSAT(vert_poly1, vert_poly2);
-        }
+        // No maxDist so run SAT on the polys (we deleted this "optimization", we preferred to run every case)
+        return runSAT(vert_poly1, vert_poly2);
     }
 
     private static Boolean runSAT(Vertex[] poly1, Vertex[] poly2) {
@@ -40,7 +30,7 @@ public abstract class Sat {
                 return false;
             }
         }
-
+        // todo: perhaps here we have to insert the containment part
         // The polys overlap on all axes so they must be touching
         return true;
     }
@@ -71,13 +61,6 @@ public abstract class Sat {
     }
 
     /**
-     * Returns the distance the two vectors
-     */
-    private static double distance(Vertex[] poly1, Vertex[] poly2) {
-        return Math.pow(poly1[1].getX() - poly2[0].getX(), 2) + Math.pow(poly1[1].getY() - poly2[0].getY(), 2);
-    }
-
-    /**
      * Returns a vector showing how much of the poly lies along the axis
      */
     private static Vertex project(Vertex[] poly, Vertex axis) {
@@ -95,4 +78,19 @@ public abstract class Sat {
         return projection1.getX() <= projection2.getY() &&
                 projection2.getX() <= projection1.getY();
     }
+
+    public static void main(String[] args) {
+        // creating two polygons
+        Polygon a = new Polygon(new Vertex(10,10), new Vertex(10,100), new Vertex(100,100),new Vertex(100,10));
+        Polygon b = new Polygon(new Vertex(20,20), new Vertex(20,120), new Vertex(120,120),new Vertex(120,20));
+        // they are two squares which overlaps
+        a.printVertices();
+        b.printVertices();
+        System.out.println("Do a & b collide? " + haveCollided(a,b));
+        // now the entire polygon c is contained in a
+        Polygon c = new Polygon(new Vertex(30,30), new Vertex(30,90), new Vertex(90,90),new Vertex(90,30));
+        c.printVertices();
+        System.out.println("Do a & c collide? " + haveCollided(a,c));
+    }
+
 }
