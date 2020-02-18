@@ -8,9 +8,9 @@ import processing.core.PApplet;
 public class Main extends Application {
 
     public static void main(String[] args) {
-        PApplet.main("Test_3D");
-        //PApplet.main("ProcessingClass");
-        launch(args);
+//        PApplet.main("Test_3D");
+        PApplet.main("ProcessingClass");
+        //launch(args);
     }
 
     @Override

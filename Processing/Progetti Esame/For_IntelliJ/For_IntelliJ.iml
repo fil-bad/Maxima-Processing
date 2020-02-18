@@ -9,5 +9,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Processing" level="project" />
     <orderEntry type="library" name="JavaFx" level="project" />
+    <orderEntry type="library" name="ejml-v0" level="project" />
   </component>
 </module>
