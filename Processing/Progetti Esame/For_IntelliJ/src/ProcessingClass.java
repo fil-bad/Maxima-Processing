@@ -17,6 +17,7 @@ public class ProcessingClass extends PApplet {
 
     Box ob;
     CommonDraw com;
+    Terra gnd;
     @Override
     public void setup() {
         // TODO: Your custom drawing and setup on applet start belongs here
@@ -24,7 +25,10 @@ public class ProcessingClass extends PApplet {
         cameraInit();
 
         com = CommonDraw.getInstance(this);
+        gnd = new Terra(this,800,400,color(101,67,33));
+
         ob = new Box(this, 50,40,10, color(255,0,0));
+
     }
 
 
@@ -34,16 +38,14 @@ public class ProcessingClass extends PApplet {
         // TODO: Do your drawing for each frame here
         clear();
         cameraSet();
-        pushMatrix();
-
-        //com.assi(150);
-        popMatrix();
 
         //Oggetti da graficare
-        fill(0,255,0);
-        box(400,800,1);
-        translate(100,100,1);
+        //fill(0,255,0);
+        gnd.draw();
+        com.assi(255);
+//        box(400,800,1);
 
+        translate(100,100,1);
         ob.draw();
     }
 
@@ -73,9 +75,7 @@ public class ProcessingClass extends PApplet {
     }
     private void cameraSet(){
         //Fondale da disegnare
-        int[] rgbBackGr = com.hexToRGB("#96FCFA");
-        background(rgbBackGr[0], rgbBackGr[1], rgbBackGr[2]);
-//        background(color("#96FCFA"));
+        background(color(0x96FCFA));
         directionalLight(223, 126, 126, 0, 0, (float) 0.7);
         ambientLight(200, 200, 200);
 
@@ -94,7 +94,7 @@ public class ProcessingClass extends PApplet {
             eyeX = centerX + x * d;
             eyeY = centerY + y * d;
             eyeZ = centerZ + z * d;
-            Zrot += (mouseX - pmouseX)/50.0;
+            Zrot += (mouseX - pmouseX)/200.0;
 
         } else if (mousePressed && (mouseButton == RIGHT)) {    // traslazione xy
             eyeX -= (mouseX - pmouseX)/2.0;
@@ -112,7 +112,7 @@ public class ProcessingClass extends PApplet {
                 0.0f, 1.0f, 0.0f); // upX, upY, upZ
 
         //Ortonormale Destro
-        rotateZ(PI/2);
+        //rotateZ(PI/2);
         scale(1,-1,1);
         rotateZ(Zrot);
     }
