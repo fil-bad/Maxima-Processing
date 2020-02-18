@@ -1,5 +1,5 @@
 package processingElement;
-
+import javaMisc.Polygon;
 public interface Obstacle {
-    void getPoly();
+    Polygon getPoly();
 }

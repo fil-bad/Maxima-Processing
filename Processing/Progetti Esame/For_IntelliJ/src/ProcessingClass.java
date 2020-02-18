@@ -32,7 +32,7 @@ public class ProcessingClass extends PApplet {
     }
 
 
-
+int a =0;
     @Override
     public void draw() {
         // TODO: Do your drawing for each frame here
@@ -45,8 +45,10 @@ public class ProcessingClass extends PApplet {
         com.assi(255);
 //        box(400,800,1);
 
-        translate(100,100,1);
+        ob.setD(50,50,0);
+        ob.setR(radians(50));
         ob.draw();
+        //ob.getD().print();
     }
 
     @Override
