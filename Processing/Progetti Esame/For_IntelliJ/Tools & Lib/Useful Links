@@ -10,3 +10,6 @@ https://en.wikipedia.org/wiki/Quadtree
 So, we start with the largest partition; each time we find an intersection, we use the QuadTree approach
 in order to reduce the size of the partition. On the reduced one, we apply recursively this method (until
 the size of the cell is equal or below that of the robot).
+
+Algorithm found for neighbour research in CONSTANT time.
+
