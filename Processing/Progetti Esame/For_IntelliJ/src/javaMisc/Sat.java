@@ -6,18 +6,22 @@ import java.util.List;
 
 public abstract class Sat {
 
-    public static Boolean hasCollided(Vertex[] poly1, Vertex[] poly2, Double maxDist) {
+    public static Boolean hasCollided(Polygon poly1, Polygon poly2, Double maxDist) {
+
+        Vertex[] vert_poly1 = poly1.getVertices(); // this two lines were added due to compatibility reasons
+        Vertex[] vert_poly2 = poly2.getVertices();
+
         // Do an optimization check using the maxDist
         if (maxDist != null) {
-            if (distance(poly1, poly2) <= Math.pow(maxDist, 2)) {
+            if (distance(vert_poly1, vert_poly2) <= Math.pow(maxDist, 2)) {
                 // Collision is possible so run SAT on the polys
-                return runSAT(poly1, poly2);
+                return runSAT(vert_poly1, vert_poly2);
             } else {
                 return false;
             }
         } else {
             // No maxDist so run SAT on the polys
-            return runSAT(poly1, poly2);
+            return runSAT(vert_poly1, vert_poly2);
         }
     }
 
