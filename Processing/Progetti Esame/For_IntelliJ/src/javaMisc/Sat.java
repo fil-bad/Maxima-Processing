@@ -30,7 +30,38 @@ public abstract class Sat {
                 return false;
             }
         }
-        // todo: perhaps here we have to insert the containment part
+
+/* // todo: perhaps here we have to insert the containment part
+
+        if (!p1.overlap(p2)) {
+            // then we can guarantee that the shapes do not overlap
+            return false;
+        } else {
+            // get the overlap
+            double o = p1.getOverlap(p2);
+            // check for containment
+            if (p1.contains(p2) || p2.contains(p1)) {
+                // get the overlap plus the distance from the minimum end points
+                double mins = abs(p1.min - p2.min);
+                double maxs = abs(p1.max - p2.max);
+                // NOTE: depending on which is smaller you may need to
+                // negate the separating axis!!
+                if (mins < maxs) {
+                    o += mins;
+                } else {
+                    o += maxs;
+                }
+            }
+            // check for minimum
+            if (o < overlap) {
+                // then set this one as the smallest
+                overlap = o;
+                smallest = axis;
+            }
+        }
+
+
+*/
         // The polys overlap on all axes so they must be touching
         return true;
     }
