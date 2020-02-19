@@ -255,6 +255,7 @@ Avv(v,theta,d):= Romog(v,theta).Tomog(v,d)$
 Avv_z(v,theta,d):=Romog(v,theta).Tomog(v,d)$
 Avv_x(u,alpha,a):=Romog(u,alpha).Tomog(u,a)$
 e_x:transpose([1,0,0])$
+e_y:transpose([0,1,0])$
 e_z:transpose([0,0,1])$
 
 Cin_dir_Den_Hart(tabDH):= block(
@@ -262,7 +263,7 @@ Cin_dir_Den_Hart(tabDH):= block(
     for row thru length(tabDH) do(
         result:result.(Avv_z(e_z,tabDH[row,1],tabDH[row,2]).Avv_x(e_x,tabDH[row,3],tabDH[row,4]))),
     return(factor(trigexpand(result)))
-        );
+        )$
 
 /* Esamino la cinematica diretta, con il metodo di Denavit-Hartenberg, delle strutture portanti. */
 
@@ -384,5 +385,73 @@ MatrBar(vett,cost):=block( /*matrice che mi permette di spostarte il sistema di 
     MatrB: mat_unblocker(MatrB),
     return(MatrB)
 )$
+
+
+MatrFinale(tabDH,vett,cost):=Cin_dir_Den_Hart(tabDH).MatrBar(vett,cost)$
+
+/* [wxMaxima: section start ]
+Energia cinetica
+   [wxMaxima: section end   ] */
+
+
+Matr_Inerzia:matrix(
+        [I_xx,I_xy,I_xz],
+        [I_yx,I_yy,I_yz],
+        [I_zx,I_zy,I_zz]
+        )$
+
+/* Ricavo ω (data la matrice della cinematica diretta M (M:MatrFinale(tabDH,vett,cost))con origine del sistema di riferimento nel baricentro del corpo): */
+
+port_cilindrica:matrix(
+    [q_1(t),L_1,0,0],
+    [0,q_2(t),-%pi/2,0],
+    [0,q_3(t),0,0]
+    )$
+Cin_dir_Den_Hart(port_cilindrica)$
+M:MatrFinale(port_cilindrica,e_y,-50);
+
+R:submatrix(4,M,4)$
+
+R_t:transpose(R)$
+
+R_dot:diff(R,t)$
+
+S_omega:R_dot.R_t$
+S_omega:trigsimp(result)$
+
+omega(omega_x,omega_y,omega_z):=matrix(
+    [omega_x],[omega_y],[omega_z]
+    )$
+omega:omega(S_omega[3,2],S_omega[1,3],S_omega[2,1])$
+
+/* Ricavo l'energia cinetica di rotazione: */
+
+T_r:1/2*transpose(omega).R.MatrInerzia.R_t.omega$
+T_r:trigsimp(T_r)$
+
+/* Ricavo l'energia cinetica di traslazione: */
+
+d:submatrix(4,M,1,2,3)$
+
+d_dot:diff(d,t)$
+
+T_t:1/2*Massa*transpose(d_dot).d_dot$
+T_t:trigsimp(T_t)$
+
+/* Ricavo l'energia cinetica totale del corpo: */
+
+T:T_r+T_t$
+
+/* [wxMaxima: section start ]
+Energia Potenziale
+   [wxMaxima: section end   ] */
+
+
+g(g_x,g_y,g_z):=matrix(
+        [g_x],[g_y],[g_z]
+        )$
+g:g(0,0,9.8)$
+
+U:-Massa*transpose(g).d$
 
 
