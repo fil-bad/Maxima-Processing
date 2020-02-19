@@ -16,7 +16,7 @@ public class CommonDraw {
 
     public static CommonDraw getInstance() throws RuntimeException {
         if (instance == null)
-            throw new RuntimeException("Impossible generate object, unknown windows (PApllet)");
+            throw new RuntimeException("Impossible generate object, unknown windows (PApplet)");
         return instance;
     }
 
