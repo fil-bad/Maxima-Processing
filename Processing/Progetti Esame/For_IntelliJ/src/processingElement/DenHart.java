@@ -1,9 +1,4 @@
-package javaMisc;
-
-import org.ejml.simple.SimpleMatrix;
-import processingElement.Link;
-import processingElement.PrismLink;
-import processingElement.RotLink;
+package processingElement;
 
 import java.util.ArrayList;
 

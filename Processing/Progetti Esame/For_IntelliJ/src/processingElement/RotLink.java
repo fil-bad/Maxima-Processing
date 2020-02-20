@@ -34,9 +34,4 @@ public class RotLink implements Link {
     public String whichQ_iIs() {
         return this.theta_qi;
     }
-
-    public static void main(String[] args) {
-
-    }
-
 }
