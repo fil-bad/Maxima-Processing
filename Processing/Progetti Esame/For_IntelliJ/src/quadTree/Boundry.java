@@ -1,4 +1,4 @@
-package quadTree;
+package quadtree;
 import javaMisc.Polygon;
 import javaMisc.Vertex;
 
@@ -26,7 +26,7 @@ class Boundry {
     public double getX(){ return getW()/2.0;}
     public double getY(){ return getH()/2.0;}
 
-    public Polygon getPoly(){
+    public Polygon getPoly() throws Exception{
         Vertex[] v_s = {
                 new Vertex(xMin, yMin),     // Sud-Ovest
                 new Vertex(xMax, yMin),     // Sud-Est
