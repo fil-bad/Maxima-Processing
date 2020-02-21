@@ -18,6 +18,9 @@ public class Vertex {
         ap = new DMatrix2();
     }
 
+    public Vertex(Vertex a, Vertex b) { this(b.getX() - a.getX(), b.getY() - a.getY()); }
+
+
     public double dist(Vertex p) {
         CommonOps_DDF2.subtract(pos, p.get(), ap);
         return Math.sqrt(sq(ap.a1) + sq(ap.a2));
@@ -25,6 +28,25 @@ public class Vertex {
 
     static double sq(double x) {
         return x * x;
+    }
+    double cross(Vertex v) { return this.getX() * v.getY() - getY() * v.getX(); }
+    double dot(Vertex v) { return (this.getX() * v.getX() + this.getY() * v.getY()); }
+    double norm2() { return this.getX() * this.getX() + this.getY() * this.getY(); }
+    boolean between(Vertex p, Vertex q)
+    {
+        return this.getX() < Math.max(p.getX(), q.getX()) + EPS && this.getX() + EPS > Math.min(p.getX(), q.getX())
+                && this.getY() < Math.max(p.getY(), q.getY()) + EPS && this.getY() + EPS > Math.min(p.getY(), q.getY());
+    }
+    static boolean ccw(Vertex p, Vertex q, Vertex r)
+    {
+        return new Vertex(p, q).cross(new Vertex(p, r)) > 0;
+    }
+
+
+    static double angle(Vertex a, Vertex o, Vertex b)  // angle AOB
+    {
+        Vertex oa = new Vertex(o, a), ob = new Vertex(o, b);
+        return Math.acos(oa.dot(ob) / Math.sqrt(oa.norm2() * ob.norm2()));
     }
 
     public void translate(double x, double y) {
