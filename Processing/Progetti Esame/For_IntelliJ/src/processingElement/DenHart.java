@@ -1,5 +1,5 @@
 package processingElement;
-
+import static java.lang.Math.*;
 import java.util.ArrayList;
 
 public class DenHart {
@@ -36,8 +36,8 @@ public class DenHart {
 
     public static void main(String[] args) {
         DenHart dh = new DenHart();
-        dh.addLink(new RotLink("q1", 50,0, 0));
-        dh.addLink(new PrismLink(90, "q2", 0,20));
+        dh.addLink(new RotLink("q1", 50, (float) PI, 0));
+        dh.addLink(new PrismLink((float) PI/2, "q2", 0,20));
         dh.printDHTab();
     }
 
