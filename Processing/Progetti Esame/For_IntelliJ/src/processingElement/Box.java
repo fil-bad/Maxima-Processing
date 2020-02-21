@@ -48,7 +48,16 @@ public class Box extends Solid implements Obj3D, Obstacle {
 
     @Override
     public Polygon getPoly() {
-        return new Polygon(new Vertex(50, 12));
 
+        Vertex[] v_s = {
+                new Vertex(+w/2.0, +l/2.0),     // Nord-Est
+                new Vertex(-w/2.0, +l/2.0),     // Nord-Ovest
+                new Vertex(-w/2.0, -l/2.0),     // Sud-Ovest
+                new Vertex(+w/2.0, -l/2.0),     // Sud-Est
+        };
+        Polygon p = new Polygon(v_s);
+        p.rotate(this.getR());
+        p.translate(getD().get(0,0),d.get(1,0)); // getX, getY of d vector
+        return p;
     }
 }
