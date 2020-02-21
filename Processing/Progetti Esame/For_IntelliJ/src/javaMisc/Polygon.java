@@ -33,6 +33,24 @@ public class Polygon {
         System.out.println("}");
     }
 
+    public boolean contains(Vertex tested) {
+        /*
+        verifying if a Vertex is contained in the polygon; for further explanation, see
+        https://stackoverflow.com/questions/8721406/how-to-determine-if-a-point-is-inside-a-2d-convex-polygon
+        */
+        int i;
+        int j;
+        boolean result = false;
+        for (i = 0, j = this.vertices.length - 1; i < this.vertices.length; j = i++) {
+            if ((this.vertices[i].getY() > tested.getY()) != (this.vertices[j].getY() > tested.getY()) &&
+                    (tested.getX() < (this.vertices[j].getX() - this.vertices[i].getX()) * (tested.getY() - this.vertices[i].getY()) / (this.vertices[j].getY()-this.vertices[i].getY()) + this.vertices[i].getX())) {
+                result = !result;
+            }
+        }
+        return result;
+    }
+
+
     public static void main(String[] args){
         Vertex v1 = new Vertex(50, 12);
         Vertex v2 = v1.orthogonal();

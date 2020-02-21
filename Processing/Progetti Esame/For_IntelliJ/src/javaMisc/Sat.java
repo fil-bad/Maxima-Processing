@@ -6,7 +6,7 @@ import java.util.List;
 
 public abstract class Sat {
 
-    public static Boolean haveCollided(Polygon poly1, Polygon poly2) {
+    public static boolean haveCollided(Polygon poly1, Polygon poly2) {
 
         Vertex[] vert_poly1 = poly1.getVertices(); // this two lines were added due to compatibility reasons
         Vertex[] vert_poly2 = poly2.getVertices();
@@ -15,7 +15,21 @@ public abstract class Sat {
         return runSAT(vert_poly1, vert_poly2);
     }
 
-    private static Boolean runSAT(Vertex[] poly1, Vertex[] poly2) {
+    public static boolean contains(Polygon p1, Polygon p2) {
+        /*
+        ask if the first (bigger) contains the second (smaller); in our algorithm, we must test if a generic shape
+        contains a square of QuadTree; we can do this only with convex polygons.
+        */
+        for (Vertex v : p2.getVertices())
+        {
+            if (!p1.contains(v)) return false;
+        }
+        // if all the vertices are into the shape, then the entire polygon p2 is inside the first one
+        return true;
+    }
+
+
+    private static boolean runSAT(Vertex[] poly1, Vertex[] poly2) {
         // Implements the actual SAT algorithm
         ArrayList<Vertex> edges = polyToEdges(poly1);
         edges.addAll(polyToEdges(poly2));
@@ -23,45 +37,12 @@ public abstract class Sat {
         for (int i = 0; i < edges.size(); i++) {
             axes[i] = edges.get(i).orthogonal();
         }
-
         for (Vertex axis : axes) {
             if (!overlap(project(poly1, axis), project(poly2, axis))) {
                 // The polys don't overlap on this axis so they can't be touching
                 return false;
             }
         }
-
-/* // todo: perhaps here we have to insert the containment part
-
-        if (!p1.overlap(p2)) {
-            // then we can guarantee that the shapes do not overlap
-            return false;
-        } else {
-            // get the overlap
-            double o = p1.getOverlap(p2);
-            // check for containment
-            if (p1.contains(p2) || p2.contains(p1)) {
-                // get the overlap plus the distance from the minimum end points
-                double mins = abs(p1.min - p2.min);
-                double maxs = abs(p1.max - p2.max);
-                // NOTE: depending on which is smaller you may need to
-                // negate the separating axis!!
-                if (mins < maxs) {
-                    o += mins;
-                } else {
-                    o += maxs;
-                }
-            }
-            // check for minimum
-            if (o < overlap) {
-                // then set this one as the smallest
-                overlap = o;
-                smallest = axis;
-            }
-        }
-
-
-*/
         // The polys overlap on all axes so they must be touching
         return true;
     }
@@ -117,11 +98,22 @@ public abstract class Sat {
         // they are two squares which overlaps
         a.printVertices();
         b.printVertices();
-        System.out.println("Do a & b collide? " + haveCollided(a,b));
+        boolean collision_res = haveCollided(a,b);
+        System.out.println("Do a & b collide? " + collision_res);
+        if (collision_res){
+            System.out.println("Does a contain b? " + contains(a,b));
+        }
         // now the entire polygon c is contained in a
         Polygon c = new Polygon(new Vertex(30,30), new Vertex(30,90), new Vertex(90,90),new Vertex(90,30));
         c.printVertices();
-        System.out.println("Do a & c collide? " + haveCollided(a,c));
+        collision_res = haveCollided(a,c);
+        System.out.println("Do a & c collide? " + collision_res);
+        if (collision_res) {
+            System.out.println("Does a contain c? " + contains(a,c));
+        }
+        //last case, two exactly identical shapes
+        System.out.println("Does a contain a? " + contains(a,a));
+
     }
 
 }
