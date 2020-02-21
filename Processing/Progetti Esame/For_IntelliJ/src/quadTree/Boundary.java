@@ -26,6 +26,20 @@ public class Boundary {
                 && y >= this.getyMin() && y <= this.getyMax());
     }
 
+    public Boundary getSector(Coord c){
+        switch (c){
+            case NE:
+                return new Boundary(getX(), getY(), getxMax(),getyMax());
+            case NW:
+                return new Boundary(getxMin(), getY(), getX(), getyMax());
+            case SW:
+                return new Boundary(getxMin(), getyMin(), getX(), getY());
+            case SE:
+                return new Boundary(getX(), getyMin(), getxMax(), getY());
+        }
+        return null;
+    }
+
 
     public double getxMin() {
         return xMin;

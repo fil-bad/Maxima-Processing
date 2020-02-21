@@ -1,4 +1,5 @@
 package quadTree;
+
 import processing.core.PApplet;
 
 import static quadTree.Coord.*;
@@ -11,17 +12,20 @@ import static quadTree.Coord.*;
 
 /**
  * Ogni classe QuadTree è essa stessa un nodo, se
- *     QuadTree northWest = null;
- *     QuadTree northEast = null;
- *     QuadTree southWest = null;
- *     QuadTree southEast = null;
+ * QuadTree northWest = null;
+ * QuadTree northEast = null;
+ * QuadTree southWest = null;
+ * QuadTree southEast = null;
  * Allora è una foglia, altrimenti è uno splitPoint
- * */
+ */
 public class QuadTree {
-    private final int MAX_CAPACITY =4;
+    private final int MAX_CAPACITY = 4;
     private int level = 0;
 
     private boolean freeSpace;
+
+    private QuadTree dad = null;
+
 
     private QuadTree northEast = null;
     private QuadTree northWest = null;
@@ -35,16 +39,46 @@ public class QuadTree {
         freeSpace = true;
     }
 
-    public QuadTree getNode(Coord c){
-        if(c==Coord.NE)
-            return northEast;
-        if(c==Coord.NW)
-            return northWest;
-        if(c==Coord.SW)
-            return southWest;
-        if(c== SE)
-            return southEast;
+    public QuadTree getDad() {
+        return dad;
+    }
+
+    public QuadTree getNode(Coord c) {
+        switch (c){
+            case NE:
+                return northEast;
+            case NW:
+                return northWest;
+            case SW:
+                return southWest;
+            case SE:
+                return southEast;
+        }
         return null;
+    }
+
+    public void split() throws RuntimeException {
+        if (!isLeaf())
+            throw new RuntimeException("Non è una foglia");
+
+        northEast = new QuadTree(this.level + 1, boundary.getSector(NE));
+        northEast.dad = this;
+
+        northWest = new QuadTree(this.level + 1, boundary.getSector(NW));
+        northWest.dad = this;
+
+        southWest = new QuadTree(this.level + 1, boundary.getSector(SW));
+        southWest.dad = this;
+
+        southEast = new QuadTree(this.level + 1, boundary.getSector(SE));
+        southEast.dad = this;
+
+        setFreeSpace(false);
+
+    }
+
+    public Boundary getBoundry() {
+        return boundary;
     }
 
     /* Traveling the Graph using Depth First Search*/
@@ -90,59 +124,34 @@ public class QuadTree {
             return;
 
         if (node.isLeaf()) {
-            if(node.isFreeSpace())
+            if (node.isFreeSpace())
                 win.fill(255);
-            win.rect((float)node.boundary.getxMin(),(float)node.boundary.getyMin(),(float)node.boundary.getW(),(float)node.boundary.getH());
+            win.rect((float) node.boundary.getxMin(), (float) node.boundary.getyMin(), (float) node.boundary.getW(), (float) node.boundary.getH());
 
         } else {
 
-            win.fill(255,0,0);
-            dfs(node.northEast,win);
+            win.fill(255, 0, 0);
+            dfs(node.northEast, win);
 
-            win.fill(0,255,0);
-            dfs(node.northWest,win);
+            win.fill(0, 255, 0);
+            dfs(node.northWest, win);
 
-            win.fill(0,0,255);
-            dfs(node.southWest,win);
+            win.fill(0, 0, 255);
+            dfs(node.southWest, win);
 
-            win.fill(0,255,255);
-            dfs(node.southEast,win);
+            win.fill(0, 255, 255);
+            dfs(node.southEast, win);
         }
 
     }
 
-    public boolean isLeaf(){
+    public boolean isRoot() {
+        return dad == null;
+    }
+
+    public boolean isLeaf() {
         return northWest == null && northEast == null &&
                 southWest == null && southEast == null;
-    }
-
-    public void split() throws RuntimeException {
-        if(!isLeaf())
-            throw new RuntimeException("Non è una foglia");
-
-        double xOffset = boundary.getX();
-        double yOffset = boundary.getY();
-
-        northEast = new QuadTree(this.level + 1, new Boundary(
-                xOffset, yOffset,
-                this.boundary.getxMax(), this.boundary.getyMax()));
-
-        northWest = new QuadTree(this.level + 1, new Boundary(
-                this.boundary.getxMin(), yOffset,
-                xOffset, this.boundary.getyMax()));
-
-        southWest = new QuadTree(this.level + 1, new Boundary(
-                this.boundary.getxMin(), this.boundary.getyMin(),
-                xOffset,yOffset));
-        southEast = new QuadTree(this.level + 1, new Boundary(
-                xOffset, this.boundary.getyMin(),
-                this.boundary.getxMax(), yOffset));
-        setFreeSpace(false);
-
-    }
-
-    public Boundary getBoundry() {
-        return boundary;
     }
 
     public boolean isFreeSpace() {
