@@ -16,7 +16,7 @@ public class Polygon {
         return vertices;
     }
 
-    public int numVertices(){
+    public int numVertices() {
         return this.vertices.length;
     }
 

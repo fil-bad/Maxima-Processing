@@ -1,4 +1,4 @@
-package quadTree;
+package quadtree;
 
 /*
  *  			N

@@ -1,6 +1,6 @@
 package quadTree;
-
-import static quadTree.Coord.*;
+import static quadTree.Coord.NW;
+import static quadTree.Coord.SE;
 
 /*
  *  			N
@@ -10,14 +10,14 @@ import static quadTree.Coord.*;
 
 /**
  * Ogni classe QuadTree è essa stessa un nodo, se
- * QuadTree northWest = null;
- * QuadTree northEast = null;
- * QuadTree southWest = null;
- * QuadTree southEast = null;
+ *     QuadTree northWest = null;
+ *     QuadTree northEast = null;
+ *     QuadTree southWest = null;
+ *     QuadTree southEast = null;
  * Allora è una foglia, altrimenti è uno splitPoint
- */
+ * */
 public class QuadTree {
-    private final int MAX_CAPACITY = 4;
+    private final int MAX_CAPACITY =4;
     private int level = 0;
 
     private boolean freeSpace;
@@ -26,22 +26,22 @@ public class QuadTree {
     private QuadTree northWest = null;
     private QuadTree southWest = null;
     private QuadTree southEast = null;
-    private Boundry boundry;
+    private Boundary boundary;
 
-    public QuadTree(int level, Boundry boundry) {
+    public QuadTree(int level, Boundary boundry) {
         this.level = level;
-        this.boundry = boundry;
+        this.boundary = boundry;
         freeSpace = true;
     }
 
-    public QuadTree getNode(Coord c) {
-        if (c == Coord.NE)
+    public QuadTree getNode(Coord c){
+        if(c==Coord.NE)
             return northEast;
-        if (c == Coord.NW)
+        if(c==Coord.NW)
             return northWest;
-        if (c == Coord.SW)
+        if(c==Coord.SW)
             return southWest;
-        if (c == SE)
+        if(c== SE)
             return southEast;
         return null;
     }
@@ -84,13 +84,13 @@ public class QuadTree {
 
     }
 
-    public boolean isLeaf() {
+    public boolean isLeaf(){
         return northWest == null && northEast == null &&
                 southWest == null && southEast == null;
     }
 
     public void split() throws RuntimeException {
-        if (!isLeaf())
+        if(!isLeaf())
             throw new RuntimeException("Non è una foglia");
 
         double xOffset = boundry.getX();
@@ -123,11 +123,10 @@ public class QuadTree {
     }
 
     public static void main(String args[]) {
-        QuadTree qt = new QuadTree(1, new Boundry(0, 0, 1000, 1000));
+        QuadTree qt = new QuadTree(1, new Boundary(0, 0, 1000, 1000));
         qt.split();
         qt.getNode(SE).split();
         qt.getNode(SE).getNode(NW).setFreeSpace(false);
-        qt.getNode(SE).getNode(NW).split();
         //Traveling the graph
         QuadTree.dfs(qt);
     }
