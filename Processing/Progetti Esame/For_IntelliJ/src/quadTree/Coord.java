@@ -1,4 +1,4 @@
-package quadtree;
+package quadTree;
 
 public enum Coord {
     NE,

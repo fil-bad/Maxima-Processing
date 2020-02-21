@@ -1,6 +1,5 @@
 package quadTree;
-import static quadTree.Coord.NW;
-import static quadTree.Coord.SE;
+import static quadTree.Coord.*;
 
 /*
  *  			N
@@ -52,8 +51,8 @@ public class QuadTree {
             return;
 
         System.out.printf("L%d [X1=%.2f Y1=%.2f] \t[X2=%.2f Y2=%.2f]\n",
-                node.level, node.boundry.getxMin(), node.boundry.getyMin(),
-                node.boundry.getxMax(), node.boundry.getyMax());
+                node.level, node.boundary.getxMin(), node.boundary.getyMin(),
+                node.boundary.getxMax(), node.boundary.getyMax());
 
         if (node.isLeaf()) {
             System.out.print("|");
@@ -93,25 +92,25 @@ public class QuadTree {
         if(!isLeaf())
             throw new RuntimeException("Non è una foglia");
 
-        double xOffset = boundry.getX();
-        double yOffset = boundry.getY();
+        double xOffset = boundary.getX();
+        double yOffset = boundary.getY();
 
-        northWest = new QuadTree(this.level + 1, new Boundry(
-                this.boundry.getxMin(), this.boundry.getyMin(), xOffset,
+        northWest = new QuadTree(this.level + 1, new Boundary(
+                this.boundary.getxMin(), this.boundary.getyMin(), xOffset,
                 yOffset));
-        northEast = new QuadTree(this.level + 1, new Boundry(xOffset,
-                this.boundry.getyMin(), xOffset, yOffset));
-        southWest = new QuadTree(this.level + 1, new Boundry(
-                this.boundry.getxMin(), xOffset, xOffset,
-                this.boundry.getyMax()));
-        southEast = new QuadTree(this.level + 1, new Boundry(xOffset, yOffset,
-                this.boundry.getxMax(), this.boundry.getyMax()));
+        northEast = new QuadTree(this.level + 1, new Boundary(xOffset,
+                this.boundary.getyMin(), xOffset, yOffset));
+        southWest = new QuadTree(this.level + 1, new Boundary(
+                this.boundary.getxMin(), xOffset, xOffset,
+                this.boundary.getyMax()));
+        southEast = new QuadTree(this.level + 1, new Boundary(xOffset, yOffset,
+                this.boundary.getxMax(), this.boundary.getyMax()));
         setFreeSpace(false);
 
     }
 
-    public Boundry getBoundry() {
-        return boundry;
+    public Boundary getBoundry() {
+        return boundary;
     }
 
     public boolean isFreeSpace() {
