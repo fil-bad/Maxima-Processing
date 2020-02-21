@@ -21,8 +21,8 @@ public class Box extends Solid implements Obj3D, Obstacle {
 
     @Override
     public void draw() {
-        win.pushMatrix();
-        win.pushStyle();
+        win.push();
+
 
         applyCoord();
 
@@ -33,8 +33,7 @@ public class Box extends Solid implements Obj3D, Obstacle {
         win.translate(0,0,h);
         com.assi(100);
 
-        win.popStyle();
-        win.popMatrix();
+        win.pop();
     }
 
 

@@ -1,10 +1,11 @@
 
+import javaMisc.Vertex;
 import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 import processing.core.*;
 import processingElement.*;
-public class ProcessingClass extends PApplet {
 
+public class ProcessingClass extends PApplet {
 
 
     public static void main(String[] args) {
@@ -20,6 +21,8 @@ public class ProcessingClass extends PApplet {
     Box ob;
     CommonDraw com;
     Terra gnd;
+    Pointer point;
+
     @Override
     public void setup() {
         // TODO: Your custom drawing and setup on applet start belongs here
@@ -27,14 +30,15 @@ public class ProcessingClass extends PApplet {
         cameraInit();
 
         com = CommonDraw.getInstance(this);
-        gnd = new Terra(this,800,400,color(101,67,33));
-
-        ob = new Box(this, 50,40,10, color(255,0,0));
+        gnd = new Terra(this, 800, 400, color(101, 67, 33));
+        point = new Pointer(this, 60, 800, 400);
+        ob = new Box(this, 50, 40, 10, color(255, 0, 0));
 
     }
 
 
-int a =0;
+    int a = 0;
+
     @Override
     public void draw() {
         // TODO: Do your drawing for each frame here
@@ -45,8 +49,11 @@ int a =0;
         //fill(0,255,0);
         gnd.draw();
         com.assi(255);
+        point.draw();
+//        point.printCoord();
 
-        ob.setD(0,0,0);
+
+        ob.setD(0, 0, 0);
         ob.setR(radians(50));
         //ob.getPoly().printVertices();
 
@@ -55,52 +62,58 @@ int a =0;
 
     @Override
     public void keyPressed() {
-        if(key == 'r'){
+        if (key == 'r') {
             cameraInit();
         }
     }
 
 
-    private float eyeX,eyeY,eyeZ;
-    private float centerX,centerY, centerZ;
+    private float eyeX, eyeY, eyeZ;
+    private float centerX, centerY, centerZ;
     private float Zrot;
+    Vertex addPoint; // variabile per calcolare di quanto spostare il puntatore
 
     // Set camera e sistema ortonormale destro
-    private void cameraInit(){
+    private void cameraInit() {
         eyeX = 0.0f;
         eyeY = 400.f;
-        eyeZ = 220.0f;
+        eyeZ = 550.0f;
 
         centerX = 0.0f;
         centerY = 0.0f;
         centerZ = 0.0f;
 
         Zrot = 0.0f;
+
+        addPoint = new Vertex(0,0);
     }
-    private void cameraSet(){
+
+    private void cameraSet() {
         //Fondale da disegnare
         background(color(0x96FCFA));
-        directionalLight(223, 126, 126, 0, 0, (float) 0.7);
+
+        directionalLight(223, 126, 126, 0, 0, (float) -1);
         ambientLight(200, 200, 200);
+
+        float d = dist(eyeX, eyeY, eyeZ, centerX, centerY, centerZ);
 
         if (mousePressed && (mouseButton == LEFT)) {
 
 
         } else if (mousePressed && (mouseButton == RIGHT)) {    // traslazione xy
-            eyeX -= (mouseX - pmouseX)/2.0;
-            centerX -= (mouseX - pmouseX)/2.0;
-            eyeY -= (mouseY - pmouseY)/2.0;
-            centerY -= (mouseY - pmouseY)/2.0;
-        } else if (mousePressed && (mouseButton == CENTER)){    // zoom e rotazione
-            float x,y,z,dn;
-            x = eyeX-centerX;
-            y = eyeY-centerY;
+            eyeX -= (mouseX - pmouseX) / 2.0;
+            centerX -= (mouseX - pmouseX) / 2.0;
+            eyeY -= (mouseY - pmouseY) / 2.0;
+            centerY -= (mouseY - pmouseY) / 2.0;
+        } else if (mousePressed && (mouseButton == CENTER)) {    // zoom e rotazione
+            float x, y, z, dn;
+            x = eyeX - centerX;
+            y = eyeY - centerY;
             z = eyeZ - centerZ;
-            dn = dist(0,0,0,x,y,z);
-            x /=dn;
-            y /=dn;
-            z /=dn;
-            float d = dist(eyeX,eyeY,eyeZ,centerX,centerY,centerZ);
+            dn = dist(0, 0, 0, x, y, z);
+            x /= dn;
+            y /= dn;
+            z /= dn;
             d += mouseY - pmouseY;
             eyeX = centerX + x * d;
             eyeY = centerY + y * d;
@@ -133,18 +146,25 @@ int a =0;
 //            eyeX = (float)center.get(0,0);
 //            eyeY = (float)center.get(1,0);
 //            eyeZ = (float)center.get(2,0);
-            Zrot += (mouseX - pmouseX)/200.0;
+            Zrot += (mouseX - pmouseX) / 200.0;
+        } else {
+            //
+            addPoint.set((mouseX - pmouseX), -(mouseY - pmouseY));
+            addPoint.rotate(-Zrot);
+            point.addX((float)addPoint.getX()*d/800);
+            point.addY((float)addPoint.getY()*d/800);
         }
-        if (centerZ+10 >eyeZ )
-            centerZ = eyeZ -15;
+
+        if (centerZ + 10 > eyeZ)
+            centerZ = eyeZ - 15;
 
         camera(eyeX, eyeY, eyeZ, // eyeX, eyeY, eyeZ
-                centerX, centerY,centerZ, // centerX, centerY, centerZ
+                centerX, centerY, centerZ, // centerX, centerY, centerZ
                 0.0f, 1.0f, 0.0f); // upX, upY, upZ
 
         //Ortonormale Destro
         //rotateZ(PI/2);
-        scale(1,-1,1);
+        scale(1, -1, 1);
         rotateZ(Zrot);
     }
 

@@ -73,7 +73,7 @@ public class CommonDraw {
         win.popStyle();
     }
 
-    private void piramide(int h) {
+    public void piramide(int h) {
         win.beginShape();
         win.vertex(-h, -h);
         win.vertex(+h, -h);
