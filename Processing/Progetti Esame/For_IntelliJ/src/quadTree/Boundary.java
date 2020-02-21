@@ -3,20 +3,23 @@ import javaMisc.Polygon;
 import javaMisc.Vertex;
 
 /* Using two points of Rectangular (Top,Left) & (Bottom , Right)*/
-class Boundary {
+public class Boundary {
 
     private double xMin, yMin, xMax, yMax;
 
     public Boundary(double xMin, double yMin, double xMax, double yMax) {
-        super();
-        /*
-         *  Storing two diagonal points
-         */
         this.xMin = xMin;
         this.yMin = yMin;
         this.xMax = xMax;
         this.yMax = yMax;
     }
+
+//    public Boundary(double x, double y, double w, double h) {
+//        this.xMin = x-w/2.0;
+//        this.yMin = y-h/2.0;
+//        this.xMax = x+w/2.0;
+//        this.yMax = y+h/2.0;
+//    }
 
     public boolean inRange(int x, int y) {
         return (x >= this.getxMin() && x <= this.getxMax()
@@ -43,8 +46,8 @@ class Boundary {
     public double getW(){ return (xMax-xMin);}
     public double getH(){ return (yMax-yMin);}
 
-    public double getX(){ return getW()/2.0;}
-    public double getY(){ return getH()/2.0;}
+    public double getX(){ return xMin + getW()/2.0;}
+    public double getY(){ return yMin + getH()/2.0;}
 
     public Polygon getPoly() throws Exception{
         Vertex[] v_s = {

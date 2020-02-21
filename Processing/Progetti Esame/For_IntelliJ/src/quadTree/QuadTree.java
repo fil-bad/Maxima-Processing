@@ -1,4 +1,6 @@
 package quadTree;
+import processing.core.PApplet;
+
 import static quadTree.Coord.*;
 
 /*
@@ -80,6 +82,49 @@ public class QuadTree {
             System.out.print("SE:");
             dfs(node.southEast);
         }
+    }
+
+    static public void dfs(QuadTree node, PApplet win) {
+        if (node == null)
+            return;
+
+
+        System.out.printf("L%d [X1=%.2f Y1=%.2f] \t[X2=%.2f Y2=%.2f]\n",
+                node.level, node.boundary.getxMin(), node.boundary.getyMin(),
+                node.boundary.getxMax(), node.boundary.getyMax());
+
+        if (node.isLeaf()) {
+            win.rect((float)node.boundary.getxMin(),(float)node.boundary.getyMin(),(float)node.boundary.getW(),(float)node.boundary.getH());
+
+            System.out.print("|");
+            for (int i = 0; i < node.level; i++)
+                System.out.print("\t");
+            System.out.println("\tLeaf Node. FreeSpace:" + node.isFreeSpace());
+        } else {
+            for (int i = 0; i < node.level; i++)
+                System.out.print("|-----");
+            System.out.print("NE:");
+            win.fill(255,0,0);
+            dfs(node.northEast,win);
+
+            for (int i = 0; i < node.level; i++)
+                System.out.print("|-----");
+            System.out.print("NW:");
+            win.fill(0,255,0);
+            dfs(node.northWest,win);
+
+            for (int i = 0; i < node.level; i++)
+                System.out.print("|-----");
+            System.out.print("SW:");
+            win.fill(0,0,255);
+            dfs(node.southWest,win);
+
+            for (int i = 0; i < node.level; i++)
+                System.out.print("|-----");
+            System.out.print("SE:");
+            win.fill(0,255,255);
+            dfs(node.southEast,win);
+        }
 
     }
 
@@ -95,16 +140,20 @@ public class QuadTree {
         double xOffset = boundary.getX();
         double yOffset = boundary.getY();
 
-        northWest = new QuadTree(this.level + 1, new Boundary(
-                this.boundary.getxMin(), this.boundary.getyMin(), xOffset,
-                yOffset));
-        northEast = new QuadTree(this.level + 1, new Boundary(xOffset,
-                this.boundary.getyMin(), xOffset, yOffset));
-        southWest = new QuadTree(this.level + 1, new Boundary(
-                this.boundary.getxMin(), xOffset, xOffset,
-                this.boundary.getyMax()));
-        southEast = new QuadTree(this.level + 1, new Boundary(xOffset, yOffset,
+        northEast = new QuadTree(this.level + 1, new Boundary(
+                xOffset, yOffset,
                 this.boundary.getxMax(), this.boundary.getyMax()));
+
+        northWest = new QuadTree(this.level + 1, new Boundary(
+                this.boundary.getxMin(), yOffset,
+                xOffset, this.boundary.getyMax()));
+
+        southWest = new QuadTree(this.level + 1, new Boundary(
+                this.boundary.getxMin(), this.boundary.getyMin(),
+                xOffset,yOffset));
+        southEast = new QuadTree(this.level + 1, new Boundary(
+                xOffset, this.boundary.getyMin(),
+                this.boundary.getxMax(), yOffset));
         setFreeSpace(false);
 
     }

@@ -4,6 +4,11 @@ import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 import processing.core.*;
 import processingElement.*;
+import quadTree.Boundary;
+import quadTree.QuadTree;
+
+import static quadTree.Coord.NW;
+import static quadTree.Coord.SE;
 
 public class ProcessingClass extends PApplet {
 
@@ -23,6 +28,8 @@ public class ProcessingClass extends PApplet {
     Terra gnd;
     Pointer point;
 
+    QuadTree qt;
+
     @Override
     public void setup() {
         // TODO: Your custom drawing and setup on applet start belongs here
@@ -33,6 +40,12 @@ public class ProcessingClass extends PApplet {
         gnd = new Terra(this, 800, 400, color(101, 67, 33));
         point = new Pointer(this, 60, 800, 400);
         ob = new Box(this, 50, 40, 10, color(255, 0, 0));
+
+        qt = new QuadTree(1, new Boundary(-400, -200, 400, 200));
+        qt.split();
+        qt.getNode(SE).split();
+        qt.getNode(SE).getNode(NW).setFreeSpace(false);
+        qt.getNode(SE).getNode(NW).split();
 
     }
 
@@ -51,6 +64,7 @@ public class ProcessingClass extends PApplet {
         com.assi(255);
         point.draw();
 //        point.printCoord();
+        QuadTree.dfs(qt,this);
 
 
         ob.setD(0, 0, 0);
