@@ -1,8 +1,8 @@
-package quadTree;
+package quadtree;
 
 import processing.core.PApplet;
 
-import static quadTree.Coord.*;
+import static quadtree.Coord.*;
 
 /*
  *  			N

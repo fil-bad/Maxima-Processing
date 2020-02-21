@@ -4,10 +4,10 @@ import org.ejml.dense.row.NormOps_DDRM;
 import org.ejml.simple.SimpleMatrix;
 import processing.core.*;
 import processingElement.*;
-import quadTree.Boundary;
-import quadTree.QuadTree;
+import quadtree.Boundary;
+import quadtree.QuadTree;
 
-import static quadTree.Coord.*;
+import static quadtree.Coord.*;
 
 public class ProcessingClass extends PApplet {
 
