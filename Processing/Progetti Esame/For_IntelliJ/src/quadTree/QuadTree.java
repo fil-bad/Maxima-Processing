@@ -22,8 +22,8 @@ public class QuadTree {
 
     private boolean freeSpace;
 
-    private QuadTree northWest = null;
     private QuadTree northEast = null;
+    private QuadTree northWest = null;
     private QuadTree southWest = null;
     private QuadTree southEast = null;
     private Boundry boundry;
@@ -58,8 +58,8 @@ public class QuadTree {
         if (node.isLeaf()) {
             System.out.printf(" \n\t  Leaf Node. FreeSpace:"+node.isFreeSpace());
         }
-        dfs(node.northWest);
         dfs(node.northEast);
+        dfs(node.northWest);
         dfs(node.southWest);
         dfs(node.southEast);
 
@@ -73,10 +73,9 @@ public class QuadTree {
     public void split() throws RuntimeException {
         if(!isLeaf())
             throw new RuntimeException("Non è una foglia");
-        int xOffset = this.boundry.getxMin()
-                + (this.boundry.getxMax() - this.boundry.getxMin()) / 2;
-        int yOffset = this.boundry.getyMin()
-                + (this.boundry.getyMax() - this.boundry.getyMin()) / 2;
+
+        double xOffset = boundry.getX();
+        double yOffset = boundry.getY();
 
         northWest = new QuadTree(this.level + 1, new Boundry(
                 this.boundry.getxMin(), this.boundry.getyMin(), xOffset,
