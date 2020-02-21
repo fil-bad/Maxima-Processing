@@ -6,12 +6,9 @@ import org.ejml.dense.fixed.CommonOps_DDF2;
 import static java.lang.Math.*;
 
 public class Vertex {
-        private double x, y;
         DMatrix2 pos, ap;
 
         public Vertex(double x, double y) {
-            this.x = x;
-            this.y = y;
             pos = new DMatrix2(x,y);
             ap = new DMatrix2();
         }
@@ -27,6 +24,10 @@ public class Vertex {
                     sin(rad), cos(rad));
             CommonOps_DDF2.mult(R,pos, ap);
             pos.set(ap);
+        }
+
+        public void set(double x, double y){
+            pos.set(x,y);
         }
 
         /**
