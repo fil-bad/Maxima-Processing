@@ -7,8 +7,8 @@ public class Polygon {
 
     private Vertex[] vertices;
 
-    public Polygon(Vertex... vertexes) throws Exception {
-        if (vertexes.length <= 2) throw new Exception("Invalid size for a polygon");
+    public Polygon(Vertex... vertexes) throws RuntimeException {
+        if (vertexes.length <= 2) throw new RuntimeException("Invalid size for a polygon");
         this.vertices = vertexes;
     }
 
@@ -16,7 +16,7 @@ public class Polygon {
         return vertices;
     }
 
-    public int numVertices(){
+    public int numVertices() {
         return this.vertices.length;
     }
 
