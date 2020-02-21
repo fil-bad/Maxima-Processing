@@ -51,8 +51,8 @@ public class Vertex {
      **/
     public int compareTo(Vertex p) {
         CommonOps_DDF2.subtract(pos, p.get(), ap);
-        if (Math.abs(ap.a1) > EPS) return pos.a1 > p.get().a1 ? 1 : -1;
-        if (Math.abs(ap.a2) > EPS) return pos.a2 > p.get().a2 ? 1 : -1;
+        if (Math.abs(ap.a1) > EPS) return pos.a1 > p.get().a1 ? 1 : -1; // my.x > p.x return 1 else -1
+        if (Math.abs(ap.a2) > EPS) return pos.a2 > p.get().a2 ? 1 : -1; // my.y > p.y return 1 else -1
         return 0;
     }
 
@@ -68,10 +68,10 @@ public class Vertex {
     boolean onSegment(Vertex a, Vertex b)
     {
         if(onLine(a,b)){
-            if(a.compareTo(b) == 1){    //a dopo di b
-                return a.compareTo(this) == -1;
+            if(a.compareTo(b) == 1){    //a oltre di b
+                return a.compareTo(this) == -1 && b.compareTo(this) == 1;   // prima di a, dopo b
             }else{                      //a prima di b
-                return a.compareTo(this) == 1;
+                return a.compareTo(this) == 1 && b.compareTo(this) == -1;   // dopo di a, prima b
             }
         }else
             return false;
@@ -125,6 +125,16 @@ public class Vertex {
         System.out.println("\nv2 translate by +10,+20:");
         v2.translate(10, 20);
         v2.printVertex();
+
+        Vertex l1 = new Vertex(5, 0);
+        Vertex l2 = new Vertex(6, 0);
+        Vertex l3 = new Vertex(7, 0);
+        System.out.println("\nl2 è tra sulla linea l1 e l3? "+ l2.onLine(l1,l3));
+        System.out.println("\nl1 è tra sulla linea l2 e l3? "+ l1.onLine(l2,l3));
+        System.out.println("\nl1 è tra sul segmento l2 e l3? "+ l1.onSegment(l2,l3));
+
+
+
     }
 }
 
