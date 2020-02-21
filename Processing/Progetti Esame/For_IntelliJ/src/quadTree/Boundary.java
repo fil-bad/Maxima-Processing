@@ -3,7 +3,7 @@ import javaMisc.Polygon;
 import javaMisc.Vertex;
 
 /* Using two points of Rectangular (Top,Left) & (Bottom , Right)*/
-class Boundry {
+class Boundary {
     public int getxMin() {
         return xMin;
     }
@@ -37,7 +37,7 @@ class Boundry {
         return p;
     }
 
-    public Boundry(int xMin, int yMin, int xMax, int yMax) {
+    public Boundary(int xMin, int yMin, int xMax, int yMax) {
         super();
         /*
          *  Storing two diagonal points

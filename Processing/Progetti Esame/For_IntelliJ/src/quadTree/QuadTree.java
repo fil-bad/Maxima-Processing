@@ -1,6 +1,6 @@
-package quadTree;
-import static quadTree.Coord.NW;
-import static quadTree.Coord.SE;
+package quadtree;
+import static quadtree.Coord.NW;
+import static quadtree.Coord.SE;
 
 /*
  *  			N
@@ -26,11 +26,11 @@ public class QuadTree {
     private QuadTree northEast = null;
     private QuadTree southWest = null;
     private QuadTree southEast = null;
-    private Boundry boundry;
+    private Boundary boundary;
 
-    public QuadTree(int level, Boundry boundry) {
+    public QuadTree(int level, Boundary boundry) {
         this.level = level;
-        this.boundry = boundry;
+        this.boundary = boundry;
         freeSpace = true;
     }
 
@@ -52,8 +52,8 @@ public class QuadTree {
             return;
 
         System.out.printf("\nLevel = %d [X1=%d Y1=%d] \t[X2=%d Y2=%d] ",
-                node.level, node.boundry.getxMin(), node.boundry.getyMin(),
-                node.boundry.getxMax(), node.boundry.getyMax());
+                node.level, node.boundary.getxMin(), node.boundary.getyMin(),
+                node.boundary.getxMax(), node.boundary.getyMax());
 
         if (node.isLeaf()) {
             System.out.printf(" \n\t  Leaf Node. FreeSpace:"+node.isFreeSpace());
@@ -73,27 +73,27 @@ public class QuadTree {
     public void split() throws RuntimeException {
         if(!isLeaf())
             throw new RuntimeException("Non è una foglia");
-        int xOffset = this.boundry.getxMin()
-                + (this.boundry.getxMax() - this.boundry.getxMin()) / 2;
-        int yOffset = this.boundry.getyMin()
-                + (this.boundry.getyMax() - this.boundry.getyMin()) / 2;
+        int xOffset = this.boundary.getxMin()
+                + (this.boundary.getxMax() - this.boundary.getxMin()) / 2;
+        int yOffset = this.boundary.getyMin()
+                + (this.boundary.getyMax() - this.boundary.getyMin()) / 2;
 
-        northWest = new QuadTree(this.level + 1, new Boundry(
-                this.boundry.getxMin(), this.boundry.getyMin(), xOffset,
+        northWest = new QuadTree(this.level + 1, new Boundary(
+                this.boundary.getxMin(), this.boundary.getyMin(), xOffset,
                 yOffset));
-        northEast = new QuadTree(this.level + 1, new Boundry(xOffset,
-                this.boundry.getyMin(), xOffset, yOffset));
-        southWest = new QuadTree(this.level + 1, new Boundry(
-                this.boundry.getxMin(), xOffset, xOffset,
-                this.boundry.getyMax()));
-        southEast = new QuadTree(this.level + 1, new Boundry(xOffset, yOffset,
-                this.boundry.getxMax(), this.boundry.getyMax()));
+        northEast = new QuadTree(this.level + 1, new Boundary(xOffset,
+                this.boundary.getyMin(), xOffset, yOffset));
+        southWest = new QuadTree(this.level + 1, new Boundary(
+                this.boundary.getxMin(), xOffset, xOffset,
+                this.boundary.getyMax()));
+        southEast = new QuadTree(this.level + 1, new Boundary(xOffset, yOffset,
+                this.boundary.getxMax(), this.boundary.getyMax()));
         setFreeSpace(false);
 
     }
 
-    public Boundry getBoundry() {
-        return boundry;
+    public Boundary getBoundary() {
+        return boundary;
     }
 
     public boolean isFreeSpace() {
@@ -105,7 +105,7 @@ public class QuadTree {
     }
 
     public static void main(String args[]) {
-        QuadTree qt = new QuadTree(1, new Boundry(0, 0, 1000, 1000));
+        QuadTree qt = new QuadTree(1, new Boundary(0, 0, 1000, 1000));
         qt.split();
         qt.getNode(SE).split();
         qt.getNode(SE).getNode(NW).setFreeSpace(false);
