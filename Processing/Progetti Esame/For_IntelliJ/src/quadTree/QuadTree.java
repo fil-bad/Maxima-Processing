@@ -126,6 +126,7 @@ public class QuadTree {
         qt.split();
         qt.getNode(SE).split();
         qt.getNode(SE).getNode(NW).setFreeSpace(false);
+        qt.getNode(SE).getNode(NW).split();
         //Traveling the graph
         QuadTree.dfs(qt);
     }
