@@ -32,6 +32,7 @@ public class Vertex {
     double cross(Vertex v) { return this.getX() * v.getY() - getY() * v.getX(); }
     double dot(Vertex v) { return (this.getX() * v.getX() + this.getY() * v.getY()); }
     double norm2() { return this.getX() * this.getX() + this.getY() * this.getY(); }
+
     boolean between(Vertex p, Vertex q)
     {
         return this.getX() < Math.max(p.getX(), q.getX()) + EPS && this.getX() + EPS > Math.min(p.getX(), q.getX())
