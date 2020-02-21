@@ -97,15 +97,7 @@ public class ProcessingClass extends PApplet {
 
         float d = dist(eyeX, eyeY, eyeZ, centerX, centerY, centerZ);
 
-        if (mousePressed && (mouseButton == LEFT)) {
-
-
-        } else if (mousePressed && (mouseButton == RIGHT)) {    // traslazione xy
-            eyeX -= (mouseX - pmouseX) / 2.0;
-            centerX -= (mouseX - pmouseX) / 2.0;
-            eyeY -= (mouseY - pmouseY) / 2.0;
-            centerY -= (mouseY - pmouseY) / 2.0;
-        } else if (mousePressed && (mouseButton == CENTER)) {    // zoom e rotazione
+        if (mousePressed && (mouseButton == LEFT)) { //zoom e rotazione
             float x, y, z, dn;
             x = eyeX - centerX;
             y = eyeY - centerY;
@@ -149,6 +141,14 @@ public class ProcessingClass extends PApplet {
 //            eyeY = (float)center.get(1,0);
 //            eyeZ = (float)center.get(2,0);
             Zrot += (mouseX - pmouseX) / 200.0;
+
+        } else if (mousePressed && (mouseButton == RIGHT)) {    // traslazione xy
+            eyeX -= (mouseX - pmouseX) / 2.0;
+            centerX -= (mouseX - pmouseX) / 2.0;
+            eyeY -= (mouseY - pmouseY) / 2.0;
+            centerY -= (mouseY - pmouseY) / 2.0;
+        } else if (mousePressed && (mouseButton == CENTER)) {    // Seleziona
+
         } else {
             //
             addPoint.set((mouseX - pmouseX), -(mouseY - pmouseY));
