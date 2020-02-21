@@ -1,4 +1,6 @@
 
+import org.ejml.dense.row.NormOps_DDRM;
+import org.ejml.simple.SimpleMatrix;
 import processing.core.*;
 import processingElement.*;
 public class ProcessingClass extends PApplet {
@@ -43,12 +45,12 @@ int a =0;
         //fill(0,255,0);
         gnd.draw();
         com.assi(255);
-//        box(400,800,1);
 
-        ob.setD(50,50,0);
+        ob.setD(0,0,0);
         ob.setR(radians(50));
+        //ob.getPoly().printVertices();
+
         ob.draw();
-        //ob.getD().print();
     }
 
     @Override
@@ -81,7 +83,15 @@ int a =0;
         directionalLight(223, 126, 126, 0, 0, (float) 0.7);
         ambientLight(200, 200, 200);
 
-        if (mousePressed && (mouseButton == LEFT)) {    // zoom e rotazione
+        if (mousePressed && (mouseButton == LEFT)) {
+
+
+        } else if (mousePressed && (mouseButton == RIGHT)) {    // traslazione xy
+            eyeX -= (mouseX - pmouseX)/2.0;
+            centerX -= (mouseX - pmouseX)/2.0;
+            eyeY -= (mouseY - pmouseY)/2.0;
+            centerY -= (mouseY - pmouseY)/2.0;
+        } else if (mousePressed && (mouseButton == CENTER)){    // zoom e rotazione
             float x,y,z,dn;
             x = eyeX-centerX;
             y = eyeY-centerY;
@@ -92,19 +102,38 @@ int a =0;
             z /=dn;
             float d = dist(eyeX,eyeY,eyeZ,centerX,centerY,centerZ);
             d += mouseY - pmouseY;
-
             eyeX = centerX + x * d;
             eyeY = centerY + y * d;
             eyeZ = centerZ + z * d;
-            Zrot += (mouseX - pmouseX)/200.0;
 
-        } else if (mousePressed && (mouseButton == RIGHT)) {    // traslazione xy
-            eyeX -= (mouseX - pmouseX)/2.0;
-            centerX -= (mouseX - pmouseX)/2.0;
-            eyeY -= (mouseY - pmouseY)/2.0;
-            centerY -= (mouseY - pmouseY)/2.0;
-        } else if (mousePressed && (mouseButton == CENTER)){    // inclinazione lungo Z
-            centerZ += mouseY - pmouseY;
+            //Allenamento per l'uso delle matrici
+//            SimpleMatrix look = new SimpleMatrix(3,1);
+//            look.set(0,0, eyeX);
+//            look.set(1,0, eyeY);
+//            look.set(2,0, eyeZ);
+//            println("look");
+//            look.print();
+//            SimpleMatrix center = new SimpleMatrix(3,1);
+//            center.set(0,0, centerX);
+//            center.set(1,0, centerY);
+//            center.set(2,0, centerZ);
+//            println("center");
+//            center.print();
+//            float d = dist(eyeX,eyeY,eyeZ,centerX,centerY,centerZ);
+//            d += mouseY - pmouseY;
+//
+//            SimpleMatrix pos = new SimpleMatrix(3,1);
+//            pos.set(look.plus(-1,center)); //look-center
+//            pos = pos.divide(NormOps_DDRM.normP2(pos.getDDRM())); //normalize
+//            println("pos");
+//            pos.print();
+//            center = center.plus(d,pos);
+//            center.print();
+//
+//            eyeX = (float)center.get(0,0);
+//            eyeY = (float)center.get(1,0);
+//            eyeZ = (float)center.get(2,0);
+            Zrot += (mouseX - pmouseX)/200.0;
         }
         if (centerZ+10 >eyeZ )
             centerZ = eyeZ -15;
