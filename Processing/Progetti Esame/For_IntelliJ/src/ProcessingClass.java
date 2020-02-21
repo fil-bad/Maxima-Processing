@@ -77,7 +77,7 @@ public class ProcessingClass extends PApplet {
     private void cameraInit() {
         eyeX = 0.0f;
         eyeY = 400.f;
-        eyeZ = 550.0f;
+        eyeZ = 400.0f;
 
         centerX = 0.0f;
         centerY = 0.0f;
