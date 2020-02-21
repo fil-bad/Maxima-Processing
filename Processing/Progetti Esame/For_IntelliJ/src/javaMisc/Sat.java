@@ -118,5 +118,4 @@ public abstract class Sat {
         System.out.println("Does a contain d? " + contains(a,d));
         // si engono a creare problemi ogni qualvolta si ha un vertica coincidente o un vertice su uno spigolo
     }
-
 }
