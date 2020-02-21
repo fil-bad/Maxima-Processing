@@ -10,6 +10,6 @@
     <orderEntry type="library" name="Processing" level="project" />
     <orderEntry type="library" name="JavaFx" level="project" />
     <orderEntry type="library" name="ejml-v0" level="project" />
-    <orderEntry type="library" name="org.dyn4j:dyn4j:3.4.0" level="project" />
+    <orderEntry type="library" name="math&amp;spline" level="project" />
   </component>
 </module>
