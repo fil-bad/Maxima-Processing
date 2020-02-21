@@ -111,9 +111,11 @@ public abstract class Sat {
         if (collision_res) {
             System.out.println("Does a contain c? " + contains(a,c));
         }
-        //last case, two exactly identical shapes
+        //two exactly identical shapes
         System.out.println("Does a contain a? " + contains(a,a));
-
+        // an edge smaller
+        Polygon d = new Polygon(new Vertex(10,10), new Vertex(10,30), new Vertex(100,30),new Vertex(100,10));
+        System.out.println("Does a contain d? " + contains(a,d));
+        // si engono a creare problemi ogni qualvolta si ha un vertica coincidente o un vertice su uno spigolo
     }
-
 }
