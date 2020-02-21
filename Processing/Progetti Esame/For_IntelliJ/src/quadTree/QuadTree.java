@@ -51,7 +51,7 @@ public class QuadTree {
         if (node == null)
             return;
 
-        System.out.printf("\nLevel = %d [X1=%d Y1=%d] \t[X2=%d Y2=%d] ",
+        System.out.printf("\nLevel = %d [X1=%2f Y1=%2f] \t[X2=%2f Y2=%2f] ",
                 node.level, node.boundry.getxMin(), node.boundry.getyMin(),
                 node.boundry.getxMax(), node.boundry.getyMax());
 
