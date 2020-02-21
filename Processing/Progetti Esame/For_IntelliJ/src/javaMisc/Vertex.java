@@ -44,9 +44,11 @@ public class Vertex {
         pos.set(ap);
     }
 
-    // +1 := Oltre l'asse X, o se sull'asse con Y maggiore
-    // -1 := opposto
-    // 0 := Stesso punto entro EPS
+    /**
+     *  +1 := Oltre l'asse X, o se sull'asse con Y maggiore
+     * -1 := opposto
+     * 0 := Stesso punto entro EPS
+     **/
     public int compareTo(Vertex p) {
         CommonOps_DDF2.subtract(pos, p.get(), ap);
         if (Math.abs(ap.a1) > EPS) return pos.a1 > p.get().a1 ? 1 : -1;
@@ -55,10 +57,26 @@ public class Vertex {
     }
 
     /** returns true if this Vertex it is on the line defined by a and b **/
-//    boolean onLine(Vertex a, Vertex b) {
-//        if (a.compareTo(b) == 0) return compareTo(a) == 0;
-//        return Math.abs(new Vector(a, b).cross(new Vector(a, this))) < EPS;
-//    }
+    boolean onLine(Vertex a, Vertex b) {
+        if (a.compareTo(b) == 0) return compareTo(a) == 0;      // Se a,b molto vicini, li considero stesso punto
+        // a X b = 0 se a//b
+        CommonOps_DDF2.subtract(a.get(),b.get(),ap);
+        double z = pos.a1 * ap.a2 - pos.a2 * ap.a1;     // x*ap.y - y*ap.x
+        return Math.abs(z) < EPS; // a X b = 0 se a//b
+    }
+
+    boolean onSegment(Vertex a, Vertex b)
+    {
+        if(onLine(a,b)){
+            if(a.compareTo(b) == 1){    //a dopo di b
+                return a.compareTo(this) == -1;
+            }else{                      //a prima di b
+                return a.compareTo(this) == 1;
+            }
+        }else
+            return false;
+
+    }
 
     public void set(double x, double y) {
         pos.set(x, y);
