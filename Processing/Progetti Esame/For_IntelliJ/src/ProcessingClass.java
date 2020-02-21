@@ -85,7 +85,7 @@ public class ProcessingClass extends PApplet {
 
         Zrot = 0.0f;
 
-        addPoint = new Vertex(0,0);
+        addPoint = new Vertex(0, 0);
     }
 
     private void cameraSet() {
@@ -115,6 +115,8 @@ public class ProcessingClass extends PApplet {
             y /= dn;
             z /= dn;
             d += mouseY - pmouseY;
+            if (d < 150)
+                d = 150;
             eyeX = centerX + x * d;
             eyeY = centerY + y * d;
             eyeZ = centerZ + z * d;
@@ -151,12 +153,12 @@ public class ProcessingClass extends PApplet {
             //
             addPoint.set((mouseX - pmouseX), -(mouseY - pmouseY));
             addPoint.rotate(-Zrot);
-            point.addX((float)addPoint.getX()*d/800);
-            point.addY((float)addPoint.getY()*d/800);
+            point.addX((float) addPoint.getX() * d / 800);
+            point.addY((float) addPoint.getY() * d / 800);
         }
 
-        if (centerZ + 10 > eyeZ)
-            centerZ = eyeZ - 15;
+//        if (centerZ + 10 > eyeZ)
+//            centerZ = eyeZ - 15;
 
         camera(eyeX, eyeY, eyeZ, // eyeX, eyeY, eyeZ
                 centerX, centerY, centerZ, // centerX, centerY, centerZ
