@@ -7,8 +7,7 @@ import processingElement.*;
 import quadTree.Boundary;
 import quadTree.QuadTree;
 
-import static quadTree.Coord.NW;
-import static quadTree.Coord.SE;
+import static quadTree.Coord.*;
 
 public class ProcessingClass extends PApplet {
 
@@ -43,9 +42,12 @@ public class ProcessingClass extends PApplet {
 
         qt = new QuadTree(1, new Boundary(-400, -200, 400, 200));
         qt.split();
+        qt.getNode(SW).setFreeSpace(false);
+        qt.getNode(NW).setFreeSpace(false);
         qt.getNode(SE).split();
         qt.getNode(SE).getNode(NW).setFreeSpace(false);
         qt.getNode(SE).getNode(NW).split();
+        qt.getNode(SE).getNode(NW).getNode(SW).setFreeSpace(false);
 
     }
 

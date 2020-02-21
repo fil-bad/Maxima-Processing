@@ -84,44 +84,27 @@ public class QuadTree {
         }
     }
 
+    // non lascia invariato lo stile
     static public void dfs(QuadTree node, PApplet win) {
         if (node == null)
             return;
 
-
-        System.out.printf("L%d [X1=%.2f Y1=%.2f] \t[X2=%.2f Y2=%.2f]\n",
-                node.level, node.boundary.getxMin(), node.boundary.getyMin(),
-                node.boundary.getxMax(), node.boundary.getyMax());
-
         if (node.isLeaf()) {
+            if(node.isFreeSpace())
+                win.fill(255);
             win.rect((float)node.boundary.getxMin(),(float)node.boundary.getyMin(),(float)node.boundary.getW(),(float)node.boundary.getH());
 
-            System.out.print("|");
-            for (int i = 0; i < node.level; i++)
-                System.out.print("\t");
-            System.out.println("\tLeaf Node. FreeSpace:" + node.isFreeSpace());
         } else {
-            for (int i = 0; i < node.level; i++)
-                System.out.print("|-----");
-            System.out.print("NE:");
+
             win.fill(255,0,0);
             dfs(node.northEast,win);
 
-            for (int i = 0; i < node.level; i++)
-                System.out.print("|-----");
-            System.out.print("NW:");
             win.fill(0,255,0);
             dfs(node.northWest,win);
 
-            for (int i = 0; i < node.level; i++)
-                System.out.print("|-----");
-            System.out.print("SW:");
             win.fill(0,0,255);
             dfs(node.southWest,win);
 
-            for (int i = 0; i < node.level; i++)
-                System.out.print("|-----");
-            System.out.print("SE:");
             win.fill(0,255,255);
             dfs(node.southEast,win);
         }
