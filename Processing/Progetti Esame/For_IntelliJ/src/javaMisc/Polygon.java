@@ -51,6 +51,10 @@ public class Polygon {
         verifying if a Vertex is contained in the polygon; for further explanation, see
         https://stackoverflow.com/questions/8721406/how-to-determine-if-a-point-is-inside-a-2d-convex-polygon
         */
+        //todo: il codice genera un falso positivo se siamo ESATTAMENTE su un vertice; possibili soluzioni:
+        //      1)aggiungere un "rumore" nella creazione ostacoli (così è quasi impossibile passarci sopra)
+        //      2)aggiungere a posteriori una verifica sulla presenza nello stesso livello del QuadTree di tutti neri
+        //      3)trovare un algoritmo migliore :(
         int i;
         int j;
         boolean result = false;
