@@ -27,7 +27,7 @@ public class RotLink implements Link {
 
     @Override
     public void printLink() {
-        System.out.println("["+ this.theta +";"+ this.d +";"+ this.alpha +";"+ this.a +"]");
+        System.out.printf("[%.3f;%.3f;%.3f;%.3f]", this.theta, this.d, this.alpha, this.a);
     }
 
     @Override
