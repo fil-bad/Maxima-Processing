@@ -79,6 +79,20 @@ public class QuadTree {
         }
     }
 
+    public QuadTree getNode(Coord c) {
+        switch (c){
+            case NE:
+                return northEast;
+            case NW:
+                return northWest;
+            case SW:
+                return southWest;
+            case SE:
+                return southEast;
+        }
+        return null;
+    }
+
     public static Stack<QuadTree> reverseBFS(QuadTree root) {
         Queue<QuadTree> q = new LinkedList<QuadTree>() ;
         Stack<QuadTree> s = new Stack<QuadTree>();

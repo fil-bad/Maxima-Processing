@@ -1,4 +1,4 @@
-package quadtree;
+package quadTree;
 import javaMisc.Polygon;
 import javaMisc.Vertex;
 
