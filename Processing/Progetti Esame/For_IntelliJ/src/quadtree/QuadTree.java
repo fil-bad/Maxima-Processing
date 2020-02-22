@@ -1,9 +1,9 @@
-package quadTree;
+package quadtree;
 
 import processing.core.PApplet;
 
-import static quadTree.Coord.*;
-import static quadTree.Side.*;
+import static quadtree.Coord.*;
+import static quadtree.Side.*;
 
 import java.util.LinkedList;
 import java.util.Queue;

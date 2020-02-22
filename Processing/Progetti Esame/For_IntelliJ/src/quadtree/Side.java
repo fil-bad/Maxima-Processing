@@ -1,4 +1,4 @@
-package quadTree;
+package quadtree;
 
 public enum Side {
     N,

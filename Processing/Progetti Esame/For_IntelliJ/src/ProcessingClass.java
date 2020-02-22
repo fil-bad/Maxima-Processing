@@ -1,11 +1,10 @@
 import javaMisc.Vertex;
 import processing.core.*;
 import processingElement.*;
-import quadTree.Boundary;
-import quadTree.Coord;
-import quadTree.QuadTree;
-import static quadTree.Coord.*;
-import static quadTree.Side.*;
+import quadtree.Boundary;
+import quadtree.Coord;
+import quadtree.QuadTree;
+import static quadtree.Coord.*;
 
 
 public class ProcessingClass extends PApplet {
