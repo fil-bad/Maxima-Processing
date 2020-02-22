@@ -1,13 +1,12 @@
-
 import javaMisc.Vertex;
-import org.ejml.dense.row.NormOps_DDRM;
-import org.ejml.simple.SimpleMatrix;
 import processing.core.*;
 import processingElement.*;
-import quadtree.Boundary;
-import quadtree.QuadTree;
+import quadTree.Boundary;
+import quadTree.Coord;
+import quadTree.QuadTree;
+import static quadTree.Coord.*;
+import static quadTree.Side.*;
 
-import static quadtree.Coord.*;
 
 public class ProcessingClass extends PApplet {
 
@@ -42,7 +41,7 @@ public class ProcessingClass extends PApplet {
 
         qt = new QuadTree(new Boundary(-400, -200, 400, 200));
         qt.split();
-        qt.getNode(SW).setFreeSpace(false);
+        qt.getNode(Coord.SW).setFreeSpace(false);
         qt.getNode(NW).setFreeSpace(false);
         qt.getNode(SE).split();
         qt.getNode(SE).getNode(NW).setFreeSpace(false);
