@@ -1,6 +1,7 @@
 package quadtree;
 
 import processing.core.PApplet;
+
 import static quadtree.Coord.*;
 import static quadtree.Side.*;
 
@@ -76,7 +77,7 @@ public class QuadTree {
 
     }
 
-    private static void foundFreeSpace (QuadTree node, Obstacle[] obst){
+    private static void foundFreeSpace(QuadTree node, Obstacle[] obst) {
 //        Sat
     }
 
@@ -123,7 +124,7 @@ public class QuadTree {
         return null;
     }
 
-    public static Stack<QuadTree> qtToGraph(QuadTree root) {
+    public static Stack<QuadTree> qt2leaves(QuadTree root) {
         // tale funzione si proccupa di creare uno stack di nodi foglia del quadtree, e contemporaneamente genera i
         // nodi del grafo per il percorso del robot. Successivamente, un'altra funzione si preoccuperà di creare gli
         // archi tra nodi adiacenti, utilizzando lo stack ritornato da questa funzione.
@@ -269,7 +270,7 @@ public class QuadTree {
                     break;
             }
         }
-        if(side!=HALT)  // Sto saltando tipo "PacMAn"
+        if (side != HALT)  // Sto saltando tipo "PacMAn"
             code = "";
         else
             code = String.valueOf(codeBuf);
@@ -308,6 +309,50 @@ public class QuadTree {
         southEast.dad = this;
 
         setFreeSpace(false);
+
+    }
+
+    public static void main(String[] args) {
+        // Riprodico QuadTree presente nella publicazione
+        QuadTree qt = new QuadTree(new Boundary(-100, -100, 100, 100));
+        qt.split();
+        qt.getNode('1').split();
+        qt.getNode('2').split();
+        qt.getNode('2').getNode('1').split();
+        qt.getNode('3').split();
+        qt.getNode('3').getNode('0').split();
+        qt.getNode('3').getNode('2').split();
+
+        //Traveling the graph
+        QuadTree.dfs(qt);
+        System.out.println();
+        //Test neighbors method
+
+        QuadTree node = QuadTree.nearestParent(qt, "321");
+        System.out.println(node.dataNode());
+
+        System.out.print("Find Coord of Est neighbors of 302: ");
+        System.out.println(QuadTree.FSMneighbors("302", E));
+
+        System.out.print("Find Coord of West neighbors of 320: ");
+        System.out.println(QuadTree.FSMneighbors("320", W));
+
+        System.out.println("Find Node West neighbors 320:");
+        System.out.println("\t" + QuadTree.nearestParent(qt, "320").FSMneighbors(W).dataNode());
+
+        System.out.println("Find Node Sud neighbors 323 (Out of range):");
+        node = QuadTree.nearestParent(qt, "323").FSMneighbors(S);
+        if (node != null)
+            System.out.println("\t" + node.dataNode());
+        else
+            System.out.println("\t Il nodo non esiste");
+
+        System.out.println("Find Node Est neighbors 0 (Split Node):");
+        node = QuadTree.nearestParent(qt, "0").FSMneighbors(E);
+        if (node != null)
+            System.out.println("\t" + node.dataNode());
+        else
+            System.out.println("\t Il nodo non esiste");
 
     }
 
@@ -373,12 +418,12 @@ public class QuadTree {
 
     }
 
-    public Boundary getBoundry() {
-        return boundary;
+    public void printTree() {
+        QuadTree.dfs(this);
     }
 
-    public String dataNode() {
-        return String.format("L%d code:%s; isLeaf:%s; %s", level, myCode, isLeaf(), boundary.dataBoundary());
+    public Boundary getBoundary() {
+        return boundary;
     }
 
     public boolean isRoot() {
@@ -398,47 +443,7 @@ public class QuadTree {
         this.freeSpace = freeSpace;
     }
 
-    public static void main(String[] args) {
-        // Riprodico QuadTree presente nella publicazione
-        QuadTree qt = new QuadTree(new Boundary(-100, -100, 100, 100));
-        qt.split();
-        qt.getNode('1').split();
-        qt.getNode('2').split();
-        qt.getNode('2').getNode('1').split();
-        qt.getNode('3').split();
-        qt.getNode('3').getNode('0').split();
-        qt.getNode('3').getNode('2').split();
-
-        //Traveling the graph
-        QuadTree.dfs(qt);
-        System.out.println();
-        //Test neighbors method
-
-        QuadTree node = QuadTree.nearestParent(qt, "321");
-        System.out.println(node.dataNode());
-
-        System.out.print("Find Coord of Est neighbors of 302: ");
-        System.out.println(QuadTree.FSMneighbors("302", E));
-
-        System.out.print("Find Coord of West neighbors of 320: ");
-        System.out.println(QuadTree.FSMneighbors("320", W));
-
-        System.out.println("Find Node West neighbors 320:");
-        System.out.println("\t" + QuadTree.nearestParent(qt, "320").FSMneighbors(W).dataNode());
-
-        System.out.println("Find Node Sud neighbors 323 (Out of range):");
-        node = QuadTree.nearestParent(qt, "323").FSMneighbors(S);
-        if(node!=null)
-            System.out.println("\t" + node.dataNode());
-        else
-            System.out.println("\t Il nodo non esiste");
-
-        System.out.println("Find Node Est neighbors 0 (Split Node):");
-        node = QuadTree.nearestParent(qt, "0").FSMneighbors(E);
-        if(node!=null)
-            System.out.println("\t" + node.dataNode());
-        else
-            System.out.println("\t Il nodo non esiste");
-
+    public String dataNode() {
+        return String.format("L%d code:%s; isLeaf:%s; isFree:%s %s", level, myCode, isLeaf(), isFreeSpace(), boundary.dataBoundary());
     }
 }
