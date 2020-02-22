@@ -4,6 +4,10 @@ import processing.core.PApplet;
 
 import static quadtree.Coord.*;
 
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
+
 /*
  *  			N
  *  		W		E
@@ -33,9 +37,9 @@ public class QuadTree {
     private QuadTree southEast = null;
     private Boundary boundary;
 
-    public QuadTree(int level, Boundary boundry) {
+    public QuadTree(int level, Boundary boundary) {
         this.level = level;
-        this.boundary = boundry;
+        this.boundary = boundary;
         freeSpace = true;
     }
 
@@ -43,18 +47,34 @@ public class QuadTree {
         return dad;
     }
 
-    public QuadTree getNode(Coord c) {
-        switch (c){
-            case NE:
-                return northEast;
-            case NW:
-                return northWest;
-            case SW:
-                return southWest;
-            case SE:
-                return southEast;
+    public static Stack<QuadTree> reverseBFS(QuadTree root) {
+        Queue<QuadTree> q = new LinkedList<QuadTree>();
+        Stack<QuadTree> s = new Stack<QuadTree>();
+        q.add(root);// add the root node to the queue
+
+        while (!q.isEmpty()) {
+            // add the children to the queue
+            QuadTree n = q.remove();
+            if (n.northEast != null) {
+                q.add(n.northEast);
+            }
+            if (n.northWest != null) {
+                q.add(n.northWest);
+            }
+            if (n.southWest != null) {
+                q.add(n.southWest);
+            }
+            if (n.southEast != null) {
+                q.add(n.southEast);
+            }
+            // add the extracted node to the Stack
+            // here we must insert all the logic
+            if (n.isLeaf() && n.freeSpace) {
+                s.add(n);
+            }
+            //so we add only white valid tiles
         }
-        return null;
+        return s;
     }
 
     public void split() throws RuntimeException {
@@ -77,9 +97,36 @@ public class QuadTree {
 
     }
 
-    public Boundary getBoundry() {
-        return boundary;
+    public static void main(String[] args) {
+        QuadTree qt = new QuadTree(1, new Boundary(0, 0, 1000, 1000));
+        qt.split();
+        qt.getNode(SE).split();
+        qt.getNode(SE).getNode(NE).setFreeSpace(false);
+        qt.getNode(SE).getNode(NW).split();
+        //Traveling the graph
+        QuadTree.dfs(qt);
+
+        Stack<QuadTree> leafList = QuadTree.reverseBFS(qt);
+        System.out.println("Leaf levels:");
+        while (!leafList.isEmpty()) {
+            System.out.println(leafList.pop().getLevel());
+        }
     }
+
+    public QuadTree getNode(Coord c) {
+        switch (c) {
+            case NE:
+                return northEast;
+            case NW:
+                return northWest;
+            case SW:
+                return southWest;
+            case SE:
+                return southEast;
+        }
+        return null;
+    }
+
 
     /* Traveling the Graph using Depth First Search*/
     static void dfs(QuadTree node) {
@@ -162,13 +209,11 @@ public class QuadTree {
         this.freeSpace = freeSpace;
     }
 
-    public static void main(String args[]) {
-        QuadTree qt = new QuadTree(1, new Boundary(0, 0, 1000, 1000));
-        qt.split();
-        qt.getNode(SE).split();
-        qt.getNode(SE).getNode(NW).setFreeSpace(false);
-        qt.getNode(SE).getNode(NW).split();
-        //Traveling the graph
-        QuadTree.dfs(qt);
+    public Boundary getBoundary() {
+        return boundary;
+    }
+
+    public int getLevel() {
+        return this.level;
     }
 }
