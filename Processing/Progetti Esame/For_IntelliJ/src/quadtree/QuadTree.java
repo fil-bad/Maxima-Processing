@@ -286,7 +286,7 @@ public class QuadTree {
 
     }
 
-    /* Traveling the Graph using Depth First Search*/
+    /* Traveling the QTGraph using Depth First Search*/
     public static void dfs(QuadTree node) {
         if (node == null)
             return;
