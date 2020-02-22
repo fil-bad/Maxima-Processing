@@ -1,10 +1,8 @@
-package javaMisc;
+package geometry;
 
 import org.ejml.data.DMatrix2;
 import org.ejml.data.DMatrix2x2;
 import org.ejml.dense.fixed.CommonOps_DDF2;
-import org.ejml.dense.fixed.NormOps_DDF2;
-import org.ejml.dense.row.NormOps_DDRM;
 
 import static java.lang.Math.*;
 

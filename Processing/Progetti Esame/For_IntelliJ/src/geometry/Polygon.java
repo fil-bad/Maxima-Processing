@@ -1,4 +1,4 @@
-package javaMisc;
+package geometry;
 import static java.lang.Math.*;
 
 public class Polygon {

@@ -1,6 +1,6 @@
 package processingElement;
-import javaMisc.Polygon;
-import javaMisc.Vertex;
+import geometry.Polygon;
+import geometry.Vertex;
 import processing.core.PApplet;
 
 public class Box extends Solid implements Obj3D, Obstacle {

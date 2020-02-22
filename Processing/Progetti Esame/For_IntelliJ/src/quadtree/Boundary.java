@@ -1,6 +1,6 @@
 package quadtree;
-import javaMisc.Polygon;
-import javaMisc.Vertex;
+import geometry.Polygon;
+import geometry.Vertex;
 
 /* Using two points of Rectangular (Top,Left) & (Bottom , Right)*/
 public class Boundary {

@@ -1,4 +1,4 @@
-import javaMisc.Vertex;
+import geometry.Vertex;
 import processing.core.*;
 import processingElement.*;
 import quadtree.Boundary;
