@@ -57,6 +57,7 @@ public class QuadTree {
     protected QuadTree(int level, Boundary boundary, String myCode) {
         this.level = level;
         this.boundary = boundary;
+        this.myCode = myCode;
         freeSpace = true;
     }
 
@@ -376,6 +377,7 @@ public class QuadTree {
         QuadTree node = qt.nearestParent(qt, "321");
         System.out.println(node.dataNode());
 
+        System.out.print("Coord of Est neighbors of 302: ");
         System.out.println(QuadTree.FSMneighbors("302", E));
 
         System.out.println("SE-NW-NE find nord neighborsN:");
