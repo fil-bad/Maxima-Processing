@@ -125,7 +125,7 @@ public class QuadTree {
             }
             //so we add only white valid tiles
         }
-        return null;
+        return s;
     }
 
     // Ritorna il nodo padre più vicino alla coordinata richiesta
