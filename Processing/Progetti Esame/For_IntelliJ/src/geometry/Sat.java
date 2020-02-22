@@ -57,8 +57,8 @@ public abstract class Sat {
     /**
      * Returns a vector going from point1 to point2
      */
-    private static Vertex edgeVector(Vertex point1, Vertex point2) {
-        return new Vertex(point2.getX() - point1.getX(), point2.getY() - point1.getY());
+    private static Vertex edgeVector(Vertex p1, Vertex p2) {
+        return new Vertex(p2.getX() - p1.getX(), p2.getY() - p1.getY());
     }
 
     /**
