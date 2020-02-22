@@ -1,13 +1,15 @@
 package quadtree;
 
 import processing.core.PApplet;
-
 import static quadtree.Coord.*;
 import static quadtree.Side.*;
 
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
+
+import geometry.*;
+import processingElement.Obstacle;
 
 
 // The method to find neighbor are describe here:
@@ -59,6 +61,23 @@ public class QuadTree {
         this.boundary = boundary;
         freeSpace = true;
         this.myCode = "";
+    }
+
+    public QuadTree(Obstacle[] obst, Boundary boundary) {
+        this.level = 1;
+        this.boundary = boundary;
+        freeSpace = true;
+        this.myCode = "";
+        int nodeCount = 1;
+//        while (nodeCount>0){
+//
+//
+//        }
+
+    }
+
+    private static void foundFreeSpace (QuadTree node, Obstacle[] obst){
+//        Sat
     }
 
     /**
@@ -250,7 +269,10 @@ public class QuadTree {
                     break;
             }
         }
-        code = String.valueOf(codeBuf);
+        if(side!=HALT)  // Sto saltando tipo "PacMAn"
+            code = "";
+        else
+            code = String.valueOf(codeBuf);
         return code;
     }
 
@@ -259,6 +281,8 @@ public class QuadTree {
         if (!this.isLeaf())
             return null;
         String tgCode = FSMneighbors(this.myCode, side);
+        if (tgCode.equals(""))  //Lato senza vicini
+            return null;
         QuadTree tree = this;
         while (!tree.isRoot())
             tree = tree.dad;
@@ -354,7 +378,7 @@ public class QuadTree {
     }
 
     public String dataNode() {
-        return String.format("L%d code:%s %s", level, myCode, boundary.dataBoundary());
+        return String.format("L%d code:%s; isLeaf:%s; %s", level, myCode, isLeaf(), boundary.dataBoundary());
     }
 
     public boolean isRoot() {
@@ -401,6 +425,20 @@ public class QuadTree {
 
         System.out.println("Find Node West neighbors 320:");
         System.out.println("\t" + QuadTree.nearestParent(qt, "320").FSMneighbors(W).dataNode());
+
+        System.out.println("Find Node Sud neighbors 323 (Out of range):");
+        node = QuadTree.nearestParent(qt, "323").FSMneighbors(S);
+        if(node!=null)
+            System.out.println("\t" + node.dataNode());
+        else
+            System.out.println("\t Il nodo non esiste");
+
+        System.out.println("Find Node Est neighbors 0 (Split Node):");
+        node = QuadTree.nearestParent(qt, "0").FSMneighbors(E);
+        if(node!=null)
+            System.out.println("\t" + node.dataNode());
+        else
+            System.out.println("\t Il nodo non esiste");
 
     }
 }
