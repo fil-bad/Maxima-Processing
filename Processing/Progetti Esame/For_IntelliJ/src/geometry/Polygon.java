@@ -73,7 +73,7 @@ public class Polygon {
         if (!result) { // se riesco a trovare almeno un punto che va bene, allora sono sul bordo
             for (int k = 0; k < this.vertices.length - 1; k++) {
                 if (isLeft(this.vertices[k], this.vertices[k + 1], tested) == 0.0) {
-                    // unico falso positivo, linee su un asse, elimino ciò
+                    // unico falso positivo, i bordi sono su un asse, esamino ciò
                     double v1_x = this.vertices[k].getX();
                     double v2_x = this.vertices[k + 1].getX();
                     double v1_y = this.vertices[k].getY();
