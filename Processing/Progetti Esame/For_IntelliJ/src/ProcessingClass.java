@@ -20,7 +20,7 @@ public class ProcessingClass extends PApplet {
         size(1200, 800, P3D);
     }
 
-    Box ob;
+    Box ob1, ob2;
     CommonDraw com;
     Terra gnd;
     Pointer point;
@@ -36,16 +36,28 @@ public class ProcessingClass extends PApplet {
         com = CommonDraw.getInstance(this);
         gnd = new Terra(this, 800, 400, color(101, 67, 33));
         point = new Pointer(this, 60, 800, 400);
-        ob = new Box(this, 50, 40, 10, color(255, 0, 0));
+        ob1 = new Box(this, 50, 40, 10, color(255, 150, 0));
+        ob2 = new Box(this, 50, 40, 10, color(0, 255, 0));
 
-        qt = new QuadTree(new Boundary(-400, -200, 400, 200));
-        qt.split();
-        qt.getNode(Coord.SW).setFreeSpace(false);
-        qt.getNode(NW).setFreeSpace(false);
-        qt.getNode(SE).split();
-        qt.getNode(SE).getNode(NW).setFreeSpace(false);
-        qt.getNode(SE).getNode(NW).split();
-        qt.getNode(SE).getNode(NW).getNode(SW).setFreeSpace(false);
+
+        ob1.setR(radians(50));
+
+        ob2.setD(150, -60, 0);
+
+
+
+
+
+
+
+        //QuadTree.dfs(qt);
+//        qt.split();
+//        qt.getNode(Coord.SW).setFreeSpace(false);
+//        qt.getNode(NW).setFreeSpace(false);
+//        qt.getNode(SE).split();
+//        qt.getNode(SE).getNode(NW).setFreeSpace(false);
+//        qt.getNode(SE).getNode(NW).split();
+//        qt.getNode(SE).getNode(NW).getNode(SW).setFreeSpace(false);
 
     }
 
@@ -59,19 +71,20 @@ public class ProcessingClass extends PApplet {
         cameraSet();
 
         //Oggetti da graficare
-        //fill(0,255,0);
         gnd.draw();
         com.assi(255);
         point.draw();
-//        point.printCoord();
+
+        ob1.setD(point.getX(), point.getY(), 0);
+        Obstacle[] obstacles ={ ob1, ob2};
+        qt = new QuadTree(obstacles, new Boundary(-400, -200, 400, 200), 10);
         QuadTree.dfs(qt,this);
 
 
-        ob.setD(0, 0, 0);
-        ob.setR(radians(50));
-        //ob.getPoly().printVertices();
 
-        ob.draw();
+
+        ob1.draw();
+        ob2.draw();
     }
 
     @Override
@@ -121,8 +134,8 @@ public class ProcessingClass extends PApplet {
             y /= dn;
             z /= dn;
             d += mouseY - pmouseY;
-            if (d < 150)
-                d = 150;
+            if (d < 10)    // 150
+                d = 10;
             eyeX = centerX + x * d;
             eyeY = centerY + y * d;
             eyeZ = centerZ + z * d;

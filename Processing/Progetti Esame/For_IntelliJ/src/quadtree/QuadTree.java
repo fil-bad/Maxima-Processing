@@ -1,9 +1,11 @@
 package quadtree;
 
 import processing.core.PApplet;
+
 import static quadtree.Coord.*;
 import static quadtree.Side.*;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
@@ -63,21 +65,43 @@ public class QuadTree {
         this.myCode = "";
     }
 
-    public QuadTree(Obstacle[] obst, Boundary boundary) {
+    public QuadTree(Obstacle[] obst, Boundary boundary, float minSize) {
         this.level = 1;
         this.boundary = boundary;
         freeSpace = true;
         this.myCode = "";
         int nodeCount = 1;
-//        while (nodeCount>0){
-//
-//
-//        }
-
+        foundFreeSpace(this, obst, minSize);
     }
 
-    private static void foundFreeSpace (QuadTree node, Obstacle[] obst){
-//        Sat
+    private static void foundFreeSpace(QuadTree node, Obstacle[] obst, float minSize) {
+        // entro con i nodi bianchi, nell'avanzare li rendo neri o li splitto
+        int i = 0;
+        for (Obstacle ob : obst) {
+
+            // se la finestra interseca un ostacolo
+            if (Sat.haveCollided(ob.getPoly(), node.getBoundry().getPoly())) {
+                // se La finestra è contenuta in un ostacolo allora è occupata
+                if (Sat.contains(ob.getPoly(), node.getBoundry().getPoly())) {
+                    node.setFreeSpace(false);
+                    return;
+                }
+                // Se l'attuale bordo è troppo piccolo coloro nero e vado avanti
+                if (node.getBoundry().getMinExtension() < minSize) {
+                    node.setFreeSpace(false);
+                    return;
+                }
+                node.split();
+                // Get the slice of the Array
+                foundFreeSpace(node.getNode(NW), Arrays.copyOfRange(obst, i, obst.length), minSize);
+                foundFreeSpace(node.getNode(NE), Arrays.copyOfRange(obst, i, obst.length), minSize);
+                foundFreeSpace(node.getNode(SW), Arrays.copyOfRange(obst, i, obst.length), minSize);
+                foundFreeSpace(node.getNode(SE), Arrays.copyOfRange(obst, i, obst.length), minSize);
+                return;
+            }
+
+            i++;
+        }
     }
 
     /**
@@ -269,7 +293,7 @@ public class QuadTree {
                     break;
             }
         }
-        if(side!=HALT)  // Sto saltando tipo "PacMAn"
+        if (side != HALT)  // Sto saltando tipo "PacMAn"
             code = "";
         else
             code = String.valueOf(codeBuf);
@@ -292,8 +316,9 @@ public class QuadTree {
 
     //Divido il nodo trasformandolo da foglia a split point
     public void split() throws RuntimeException {
-        if (!isLeaf())
-            throw new RuntimeException("Non è una foglia");
+        if (!isLeaf()) {
+            throw new RuntimeException("Non è una foglia:\n" + dataNode());
+        }
 
         northWest = new QuadTree(this.level + 1, boundary.getSector(NW), myCode + "0");
         northWest.dad = this;
@@ -428,14 +453,14 @@ public class QuadTree {
 
         System.out.println("Find Node Sud neighbors 323 (Out of range):");
         node = QuadTree.nearestParent(qt, "323").FSMneighbors(S);
-        if(node!=null)
+        if (node != null)
             System.out.println("\t" + node.dataNode());
         else
             System.out.println("\t Il nodo non esiste");
 
         System.out.println("Find Node Est neighbors 0 (Split Node):");
         node = QuadTree.nearestParent(qt, "0").FSMneighbors(E);
-        if(node!=null)
+        if (node != null)
             System.out.println("\t" + node.dataNode());
         else
             System.out.println("\t Il nodo non esiste");
