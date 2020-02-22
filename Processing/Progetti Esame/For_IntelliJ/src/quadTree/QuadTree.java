@@ -4,6 +4,12 @@ import processing.core.PApplet;
 
 import static quadTree.Coord.*;
 import static quadTree.Side.*;
+
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
+
+
 // The method to find neighbor are describe here:
 //http://web.archive.org/web/20120907211934/http://ww1.ucmss.com/books/LFS/CSREA2006/MSV4517.pdf
 /*                           _______
@@ -39,19 +45,18 @@ public class QuadTree {
     /**
      * Costruttore radice
      **/
-    public QuadTree(Boundary boundry) {
+    public QuadTree(Boundary boundary) {
         this.level = 1;
-        this.boundary = boundry;
+        this.boundary = boundary;
         freeSpace = true;
     }
 
     /**
      * Costruttore dei nodi
      **/
-    protected QuadTree(int level, Boundary boundry, String myCode) {
+    protected QuadTree(int level, Boundary boundary, String myCode) {
         this.level = level;
-        this.boundary = boundry;
-        this.myCode = myCode;
+        this.boundary = boundary;
         freeSpace = true;
     }
 
@@ -74,16 +79,32 @@ public class QuadTree {
         }
     }
 
-    public QuadTree getNode(Coord c) {
-        switch (c) {
-            case NE:
-                return northEast;
-            case NW:
-                return northWest;
-            case SW:
-                return southWest;
-            case SE:
-                return southEast;
+    public static Stack<QuadTree> reverseBFS(QuadTree root) {
+        Queue<QuadTree> q = new LinkedList<QuadTree>() ;
+        Stack<QuadTree> s = new Stack<QuadTree>();
+        q.add(root);// add the root node to the queue
+
+        while (!q.isEmpty()) {
+            // add the children to the queue
+            QuadTree n = q.remove();
+            if (n.northEast != null) {
+                q.add(n.northEast);
+            }
+            if (n.northWest != null) {
+                q.add(n.northWest);
+            }
+            if (n.southWest != null) {
+                q.add(n.southWest);
+            }
+            if (n.southEast != null) {
+                q.add(n.southEast);
+            }
+            // add the extracted node to the Stack
+            // here we must insert all the logic
+            if (n.isLeaf() && n.freeSpace) {
+                s.add(n);
+            }
+            //so we add only white valid tiles
         }
         return null;
     }
