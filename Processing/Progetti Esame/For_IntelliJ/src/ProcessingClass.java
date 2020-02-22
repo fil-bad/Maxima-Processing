@@ -40,7 +40,7 @@ public class ProcessingClass extends PApplet {
         point = new Pointer(this, 60, 800, 400);
         ob = new Box(this, 50, 40, 10, color(255, 0, 0));
 
-        qt = new QuadTree(1, new Boundary(-400, -200, 400, 200));
+        qt = new QuadTree(new Boundary(-400, -200, 400, 200));
         qt.split();
         qt.getNode(SW).setFreeSpace(false);
         qt.getNode(NW).setFreeSpace(false);

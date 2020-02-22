@@ -6,3 +6,4 @@ public enum Coord {
     SW,
     SE
 }
+
