@@ -1,11 +1,14 @@
 package geometry;
 
+import org.ejml.dense.fixed.CommonOps_DDF2;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 public abstract class Sat {
 
+    // true if p1 intersect p2, or otherwise
     public static boolean haveCollided(Polygon poly1, Polygon poly2) {
 
         Vertex[] vert_poly1 = poly1.getVertices(); // this two lines were added due to compatibility reasons
@@ -15,6 +18,7 @@ public abstract class Sat {
         return runSAT(vert_poly1, vert_poly2);
     }
 
+    // true if p1 contains p2, not otherwise
     public static boolean contains(Polygon p1, Polygon p2) {
         /*
         ask if the first (bigger) contains the second (smaller); in our algorithm, we must test if a generic shape
@@ -71,8 +75,8 @@ public abstract class Sat {
     /**
      * Returns the dot (or scalar) product of the two vectors
      */
-    private static double dotProduct(Vertex vertex1, Vertex vertex2) {
-        return vertex1.getX() * vertex2.getX() + vertex1.getY() * vertex2.getY();
+    private static double dotProduct(Vertex v1, Vertex v2) {
+        return CommonOps_DDF2.dot(v1.get(),v2.get());
     }
 
     /**
