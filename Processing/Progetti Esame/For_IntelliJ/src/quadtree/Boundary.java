@@ -45,6 +45,10 @@ public class Boundary {
         return xMin;
     }
 
+    public double getMinExtension() {
+        return Math.min(getW(),getH());
+    }
+
     public double getyMin() {
         return yMin;
     }
@@ -63,7 +67,7 @@ public class Boundary {
     public double getX(){ return xMin + getW()/2.0;}
     public double getY(){ return yMin + getH()/2.0;}
 
-    public Polygon getPoly() throws Exception{
+    public Polygon getPoly() throws RuntimeException{
         Vertex[] v_s = {
                 new Vertex(xMin, yMin),     // Sud-Ovest
                 new Vertex(xMax, yMin),     // Sud-Est
