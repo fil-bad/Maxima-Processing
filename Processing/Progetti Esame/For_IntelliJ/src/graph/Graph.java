@@ -1,4 +1,4 @@
-package javaMisc;
+package graph;
 
 public class Graph {
 }
