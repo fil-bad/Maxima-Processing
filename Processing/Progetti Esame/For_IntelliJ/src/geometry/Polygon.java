@@ -59,18 +59,33 @@ public class Polygon {
     public boolean contains(Vertex tested) {
         //verifying if a Vertex is contained in the polygon; for further explanation, see
         //https://stackoverflow.com/questions/8721406/how-to-determine-if-a-point-is-inside-a-2d-convex-polygon
-        int i;
-        int j;
+        int i, j;
         boolean result = false;
+        double test_x = tested.getX();
+        double test_y = tested.getY();
+
         for (i = 0, j = this.vertices.length - 1; i < this.vertices.length; j = i++) {
-            if ((this.vertices[i].getY() > tested.getY()) != (this.vertices[j].getY() > tested.getY()) &&
-                    (tested.getX() < (this.vertices[j].getX() - this.vertices[i].getX()) * (tested.getY() - this.vertices[i].getY()) / (this.vertices[j].getY()-this.vertices[i].getY()) + this.vertices[i].getX())) {
+            if ((this.vertices[i].getY() > test_y) != (this.vertices[j].getY() > test_y) &&
+                    (test_x < (this.vertices[j].getX() - this.vertices[i].getX()) * (test_y - this.vertices[i].getY()) / (this.vertices[j].getY() - this.vertices[i].getY()) + this.vertices[i].getX())) {
                 result = !result;
             }
         }
-        if (!result){ // se riesco a trovare almeno un punto che va bene, allora sono sul bordo
-            for (int k = 0; k<this.vertices.length-1; k++) {
-                if(isLeft(this.vertices[k], this.vertices[k + 1], tested) == 0.0) return true;
+        if (!result) { // se riesco a trovare almeno un punto che va bene, allora sono sul bordo
+            for (int k = 0; k < this.vertices.length - 1; k++) {
+                if (isLeft(this.vertices[k], this.vertices[k + 1], tested) == 0.0) {
+                    // unico falso positivo, linee su un asse, elimino ciò
+                    double v1_x = this.vertices[k].getX();
+                    double v2_x = this.vertices[k + 1].getX();
+                    double v1_y = this.vertices[k].getY();
+                    double v2_y = this.vertices[k + 1].getY();
+
+                    if (v1_x - v2_x == 0.0) { // cambia solo y
+                        if (max(v1_y, v2_y) >= test_y && min(v1_y, v2_y) <= test_y) return true;
+                    }
+                    if (v1_y - v2_y == 0.0) { // cambia solo x
+                        if (max(v1_x, v2_x) >= test_x && min(v1_x, v2_x) <= test_x) return true;
+                    }
+                }
             }
         }
         return result;

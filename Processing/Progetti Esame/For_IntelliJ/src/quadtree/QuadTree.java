@@ -29,9 +29,15 @@ import java.util.Stack;
  */
 public class QuadTree {
     //Global tree define
+    /**
+     * WARNING: non sovrascrivere i metodi hash() e toString() (necessari per far funzionare il grafo)
+     */
+
     private final int MAX_CAPACITY = 4;
 
-    /**  Tree structure variable   **/
+    /**
+     * Tree structure variable
+     **/
     private int level = 0;
     String myCode = "";
     private QuadTree dad = null;
