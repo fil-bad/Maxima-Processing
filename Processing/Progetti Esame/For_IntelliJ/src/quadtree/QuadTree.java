@@ -1,13 +1,15 @@
 package quadtree;
 
 import processing.core.PApplet;
-
 import static quadtree.Coord.*;
 import static quadtree.Side.*;
 
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
+
+import geometry.*;
+import processingElement.Obstacle;
 
 
 // The method to find neighbor are describe here:
@@ -53,6 +55,23 @@ public class QuadTree {
         this.boundary = boundary;
         freeSpace = true;
         this.myCode = "";
+    }
+
+    public QuadTree(Obstacle[] obst, Boundary boundary) {
+        this.level = 1;
+        this.boundary = boundary;
+        freeSpace = true;
+        this.myCode = "";
+        int nodeCount = 1;
+//        while (nodeCount>0){
+//
+//
+//        }
+
+    }
+
+    private static void foundFreeSpace (QuadTree node, Obstacle[] obst){
+//        Sat
     }
 
     /**

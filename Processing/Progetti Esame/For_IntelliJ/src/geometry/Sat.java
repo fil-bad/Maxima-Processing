@@ -96,30 +96,43 @@ public abstract class Sat {
 
     public static void main(String[] args) throws Exception {
         // creating two polygons
+        System.out.println("----Intersect polygons:----");
         Polygon a = new Polygon(new Vertex(10,10), new Vertex(10,100), new Vertex(100,100),new Vertex(100,10));
         Polygon b = new Polygon(new Vertex(20,20), new Vertex(20,120), new Vertex(120,120),new Vertex(120,20));
         // they are two squares which overlaps
         System.out.print("a: "); a.printVertices();
         System.out.print("b: "); b.printVertices();
-        boolean collision_res = haveCollided(a,b);
-        System.out.println("Do a & b collide? " + collision_res);
-        if (collision_res){
-            System.out.println("Does a contain b? " + contains(a,b));
-        }
+        System.out.println("\tDo a & b collide? " + haveCollided(a,b));
+        System.out.println("\tDoes a contain b? " + contains(a,b));
+        System.out.println("----Now invert the polygons:----");
+        System.out.println("\tDo a & b collide? " + haveCollided(b,a));
+        System.out.println("\tDoes a contain b? " + contains(b,a));
+        System.out.println("----Now same polygon:----");
+        System.out.println("\tDo a & a collide? " + haveCollided(a,a));
+        System.out.println("\tDoes a contain a? " + contains(a,a));
+
         // now the entire polygon c is contained in a
+        System.out.println("----Contained polygons:----");
         Polygon c = new Polygon(new Vertex(30,30), new Vertex(30,90), new Vertex(90,90),new Vertex(90,30));
         System.out.print("c: "); c.printVertices();
-        collision_res = haveCollided(a,c);
-        System.out.println("Do a & c collide? " + collision_res);
-        if (collision_res) {
-            System.out.println("Does a contain c? " + contains(a,c));
-        }
-        //two exactly identical shapes
-        System.out.println("Does a contain a? " + contains(a,a));
+
+        System.out.println("\tDo a & c collide? " + haveCollided(a,c));
+        System.out.println("\tDoes a contain c? " + contains(a,c));
+        System.out.println("----Now invert the polygon:----");
+        System.out.println("\tDo c & a collide? " + haveCollided(c,a));
+        System.out.println("\tDoes c contain a? " + contains(c,a));
+
+
+
         // an edge smaller
+        System.out.println("----One edge common polygons:----");
         Polygon d = new Polygon(new Vertex(10,10), new Vertex(10,30), new Vertex(100,30),new Vertex(100,10));
         System.out.print("d: "); d.printVertices();
-        System.out.println("Does a contain d? " + contains(a,d));
+        System.out.println("\tDo a & d collide? " + haveCollided(a,d));
+        System.out.println("\tDoes a contain d? " + contains(a,d));
+        System.out.println("----Now invert the polygon:----");
+        System.out.println("\tDo d & a collide? " + haveCollided(d,a));
+        System.out.println("\tDoes d contain a? " + contains(d,a));     //Todo: Errato, d non contiene a
         // si engono a creare problemi ogni qualvolta si ha un vertica coincidente o un vertice su uno spigolo
     }
 }
