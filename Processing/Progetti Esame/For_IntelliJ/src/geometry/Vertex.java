@@ -104,9 +104,8 @@ public class Vertex {
     }
 
     /** Returns a new vector which is orthogonal to the current vector **/
-    //todo: chiedere a fil perchè ritorna il perpendicolare negativo
     public Vertex orthogonal() {
-        return new Vertex(getY(), -getX());
+        return new Vertex(-getY(), getX());
     }
 
     public DMatrix2 get() {
