@@ -98,7 +98,12 @@ public class QuadTree {
         return null;
     }
 
-    public static Stack<QuadTree> reverseBFS(QuadTree root) {
+    public static Stack<QuadTree> qtToGraph(QuadTree root) {
+        // tale funzione si proccupa di creare uno stack di nodi foglia del quadtree, e contemporaneamente genera i
+        // nodi del grafo per il percorso del robot. Successivamente, un'altra funzione si preoccuperà di creare gli
+        // archi tra nodi adiacenti, utilizzando lo stack ritornato da questa funzione.
+        // todo: sviluppare la funzione che genera gli archi
+
         Queue<QuadTree> q = new LinkedList<QuadTree>();
         Stack<QuadTree> s = new Stack<QuadTree>();
         q.add(root);// add the root node to the queue
@@ -106,21 +111,15 @@ public class QuadTree {
         while (!q.isEmpty()) {
             // add the children to the queue
             QuadTree n = q.remove();
-            if (n.northEast != null) {
-                q.add(n.northEast);
-            }
-            if (n.northWest != null) {
-                q.add(n.northWest);
-            }
-            if (n.southWest != null) {
-                q.add(n.southWest);
-            }
-            if (n.southEast != null) {
-                q.add(n.southEast);
+            if (!n.isLeaf()) {
+                q.add(n.getNode(NE));
+                q.add(n.getNode(NW));
+                q.add(n.getNode(SW));
+                q.add(n.getNode(SE));
             }
             // add the extracted node to the Stack
             // here we must insert all the logic
-            if (n.isLeaf() && n.freeSpace) {
+            if (n.isLeaf() && n.isFreeSpace()) {
                 s.add(n);
             }
             //so we add only white valid tiles

@@ -11,5 +11,6 @@
     <orderEntry type="library" name="JavaFx" level="project" />
     <orderEntry type="library" name="ejml-v0" level="project" />
     <orderEntry type="library" name="math&amp;spline" level="project" />
+    <orderEntry type="library" name="jgrapht" level="project" />
   </component>
 </module>
