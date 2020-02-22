@@ -28,20 +28,22 @@ import java.util.Stack;
  * Allora è una foglia, altrimenti è uno splitPoint
  */
 public class QuadTree {
+    //Global tree define
     private final int MAX_CAPACITY = 4;
+
+    /**  Tree structure variable   **/
     private int level = 0;
     String myCode = "";
-
-    private boolean freeSpace;
-
     private QuadTree dad = null;
-
 
     private QuadTree northWest = null;      //0
     private QuadTree northEast = null;      //1
     private QuadTree southWest = null;      //2
     private QuadTree southEast = null;      //3
     private Boundary boundary;
+
+    //Data attribute
+    private boolean freeSpace;
 
     /**
      * Costruttore radice
@@ -126,8 +128,7 @@ public class QuadTree {
         return null;
     }
 
-    // Ritorna il nodo più vicino alla coordinata richiesta, per verificare se sia proprio lui
-    // è suffucente vedere se level == numero di caratteri nel codice
+    // Ritorna il nodo padre più vicino alla coordinata richiesta
     public static QuadTree nearestParent(QuadTree tree, String code) throws RuntimeException {
         code = code.replaceAll("[^0123]", "");
 
@@ -143,7 +144,7 @@ public class QuadTree {
         return node;
     }
 
-    // Usando la tabella nel paper, ora genererò un nuovo codice
+    // Usando la tabella nel paper, genera il codice del vicino richiestp
     public static String FSMneighbors(String code, Side side) {
 
         code = code.replaceAll("[^0123]", "");
@@ -248,6 +249,7 @@ public class QuadTree {
         return code;
     }
 
+    // Trova il vicino richiesto del nodo corrente
     public QuadTree FSMneighbors(Side side) {
         if (!this.isLeaf())
             return null;
@@ -259,6 +261,7 @@ public class QuadTree {
         return nearestParent(tree, tgCode);
     }
 
+    //Divido il nodo trasformandolo da foglia a split point
     public void split() throws RuntimeException {
         if (!isLeaf())
             throw new RuntimeException("Non è una foglia");
