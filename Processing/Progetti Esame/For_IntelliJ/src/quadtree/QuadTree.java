@@ -12,6 +12,7 @@ import java.util.Stack;
 
 // The method to find neighbor are describe here:
 //http://web.archive.org/web/20120907211934/http://ww1.ucmss.com/books/LFS/CSREA2006/MSV4517.pdf
+// or in Doc directory of the project
 /*                           _______
  *  			N           | 0 | 1 |
  *  		W		E       |---|---| cell order
@@ -49,6 +50,7 @@ public class QuadTree {
         this.level = 1;
         this.boundary = boundary;
         freeSpace = true;
+        this.myCode = "";
     }
 
     /**
@@ -57,7 +59,7 @@ public class QuadTree {
     protected QuadTree(int level, Boundary boundary, String myCode) {
         this.level = level;
         this.boundary = boundary;
-        this.myCode = myCode;
+        this.myCode = myCode.replaceAll("[^0123]", "");
         freeSpace = true;
     }
 
@@ -81,7 +83,7 @@ public class QuadTree {
     }
 
     public QuadTree getNode(Coord c) {
-        switch (c){
+        switch (c) {
             case NE:
                 return northEast;
             case NW:
@@ -95,7 +97,7 @@ public class QuadTree {
     }
 
     public static Stack<QuadTree> reverseBFS(QuadTree root) {
-        Queue<QuadTree> q = new LinkedList<QuadTree>() ;
+        Queue<QuadTree> q = new LinkedList<QuadTree>();
         Stack<QuadTree> s = new Stack<QuadTree>();
         q.add(root);// add the root node to the queue
 
@@ -137,7 +139,7 @@ public class QuadTree {
             if (node.isLeaf())
                 break;
         }
-        System.out.println("Code search:" + code + "\tCode found:" + node.myCode);
+//        System.out.println("Code search:" + code + "\tCode found:" + node.myCode);
         return node;
     }
 
@@ -158,7 +160,7 @@ public class QuadTree {
                             break;
                         case '1':
                             codeBuf[i] = '0';
-                            side = W;
+                            side = E;
                             break;
                         case '2':
                             codeBuf[i] = '3';
@@ -166,7 +168,7 @@ public class QuadTree {
                             break;
                         case '3':
                             codeBuf[i] = '2';
-                            side = W;
+                            side = E;
                             break;
                         default:
                             break;
@@ -176,7 +178,7 @@ public class QuadTree {
                     switch (c) {
                         case '0':
                             codeBuf[i] = '1';
-                            side = E;
+                            side = W;
                             break;
                         case '1':
                             codeBuf[i] = '0';
@@ -184,7 +186,7 @@ public class QuadTree {
                             break;
                         case '2':
                             codeBuf[i] = '3';
-                            side = E;
+                            side = W;
                             break;
                         case '3':
                             codeBuf[i] = '2';
@@ -242,19 +244,19 @@ public class QuadTree {
                     break;
             }
         }
-    code =String.valueOf(codeBuf);
+        code = String.valueOf(codeBuf);
         return code;
-}
+    }
 
     public QuadTree FSMneighbors(Side side) {
         if (!this.isLeaf())
             return null;
-        String tgCode = FSMneighbors(this.myCode,side);
+        String tgCode = FSMneighbors(this.myCode, side);
         QuadTree tree = this;
         while (!tree.isRoot())
             tree = tree.dad;
 
-        return nearestParent(tree,tgCode);
+        return nearestParent(tree, tgCode);
     }
 
     public void split() throws RuntimeException {
@@ -344,8 +346,7 @@ public class QuadTree {
     }
 
     public String dataNode() {
-        String a = String.format("L%d %s", level, boundary.dataBoundary());
-        return a;
+        return String.format("L%d code:%s %s", level, myCode, boundary.dataBoundary());
     }
 
     public boolean isRoot() {
@@ -365,23 +366,33 @@ public class QuadTree {
         this.freeSpace = freeSpace;
     }
 
-    public static void main(String args[]) {
-        QuadTree qt = new QuadTree(new Boundary(0, 0, 1000, 1000));
+    public static void main(String[] args) {
+        // Riprodico QuadTree presente nella publicazione
+        QuadTree qt = new QuadTree(new Boundary(-100, -100, 100, 100));
         qt.split();
-        qt.getNode(SE).split();
-        qt.getNode(SE).getNode(NW).setFreeSpace(false);
-        qt.getNode(SE).getNode(NW).split();
+        qt.getNode('1').split();
+        qt.getNode('2').split();
+        qt.getNode('2').getNode('1').split();
+        qt.getNode('3').split();
+        qt.getNode('3').getNode('0').split();
+        qt.getNode('3').getNode('2').split();
+
         //Traveling the graph
         QuadTree.dfs(qt);
+        System.out.println();
+        //Test neighbors method
 
-        QuadTree node = qt.nearestParent(qt, "321");
+        QuadTree node = QuadTree.nearestParent(qt, "321");
         System.out.println(node.dataNode());
 
-        System.out.print("Coord of Est neighbors of 302: ");
+        System.out.print("Find Coord of Est neighbors of 302: ");
         System.out.println(QuadTree.FSMneighbors("302", E));
 
-        System.out.println("SE-NW-NE find nord neighborsN:");
-        System.out.println(qt.getNode(SE).getNode(NW).getNode(NE).FSMneighbors(N).dataNode());
+        System.out.print("Find Coord of West neighbors of 320: ");
+        System.out.println(QuadTree.FSMneighbors("320", W));
+
+        System.out.println("Find Node West neighbors 320:");
+        System.out.println("\t" + QuadTree.nearestParent(qt, "320").FSMneighbors(W).dataNode());
 
     }
 }
