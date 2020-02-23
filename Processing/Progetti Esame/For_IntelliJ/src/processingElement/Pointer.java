@@ -46,7 +46,7 @@ public class Pointer {
         win.translate(0, 0, h / 4.0f);  //disegno in base
         win.box(b, b, h/2.0f);
         win.translate(0, 0, h / 4.0f);  //sposto origine alla fine
-        com.piramide(lF);
+        com.pyramid(lF);
         win.popMatrix();
 
         win.pop();

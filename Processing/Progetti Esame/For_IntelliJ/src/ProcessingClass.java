@@ -2,9 +2,7 @@ import geometry.Vertex;
 import processing.core.*;
 import processingElement.*;
 import quadtree.Boundary;
-import quadtree.Coord;
 import quadtree.QuadTree;
-import static quadtree.Coord.*;
 
 
 public class ProcessingClass extends PApplet {
@@ -72,7 +70,7 @@ public class ProcessingClass extends PApplet {
 
         //Oggetti da graficare
         gnd.draw();
-        com.assi(255);
+        com.axes(255);
         point.draw();
 
         ob1.setD(point.getX(), point.getY(), 0);

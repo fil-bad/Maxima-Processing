@@ -28,10 +28,10 @@ public class Box extends Solid implements Obj3D, Obstacle {
 
         win.translate(0,0,h/2.0f);
         win.fill(showCol);
-        win.box(w,l,h);
-        com.assi(100);
-        win.translate(0,0,h);
-        com.assi(100);
+        win.box(w, l, h);
+        com.axes(100);
+        win.translate(0, 0, h);
+        com.axes(100);
 
         win.pop();
     }
