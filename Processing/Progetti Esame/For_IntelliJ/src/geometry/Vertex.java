@@ -14,6 +14,7 @@ public class Vertex {
     public Vertex(double x, double y) {
         pos = new DMatrix2(x, y);
         ap = new DMatrix2();
+
     }
 
     // Vettore relativo
