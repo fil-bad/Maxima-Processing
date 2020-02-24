@@ -32,7 +32,7 @@ public class ProcessingClass extends PApplet {
         // TODO: Your custom drawing and setup on applet start belongs here
         clear();
         cameraInit();
-        frameRate(30);
+        frameRate(60);
 
 
         com = CommonDraw.getInstance(this);
@@ -73,6 +73,7 @@ public class ProcessingClass extends PApplet {
         QuadTree.dfs(qt, this);
         qtGraph.printGraph(this, 10);
 
+
         ob1.draw();
         ob2.draw();
     }
@@ -81,6 +82,9 @@ public class ProcessingClass extends PApplet {
     public void keyPressed() {
         if (key == 'r') {
             cameraInit();
+        }
+        if (key == 'd') {
+            qtGraph.printPath(this, 10, new Vertex(-300, 20), new Vertex(350, 150));
         }
     }
 
