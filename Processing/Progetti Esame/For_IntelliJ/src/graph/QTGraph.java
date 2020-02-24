@@ -110,10 +110,13 @@ public class QTGraph {
         win.fill(255);
         win.stroke(0);
         win.strokeWeight(1);
+        win.pushMatrix();
+        win.translate(0,0,1);
         while (vertexIterator.hasNext()) {
             node = vertexIterator.next();
             win.circle((float) node.getBoundary().getX(), (float) node.getBoundary().getY(), (float)Math.min(r, node.getBoundary().getMinExtension()));
         }
+        win.popMatrix();
         win.popStyle();
     }
 

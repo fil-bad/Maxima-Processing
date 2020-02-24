@@ -16,7 +16,9 @@ public class Vertex {
         ap = new DMatrix2();
     }
 
-    public Vertex(Vertex a, Vertex b) { this(b.getX() - a.getX(), b.getY() - a.getY()); }
+    public Vertex(Vertex a, Vertex b) {
+        this(b.getX() - a.getX(), b.getY() - a.getY());
+    }
 
 
     public double dist(Vertex p) {

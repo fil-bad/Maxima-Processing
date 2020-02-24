@@ -16,7 +16,7 @@ public class ProcessingClass extends PApplet {
     @Override
     public void settings() {
         // TODO: Customize screen size and so on here
-        size(1200, 800, P3D);
+        size(1200, 720, P3D);
     }
 
     Box ob1, ob2;
