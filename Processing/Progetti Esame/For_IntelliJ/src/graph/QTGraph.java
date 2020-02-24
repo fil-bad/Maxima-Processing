@@ -22,7 +22,7 @@ public class QTGraph {
     private SimpleWeightedGraph<QuadTree, DefaultWeightedEdge> qtGraph;
     private QuadTree root;
     private DijkstraShortestPath<QuadTree, DefaultWeightedEdge> path = null;
-    private ArrayList<Vertex> node2visit;
+    private ArrayList<Vertex> node2visit = null;
 
     public QTGraph(QuadTree qt, float rRobot, Obstacle[] obs) {
         this(QuadTree.qt2leaves(qt), rRobot, obs);
@@ -120,9 +120,11 @@ public class QTGraph {
 
     }
 
-    public void printPath(PApplet win, float r, Vertex start, Vertex end) {
+    public void printPath(PApplet win, float r) {
+// todo: fare il print e il calcolo di dijkstra DENTRO il print del grafo, per non farlo crashare
+        if (this.node2visit == null) calcVert2Visit(new Vertex(-300, 20), new Vertex(350, 150));
+        //todo: sistemare il caso iniziale dove non è dichiarato
         win.pushStyle();
-
         win.strokeWeight(r);
         win.stroke(200, 0, 0);
 
@@ -188,7 +190,7 @@ public class QTGraph {
         return path.getPath(root.nearestPoint(start), root.nearestPoint(end));
     }
 
-    public void points2visit(Vertex start, Vertex end) {
+    public void calcVert2Visit(Vertex start, Vertex end) {
         ArrayList<Vertex> list = new ArrayList<Vertex>(0);
         list.add(start);
 

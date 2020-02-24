@@ -72,7 +72,7 @@ public class ProcessingClass extends PApplet {
 
         QuadTree.dfs(qt, this);
         qtGraph.printGraph(this, 10);
-
+        qtGraph.printPath(this, 10);
 
         ob1.draw();
         ob2.draw();
@@ -84,7 +84,9 @@ public class ProcessingClass extends PApplet {
             cameraInit();
         }
         if (key == 'd') {
-            qtGraph.printPath(this, 10, new Vertex(-300, 20), new Vertex(350, 150));
+            qtGraph.calcVert2Visit(new Vertex(-30, 150), new Vertex(310, 100));
+            //todo: risolvere il crash che si verifica che si aggiorna troppo
+            //N.B.: se non aggiorno Dijkstra insieme al grafo, crasha
         }
     }
 
