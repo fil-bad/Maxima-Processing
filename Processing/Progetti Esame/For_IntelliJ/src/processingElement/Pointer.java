@@ -37,8 +37,8 @@ public class Pointer {
     public void draw() {
         win.push();
         win.translate(x, y);
-        win.circle(0, 0, 30);
-        win.translate(0, 0, h);
+        //win.circle(0, 0, 30);
+//        win.translate(0, 0, h);
 
         win.fill(0, 255, 255); // azzurro
         win.pushMatrix();

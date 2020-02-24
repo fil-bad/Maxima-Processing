@@ -26,6 +26,11 @@ public class Boundary {
                 && y >= this.getyMin() && y <= this.getyMax());
     }
 
+    public boolean inRange(Vertex v) {
+        return (v.getX() >= this.getxMin() && v.getX()  <= this.getxMax()
+                && v.getY()  >= this.getyMin() && v.getY() <= this.getyMax());
+    }
+
     public Boundary getSector(Coord c){
         switch (c){
             case NE:
@@ -79,7 +84,7 @@ public class Boundary {
     }
 
     public String dataBoundary(){
-        String a = String.format("[X1=%.2f Y1=%.2f] \t[X2=%.2f Y2=%.2f]\n",
+        String a = String.format("[X1=%.2f Y1=%.2f] \t[X2=%.2f Y2=%.2f]",
                 getxMin(), getyMin(), getxMax(), getyMax());
         return a;
     }

@@ -5,6 +5,7 @@ import org.jgrapht.graph.DefaultWeightedEdge;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.traverse.DepthFirstIterator;
 
+import processing.core.PApplet;
 import quadtree.Boundary;
 import quadtree.QuadTree;
 import quadtree.Side;
@@ -17,37 +18,122 @@ import java.util.Stack;
 public class QTGraph {
 
     private SimpleWeightedGraph<QuadTree, DefaultWeightedEdge> qtGraph;
+    private QuadTree root;
 
-    public QTGraph(Stack<QuadTree> quadTreeStack) {
+    public QTGraph(QuadTree qt){
+        this(QuadTree.qt2leaves(qt));
+    }
+
+    public QTGraph(Stack<QuadTree> qtStack) {
+
+        QuadTree tallest = qtStack.get(0);
+        while (!tallest.isRoot())
+            tallest = tallest.getDad();
+        this.root = tallest;
 
         this.qtGraph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
         // genero i vertici da collegare
-        for (int i = quadTreeStack.size() - 1; i != -1; i--) {
-            QuadTree node = quadTreeStack.get(i);
+
+        for (int i = qtStack.size() - 1; i != -1; i--) {
+            QuadTree node = qtStack.get(i);
             // System.out.println(node.dataNode());
             this.qtGraph.addVertex(node);
-        } // todo: vedere qui, lo stack non è inverso e non si fa tutti e 4 i nodi prima di passare al successivo
+        }
         //collega i vertici secondo adiacenza
+
         QuadTree node = null;
-        for (int i = quadTreeStack.size() - 1; i != -1; i--) {
-            QuadTree n = quadTreeStack.get(i);
+        while (!qtStack.isEmpty()) {
+            QuadTree n = qtStack.pop();
             if (!n.isFreeSpace()) {
                 break;
             }
+
             for (Side s : Side.values()) {
                 node = n.FSMneighbors(s);
                 if (node == null) {
-                    break;
+                    continue;
                 }
                 if (node.isFreeSpace()) {
-                    System.out.print(node.dataNode() + "\t");
-                    System.out.println(n.dataNode());
                     DefaultWeightedEdge e = this.qtGraph.addEdge(n, node);
-                    this.qtGraph.setEdgeWeight(e, 1); //todo: distanza dai centri dei nodi
+                    if (e != null)    // arco non ancora esistente
+                        this.qtGraph.setEdgeWeight(e, 1); //todo: distanza dai centri dei nodi
                 }
             }
-
         }
+
+    }
+
+    public void printNodes() {
+        Iterator<QuadTree> iterator = new DepthFirstIterator<>(this.qtGraph);
+        QuadTree node = null;
+        System.out.println("### PRINTING VERTICES OF GRAPH ###");
+        while (iterator.hasNext()) {
+            node = iterator.next();
+            System.out.println(node.dataNode());
+        }
+    }
+
+    public void printEdges() {
+        Set<DefaultWeightedEdge> edgeSet = this.qtGraph.edgeSet();
+
+        Iterator<DefaultWeightedEdge> iterator = edgeSet.iterator();
+        DefaultWeightedEdge edge;
+        System.out.println("### PRINTING EDGES OF GRAPH ###");
+        while (iterator.hasNext()) {
+            edge = iterator.next();
+            System.out.println(edge.toString());
+            System.out.println("##[SRC]##\t" + qtGraph.getEdgeSource(edge).dataNode());
+            System.out.println("##[TAR]##\t" + qtGraph.getEdgeTarget(edge).dataNode() + "\n");
+        }
+    }
+
+    public void printGraph(PApplet win, float r) {
+        win.pushStyle();
+        Set<DefaultWeightedEdge> edgeSet = this.qtGraph.edgeSet();
+
+        Iterator<DefaultWeightedEdge> edgeIterator = edgeSet.iterator();
+        DefaultWeightedEdge edge;
+        //### PRINTING EDGES OF GRAPH ###
+        win.strokeWeight(r/8);
+        win.stroke(0,125,175);
+        Boundary src, tg;
+        while (edgeIterator.hasNext()) {
+            edge = edgeIterator.next();
+            src = qtGraph.getEdgeSource(edge).getBoundary();
+            tg = qtGraph.getEdgeTarget(edge).getBoundary();
+            win.line((float) src.getX(), (float) src.getY(), (float) tg.getX(), (float) tg.getY());
+        }
+
+        Iterator<QuadTree> vertexIterator = new DepthFirstIterator<>(this.qtGraph);
+        QuadTree node;
+        //### PRINTING VERTICES OF GRAPH ###
+        win.fill(255);
+        win.stroke(0);
+        win.strokeWeight(1);
+        while (vertexIterator.hasNext()) {
+            node = vertexIterator.next();
+            win.circle((float) node.getBoundary().getX(), (float) node.getBoundary().getY(), (float)Math.min(r, node.getBoundary().getMinExtension()));
+        }
+        win.popStyle();
+    }
+
+    public void printNodeEdges(QuadTree n) {
+        Set<DefaultWeightedEdge> edgeSet = this.qtGraph.edgesOf(n);
+
+        Iterator<DefaultWeightedEdge> iterator = edgeSet.iterator();
+        DefaultWeightedEdge edge;
+        System.out.println("### PRINTING EDGES OF Node ### (" + edgeSet.size() + ")");
+        System.out.println(n.dataNode());
+        while (iterator.hasNext()) {
+            edge = iterator.next();
+            System.out.println(edge.toString());
+            System.out.println("##[SRC]##\t" + qtGraph.getEdgeSource(edge).dataNode());
+            System.out.println("##[TAR]##\t" + qtGraph.getEdgeTarget(edge).dataNode() + "\n");
+        }
+    }
+
+    private void addPath() {
+        //todo: dovrà fare l'aggiunta di percorsi possibili secondo logica, usando addEdges()
     }
 
     public static void main(String[] args) {
@@ -63,38 +149,13 @@ public class QTGraph {
         Stack<QuadTree> qtStack = QuadTree.qt2leaves(qt);
 
         QTGraph graph = new QTGraph(qtStack);
+
+        graph.printNodeEdges(qt.nearestPoint(-50, 50));
         //graph.printNodes();
 
-        graph.printEdges();
+        //graph.printEdges();
 
 
     }
 
-    public void printNodes() {
-        Iterator<QuadTree> iterator = new DepthFirstIterator<>(this.qtGraph);
-        QuadTree node = null;
-        System.out.println("### PRINTING VERTICES OF GRAPH ###");
-        while (iterator.hasNext()) {
-            node = iterator.next();
-            System.out.println(node.dataNode());
-        }
-    }
-
-    public void printEdges() {
-
-        Set<DefaultWeightedEdge> edgeSet = this.qtGraph.edgeSet();
-
-
-        Iterator<DefaultWeightedEdge> iterator = edgeSet.iterator();
-        DefaultWeightedEdge edge = null;
-        System.out.println("### PRINTING EDGES OF GRAPH ###");
-        while (iterator.hasNext()) {
-            edge = iterator.next();
-            System.out.println(edge.toString());
-        }
-    }
-
-    private void addPath() {
-        //todo: dovrà fare l'aggiunta di percorsi possibili secondo logica, usando addEdges()
-    }
 }

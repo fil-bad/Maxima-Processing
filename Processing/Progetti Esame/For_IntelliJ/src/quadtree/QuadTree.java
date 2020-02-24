@@ -169,7 +169,7 @@ public class QuadTree {
             // add the extracted node to the Stack
             // here we must insert all the logic
             if (n.isLeaf() && n.isFreeSpace()) {
-                s.add(n);
+                s.push(n);
             }
             //so we add only white valid tiles
         }
@@ -190,6 +190,25 @@ public class QuadTree {
         }
 //        System.out.println("Code search:" + code + "\tCode found:" + node.myCode);
         return node;
+    }
+
+    public QuadTree nearestPoint(Vertex v) throws RuntimeException {
+        return nearestPoint(this, v);
+    }
+
+    public QuadTree nearestPoint(float x, float y) throws RuntimeException {
+        return nearestPoint(this, new Vertex(x, y));
+    }
+
+    public static QuadTree nearestPoint(QuadTree tree, Vertex v) throws RuntimeException {
+        if (tree.isLeaf())
+            return tree;
+        for (Coord c : Coord.values()) {
+            QuadTree n = tree.getNode(c);
+            if (n.getBoundary().inRange(v))
+                return nearestPoint(n, v);
+        }
+        throw new RuntimeException("Point" + v.toString() + " OUT OF BOUNDARY");
     }
 
     // Usando la tabella nel paper, genera il codice del vicino richiestp
@@ -303,6 +322,8 @@ public class QuadTree {
     // Trova il vicino richiesto del nodo corrente
     public QuadTree FSMneighbors(Side side) {
         if (!this.isLeaf())
+            return null;
+        if (side == HALT)
             return null;
         String tgCode = FSMneighbors(this.myCode, side);
         if (tgCode.equals(""))  //Lato senza vicini
@@ -421,7 +442,7 @@ public class QuadTree {
 
         if (node.isLeaf()) {
             if (node.isFreeSpace())
-                win.fill(255);
+                win.noFill();
             win.rect((float) node.boundary.getxMin(), (float) node.boundary.getyMin(), (float) node.boundary.getW(), (float) node.boundary.getH());
 
         } else {

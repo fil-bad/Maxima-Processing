@@ -1,4 +1,5 @@
 import geometry.Vertex;
+import graph.QTGraph;
 import processing.core.*;
 import processingElement.*;
 import quadtree.Boundary;
@@ -24,38 +25,26 @@ public class ProcessingClass extends PApplet {
     Pointer point;
 
     QuadTree qt;
-
+    QTGraph qtGraph;
     @Override
     public void setup() {
         // TODO: Your custom drawing and setup on applet start belongs here
         clear();
         cameraInit();
+        frameRate(30);
+
 
         com = CommonDraw.getInstance(this);
-        gnd = new Terra(this, 800, 400, color(101, 67, 33));
+        gnd = new Terra(this, 800, 400, color(200, 150, 100));
         point = new Pointer(this, 60, 800, 400);
-        ob1 = new Box(this, 50, 40, 10, color(255, 150, 0));
-        ob2 = new Box(this, 50, 40, 10, color(0, 255, 0));
+        ob1 = new Box(this, 50, 40, 10, color(255, 150, 0, 100));
+        ob2 = new Box(this, 50, 40, 10, color(0, 255, 0, 100));
+
 
 
         ob1.setR(radians(50));
-
         ob2.setD(150, -60, 0);
 
-
-
-
-
-
-
-        //QuadTree.dfs(qt);
-//        qt.split();
-//        qt.getNode(Coord.SW).setFreeSpace(false);
-//        qt.getNode(NW).setFreeSpace(false);
-//        qt.getNode(SE).split();
-//        qt.getNode(SE).getNode(NW).setFreeSpace(false);
-//        qt.getNode(SE).getNode(NW).split();
-//        qt.getNode(SE).getNode(NW).getNode(SW).setFreeSpace(false);
 
     }
 
@@ -74,12 +63,15 @@ public class ProcessingClass extends PApplet {
         point.draw();
 
         ob1.setD(point.getX(), point.getY(), 0);
+
+
         Obstacle[] obstacles ={ ob1, ob2};
-        qt = new QuadTree(obstacles, new Boundary(-400, -200, 400, 200), 10);
+        qt = new QuadTree(obstacles, new Boundary(-400, -200, 400, 200), 20);
+        qtGraph = new QTGraph(qt);
+
+
         QuadTree.dfs(qt,this);
-
-
-
+        qtGraph.printGraph(this,10);
 
         ob1.draw();
         ob2.draw();
