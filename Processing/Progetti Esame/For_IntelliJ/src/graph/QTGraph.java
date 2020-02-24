@@ -8,6 +8,7 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.traverse.DepthFirstIterator;
 
 import processing.core.PApplet;
+import processingElement.Obstacle;
 import quadtree.Boundary;
 import quadtree.QuadTree;
 import quadtree.Side;
@@ -23,11 +24,11 @@ public class QTGraph {
     private QuadTree root;
     private DijkstraShortestPath<QuadTree, DefaultWeightedEdge> path = null;
 
-    public QTGraph(QuadTree qt) {
-        this(QuadTree.qt2leaves(qt));
+    public QTGraph(QuadTree qt, float rRobot, Obstacle[] obs) {
+        this(QuadTree.qt2leaves(qt), rRobot, obs);
     }
 
-    public QTGraph(Stack<QuadTree> qtStack) {
+    protected QTGraph(Stack<QuadTree> qtStack, float rRobot, Obstacle[] obs) {
 
         QuadTree tallest = qtStack.get(0);
         while (!tallest.isRoot())
@@ -57,6 +58,7 @@ public class QTGraph {
                     continue;
                 }
                 if (node.isFreeSpace()) {
+                    //Todo: se un collegamento diagonale, verifico che nel raggio rRobot, non ci siano ostacoli
                     DefaultWeightedEdge e = this.qtGraph.addEdge(n, node);
                     if (e != null) {// arco non ancora esistente
 
@@ -101,8 +103,8 @@ public class QTGraph {
         Iterator<DefaultWeightedEdge> edgeIterator = edgeSet.iterator();
         DefaultWeightedEdge edge;
         //### PRINTING EDGES OF GRAPH ###
-        win.strokeWeight(r / 8);
-        win.stroke(0, 125, 175);
+        win.strokeWeight(r/8);
+        win.stroke(0,125,175);
         Boundary src, tg;
         while (edgeIterator.hasNext()) {
             edge = edgeIterator.next();
@@ -118,10 +120,10 @@ public class QTGraph {
         win.stroke(0);
         win.strokeWeight(1);
         win.pushMatrix();
-        win.translate(0, 0, 1);
+        win.translate(0,0,1);
         while (vertexIterator.hasNext()) {
             node = vertexIterator.next();
-            win.circle((float) node.getBoundary().getX(), (float) node.getBoundary().getY(), (float) Math.min(r, node.getBoundary().getMinExtension()));
+            win.circle((float) node.getBoundary().getX(), (float) node.getBoundary().getY(), (float)Math.min(r, node.getBoundary().getMinExtension()));
         }
         win.popMatrix();
         win.popStyle();
@@ -142,9 +144,8 @@ public class QTGraph {
         }
     }
 
-    private void findPath(Vertex start, Vertex end) {
-
-
+    private void addPath() {
+        //todo: dovrà fare l'aggiunta di percorsi possibili secondo logica, usando addEdges()
     }
 
     public static void main(String[] args) {
@@ -159,7 +160,7 @@ public class QTGraph {
 
         Stack<QuadTree> qtStack = QuadTree.qt2leaves(qt);
 
-        QTGraph graph = new QTGraph(qtStack);
+        QTGraph graph = new QTGraph(qtStack,10,null);
 
         graph.printNodeEdges(qt.nearestPoint(-50, 50));
         //graph.printNodes();

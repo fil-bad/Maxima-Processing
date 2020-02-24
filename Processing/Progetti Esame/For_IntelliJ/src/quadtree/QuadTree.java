@@ -70,7 +70,6 @@ public class QuadTree {
         this.boundary = boundary;
         freeSpace = true;
         this.myCode = "";
-        int nodeCount = 1;
         foundFreeSpace(this, obst, minSize);
     }
 
@@ -220,7 +219,7 @@ public class QuadTree {
         for (int i = code.length() - 1; i != -1; i--) {
             char c = codeBuf[i];
             switch (side) {
-                case E:     //Right
+                case R:     //Right
                     switch (c) {
                         case '0':
                             codeBuf[i] = '1';
@@ -228,7 +227,7 @@ public class QuadTree {
                             break;
                         case '1':
                             codeBuf[i] = '0';
-                            side = E;
+                            side = R;
                             break;
                         case '2':
                             codeBuf[i] = '3';
@@ -236,17 +235,17 @@ public class QuadTree {
                             break;
                         case '3':
                             codeBuf[i] = '2';
-                            side = E;
+                            side = R;
                             break;
                         default:
                             break;
                     }
                     break;
-                case W:     //Left
+                case L:     //Left
                     switch (c) {
                         case '0':
                             codeBuf[i] = '1';
-                            side = W;
+                            side = L;
                             break;
                         case '1':
                             codeBuf[i] = '0';
@@ -254,7 +253,7 @@ public class QuadTree {
                             break;
                         case '2':
                             codeBuf[i] = '3';
-                            side = W;
+                            side = L;
                             break;
                         case '3':
                             codeBuf[i] = '2';
@@ -264,7 +263,7 @@ public class QuadTree {
                             break;
                     }
                     break;
-                case S:     //Down
+                case D:     //Down
                     switch (c) {
                         case '0':
                             codeBuf[i] = '2';
@@ -276,25 +275,25 @@ public class QuadTree {
                             break;
                         case '2':
                             codeBuf[i] = '0';
-                            side = S;
+                            side = D;
                             break;
                         case '3':
                             codeBuf[i] = '1';
-                            side = S;
+                            side = D;
                             break;
                         default:
                             break;
                     }
                     break;
-                case N:     //Up
+                case U:     //Up
                     switch (c) {
                         case '0':
                             codeBuf[i] = '2';
-                            side = N;
+                            side = U;
                             break;
                         case '1':
                             codeBuf[i] = '3';
-                            side = N;
+                            side = U;
                             break;
                         case '2':
                             codeBuf[i] = '0';
@@ -302,6 +301,94 @@ public class QuadTree {
                             break;
                         case '3':
                             codeBuf[i] = '1';
+                            side = HALT;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case RU:     //Right-Up
+                    switch (c) {
+                        case '0':
+                            codeBuf[i] = '3';
+                            side = U;
+                            break;
+                        case '1':
+                            codeBuf[i] = '2';
+                            side = RU;
+                            break;
+                        case '2':
+                            codeBuf[i] = '1';
+                            side = HALT;
+                            break;
+                        case '3':
+                            codeBuf[i] = '0';
+                            side = R;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case RD:     //Right-Down
+                    switch (c) {
+                        case '0':
+                            codeBuf[i] = '3';
+                            side = HALT;
+                            break;
+                        case '1':
+                            codeBuf[i] = '2';
+                            side = R;
+                            break;
+                        case '2':
+                            codeBuf[i] = '1';
+                            side = D;
+                            break;
+                        case '3':
+                            codeBuf[i] = '0';
+                            side = RD;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case LD:     //Left-Down
+                    switch (c) {
+                        case '0':
+                            codeBuf[i] = '3';
+                            side = L;
+                            break;
+                        case '1':
+                            codeBuf[i] = '2';
+                            side = HALT;
+                            break;
+                        case '2':
+                            codeBuf[i] = '1';
+                            side = LD;
+                            break;
+                        case '3':
+                            codeBuf[i] = '0';
+                            side = D;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case LU:     //Left-Up
+                    switch (c) {
+                        case '0':
+                            codeBuf[i] = '3';
+                            side = LU;
+                            break;
+                        case '1':
+                            codeBuf[i] = '2';
+                            side = U;
+                            break;
+                        case '2':
+                            codeBuf[i] = '1';
+                            side = L;
+                            break;
+                        case '3':
+                            codeBuf[i] = '0';
                             side = HALT;
                             break;
                         default:
@@ -319,6 +406,8 @@ public class QuadTree {
         return code;
     }
 
+
+
     // Trova il vicino richiesto del nodo corrente
     public QuadTree FSMneighbors(Side side) {
         if (!this.isLeaf())
@@ -331,7 +420,6 @@ public class QuadTree {
         QuadTree tree = this;
         while (!tree.isRoot())
             tree = tree.dad;
-
         return nearestParent(tree, tgCode);
     }
 
@@ -376,23 +464,23 @@ public class QuadTree {
         System.out.println(node.dataNode());
 
         System.out.print("Find Coord of Est neighbors of 302: ");
-        System.out.println(QuadTree.FSMneighbors("302", E));
+        System.out.println(QuadTree.FSMneighbors("302", R));
 
         System.out.print("Find Coord of West neighbors of 320: ");
-        System.out.println(QuadTree.FSMneighbors("320", W));
+        System.out.println(QuadTree.FSMneighbors("320", L));
 
         System.out.println("Find Node West neighbors 320:");
-        System.out.println("\t" + QuadTree.nearestParent(qt, "320").FSMneighbors(W).dataNode());
+        System.out.println("\t" + QuadTree.nearestParent(qt, "320").FSMneighbors(L).dataNode());
 
         System.out.println("Find Node Sud neighbors 323 (Out of range):");
-        node = QuadTree.nearestParent(qt, "323").FSMneighbors(S);
+        node = QuadTree.nearestParent(qt, "323").FSMneighbors(D);
         if (node != null)
             System.out.println("\t" + node.dataNode());
         else
             System.out.println("\t Il nodo non esiste");
 
         System.out.println("Find Node Est neighbors 0 (Split Node):");
-        node = QuadTree.nearestParent(qt, "0").FSMneighbors(E);
+        node = QuadTree.nearestParent(qt, "0").FSMneighbors(R);
         if (node != null)
             System.out.println("\t" + node.dataNode());
         else

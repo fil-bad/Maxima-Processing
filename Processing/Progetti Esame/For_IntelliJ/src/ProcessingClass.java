@@ -26,6 +26,7 @@ public class ProcessingClass extends PApplet {
 
     QuadTree qt;
     QTGraph qtGraph;
+
     @Override
     public void setup() {
         // TODO: Your custom drawing and setup on applet start belongs here
@@ -39,7 +40,6 @@ public class ProcessingClass extends PApplet {
         point = new Pointer(this, 60, 800, 400);
         ob1 = new Box(this, 50, 40, 10, color(255, 150, 0, 100));
         ob2 = new Box(this, 50, 40, 10, color(0, 255, 0, 100));
-
 
 
         ob1.setR(radians(50));
@@ -65,13 +65,13 @@ public class ProcessingClass extends PApplet {
         ob1.setD(point.getX(), point.getY(), 0);
 
 
-        Obstacle[] obstacles ={ ob1, ob2};
+        Obstacle[] obstacles = {ob1, ob2};
         qt = new QuadTree(obstacles, new Boundary(-400, -200, 400, 200), 20);
-        qtGraph = new QTGraph(qt);
+        qtGraph = new QTGraph(qt, 20, obstacles);
 
 
-        QuadTree.dfs(qt,this);
-        qtGraph.printGraph(this,10);
+        QuadTree.dfs(qt, this);
+        qtGraph.printGraph(this, 10);
 
         ob1.draw();
         ob2.draw();

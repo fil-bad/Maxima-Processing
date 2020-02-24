@@ -1,9 +1,13 @@
 package quadtree;
 
 public enum Side {
-    N,
-    S,
-    E,
-    W,
+    U,
+    LU,
+    L,
+    LD,
+    D,
+    RD,
+    R,
+    RU,
     HALT
 }
