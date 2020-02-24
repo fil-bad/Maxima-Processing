@@ -16,6 +16,7 @@ public class Vertex {
         ap = new DMatrix2();
     }
 
+    // Vettore relativo
     public Vertex(Vertex a, Vertex b) {
         this(b.getX() - a.getX(), b.getY() - a.getY());
     }
