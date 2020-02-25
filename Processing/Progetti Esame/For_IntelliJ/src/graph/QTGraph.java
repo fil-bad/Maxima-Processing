@@ -220,6 +220,7 @@ public class QTGraph {
         }
     }
 
+    //todo ritornare lista di vertici, con i vertici medi ortogonali o diagonali
     public void calcVert2Visit(Vertex start, Vertex end) {
         this.node2visit = new Vector<>(0);
         this.node2visit.add(start);
