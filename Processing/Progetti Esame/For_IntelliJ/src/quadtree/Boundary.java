@@ -83,9 +83,36 @@ public class Boundary {
         return p;
     }
 
+    // return center
     public Vertex getVertex() {
         return new Vertex(this.getX(), this.getY());
     }
+
+    // return the vertex at the center of the size, halt return null
+    public Vertex getVertex(Side s) {
+        switch (s){
+            case U:
+                return new Vertex(getX(),getyMax());
+            case LU:
+                return new Vertex(getxMin(),getyMax());
+            case L:
+                return new Vertex(getxMin(),getY());
+            case LD:
+                return new Vertex(getxMin(),getyMin());
+            case D:
+                return new Vertex(getX(),getyMin());
+            case RD:
+                return new Vertex(getxMax(),getyMin());
+            case R:
+                return new Vertex(getxMax(),getY());
+            case RU:
+                return new Vertex(getxMax(),getyMax());
+            case HALT:
+                return null;
+        }
+        return new Vertex(this.getX(), this.getY());
+    }
+
 
     public String dataBoundary() {
         String a = String.format("[X1=%.2f Y1=%.2f] \t[X2=%.2f Y2=%.2f]",

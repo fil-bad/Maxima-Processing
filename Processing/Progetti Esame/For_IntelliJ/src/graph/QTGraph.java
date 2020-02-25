@@ -104,6 +104,25 @@ public class QTGraph {
 
     }
 
+    // return null if the edge not exist, or if side is halt
+    public Vertex middleBoundary(DefaultWeightedEdge edge){
+        if(edge==null)
+            return null;
+        Boundary big, small;
+        Side sideBigFromSmall;
+        if(qtGraph.getEdgeTarget(edge).getBoundary().getMinExtension()>=qtGraph.getEdgeSource(edge).getBoundary().getMinExtension()){
+            big = qtGraph.getEdgeTarget(edge).getBoundary();
+            small = qtGraph.getEdgeSource(edge).getBoundary();
+            sideBigFromSmall = qtGraph.getEdgeSource(edge).neighborsSide(qtGraph.getEdgeTarget(edge));
+        }else {
+            big = qtGraph.getEdgeSource(edge).getBoundary();
+            small = qtGraph.getEdgeTarget(edge).getBoundary();
+            sideBigFromSmall = qtGraph.getEdgeTarget(edge).neighborsSide(qtGraph.getEdgeSource(edge));
+        }
+        return small.getVertex(sideBigFromSmall);
+    }
+
+
     public void printNodes() {
         Iterator<QuadTree> iterator = new DepthFirstIterator<>(this.qtGraph);
         QuadTree node = null;
@@ -139,8 +158,11 @@ public class QTGraph {
         qt.getNode('3').getNode('2').split();
 
         Stack<QuadTree> qtStack = QuadTree.qt2leaves(qt);
-
-        QTGraph graph = new QTGraph(qtStack, 10, null);
+        Box ob1 = new Box(50, 40, 10);
+        Box ob2 = new Box(50, 40, 10);
+        ob2.setD(50,10,0);
+        Obstacle[] ob = {ob1, ob2};
+        QTGraph graph = new QTGraph(qtStack, 10, ob);
 
         graph.printNodeEdges(qt.nearestPoint(-50, 50));
         //graph.printNodes();
