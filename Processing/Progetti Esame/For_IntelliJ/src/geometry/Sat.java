@@ -8,6 +8,23 @@ import java.util.List;
 
 public abstract class Sat {
 
+    // True if inside the circle there are almost one vertex of the polygon
+    public static boolean haveCollided(Polygon poly1, Vertex c, double r) {
+        for (Vertex v: poly1.getVertices()) {
+            if(c.dist(v)<r)
+                return true;
+        }
+        return false;
+    }
+    // True if inside the circle there are almost one vertex of the polygons
+    public static boolean haveCollided(Polygon[] pol, Vertex c, double r) {
+        for (Polygon p: pol) {
+            if(haveCollided(p,c,r))
+                return true;
+        }
+        return false;
+    }
+
     // true if p1 intersect p2, or otherwise
     public static boolean haveCollided(Polygon poly1, Polygon poly2) {
 

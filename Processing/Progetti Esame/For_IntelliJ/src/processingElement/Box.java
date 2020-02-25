@@ -4,19 +4,28 @@ import geometry.Vertex;
 import processing.core.PApplet;
 
 public class Box extends Solid implements Obj3D, Obstacle {
-    private CommonDraw com = CommonDraw.getInstance();
+    private CommonDraw com;
 
 
     private int w,l,h;
     private int color, highlight, showCol;
     public Box (PApplet win, int w, int l, int h, int color) {
         super(win);
+        com = CommonDraw.getInstance();
         this.w = w;
         this.l = l;
         this.h = h;
         this.color = color;
         this.showCol = this.color;
         highlight = win.color(255,255,0);
+    }
+
+    // !!! DA USARE SOLO PER AVERE DEGLI OSTACOLI
+    public Box (int w, int l, int h) {
+        super(null);
+        this.w = w;
+        this.l = l;
+        this.h = h;
     }
 
     @Override

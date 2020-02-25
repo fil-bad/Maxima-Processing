@@ -187,7 +187,6 @@ public class QuadTree {
             if (node.isLeaf())
                 break;
         }
-//        System.out.println("Code search:" + code + "\tCode found:" + node.myCode);
         return node;
     }
 
@@ -210,9 +209,24 @@ public class QuadTree {
         throw new RuntimeException("Point" + v.toString() + " OUT OF BOUNDARY");
     }
 
+    //Ritorna in quale lato è vicino il nodo n
+    // HALT = Non è vicino/non sono una foglia
+    public Side neighborsSide(QuadTree n){
+        if(!this.isLeaf())
+            return null;
+        String neighCode;
+        for (Side s: Side.values()) {
+            neighCode=FSMneighbors(this.myCode,s);
+            if(neighCode.equals(n.myCode))
+                return s;
+        }
+        return HALT;
+    }
+
     // Usando la tabella nel paper, genera il codice del vicino richiestp
     public static String FSMneighbors(String code, Side side) {
-
+        if (side == HALT)
+            return "";
         code = code.replaceAll("[^0123]", "");
         char[] codeBuf = code.toCharArray();
 

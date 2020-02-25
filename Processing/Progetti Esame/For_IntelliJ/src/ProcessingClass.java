@@ -42,7 +42,7 @@ public class ProcessingClass extends PApplet {
         ob2 = new Box(this, 50, 40, 10, color(0, 255, 0, 100));
 
 
-        ob1.setR(radians(50));
+//        ob1.setR(radians(50));
         ob2.setD(150, -60, 0);
 
 
@@ -66,8 +66,8 @@ public class ProcessingClass extends PApplet {
 
 
         Obstacle[] obstacles = {ob1, ob2};
-        qt = new QuadTree(obstacles, new Boundary(-400, -200, 400, 200), 20);
-        qtGraph = new QTGraph(qt, 20, obstacles);
+        qt = new QuadTree(obstacles, new Boundary(-400, -200, 400, 200), 10);
+        qtGraph = new QTGraph(qt, 100, obstacles);
 
 
         QuadTree.dfs(qt, this);

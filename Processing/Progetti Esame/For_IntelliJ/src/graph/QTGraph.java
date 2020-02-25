@@ -1,6 +1,8 @@
 package graph;
 
 import com.sun.javafx.geom.Edge;
+import geometry.Polygon;
+import geometry.Sat;
 import geometry.Vertex;
 import org.jgrapht.GraphPath;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
@@ -9,6 +11,7 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.traverse.DepthFirstIterator;
 
 import processing.core.PApplet;
+import processingElement.Box;
 import processingElement.Obstacle;
 import quadtree.Boundary;
 import quadtree.QuadTree;
@@ -60,11 +63,38 @@ public class QTGraph {
                 if (node.isFreeSpace()) {
                     //Todo: se un collegamento diagonale, verifico che nel raggio rRobot, non ci siano ostacoli
                     DefaultWeightedEdge e = this.qtGraph.addEdge(n, node);
+                    double weight = Math.sqrt(n.getBoundary().getX() * node.getBoundary().getX() +
+                            node.getBoundary().getY() * node.getBoundary().getY());
                     if (e != null) {// arco non ancora esistente
-
-                        double weight = Math.sqrt(n.getBoundary().getX() * node.getBoundary().getX() +
-                                node.getBoundary().getY() * node.getBoundary().getY());
-                        this.qtGraph.setEdgeWeight(e, weight); //todo: distanza dai centri dei nodi
+                        switch (s) {
+                            case U:
+                            case D:
+                            case R:
+                            case L:
+                                this.qtGraph.setEdgeWeight(e, weight);
+                                break;
+                            case LD:
+                            case LU:
+                            case RD:
+                            case RU:
+                                //todo Capire perchè non funziona il check sulla diagonale
+                                boolean res = false;
+                                for (Obstacle ob : obs) {
+                                    Vertex mid = middleBoundary(e);
+                                    if (mid != null) {
+                                        if (!Sat.haveCollided(ob.getPoly(), mid, rRobot)) {
+                                            res = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (res)
+                                    System.out.println("dentro res");
+                                    this.qtGraph.setEdgeWeight(e, weight);
+                                break;
+                            case HALT:
+                                continue;
+                        }
                     }
                 }
             }
