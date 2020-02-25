@@ -172,19 +172,6 @@ public class QTGraph {
         }
     }
 
-    public static void main(String[] args) {
-        QuadTree qt = new QuadTree(new Boundary(-100, -100, 100, 100));
-        qt.split();
-        qt.getNode('1').split();
-        qt.getNode('2').split();
-        qt.getNode('2').getNode('1').split();
-        qt.getNode('3').split();
-        qt.getNode('3').getNode('0').split();
-        qt.getNode('3').getNode('2').split();
-        QTGraph graph = new QTGraph(qt);
-        graph.printNodeEdges(qt.nearestPoint(-50, 50));
-    }
-
     public void printGraph(PApplet win, float r) {
         win.pushStyle();
         Set<DefaultWeightedEdge> edgeSet = this.qtGraph.edgeSet();
@@ -272,4 +259,16 @@ public class QTGraph {
         win.popStyle();
     }
 
+    public static void main(String[] args) {
+        QuadTree qt = new QuadTree(new Boundary(-100, -100, 100, 100));
+        qt.split();
+        qt.getNode('1').split();
+        qt.getNode('2').split();
+        qt.getNode('2').getNode('1').split();
+        qt.getNode('3').split();
+        qt.getNode('3').getNode('0').split();
+        qt.getNode('3').getNode('2').split();
+        QTGraph graph = new QTGraph(qt);
+        graph.printNodeEdges(qt.nearestPoint(-50, 50));
+    }
 }
