@@ -3,8 +3,6 @@ package processingElement;
 import org.ejml.simple.SimpleMatrix;
 import processing.core.PApplet;
 
-import java.util.concurrent.ExecutionException;
-
 public class CommonDraw {
 
     private static CommonDraw instance = null;
@@ -16,7 +14,7 @@ public class CommonDraw {
 
     public static CommonDraw getInstance() throws RuntimeException {
         if (instance == null)
-            throw new RuntimeException("Impossible generate object, unknown windows (PApllet)");
+            throw new RuntimeException("Impossible generate object, unknown windows (PApplet)");
         return instance;
     }
 
@@ -40,40 +38,40 @@ public class CommonDraw {
     private int p = 50;   //profondità
     private int b = 5;    //base
     private int h = 5;     //altezza
-    private int lF = 5;   //lunghezza semi lato freccia
+    private int lf = 5;   //lunghezza semi lato freccia
 
-    public void assi(float alfa) {
+    public void axes(float alpha) {
         win.pushStyle();
         win.strokeWeight(0.5f);
-        win.fill(255, 0, 0, alfa); // rosso = x
+        win.fill(255, 0, 0, alpha); // rosso = x
         win.pushMatrix();
         win.rotateY(win.PI / 2);
         win.translate(0, 0, p / 2.0f);  //disegno in base
         win.box(h, b, p);
         win.translate(0, 0, p / 2.0f);  //sposto origine alla fine
-        piramide(lF);
+        pyramid(lf);
         win.popMatrix();
 
-        win.fill(0, 255, 0, alfa); // verde = y
+        win.fill(0, 255, 0, alpha); // verde = y
         win.pushMatrix();
         win.rotateX(-win.PI / 2.0f);
         win.translate(0, 0, p / 2.0f);  //disegno in base
         win.box(h, b, p);
         win.translate(0, 0, p / 2.0f);  //sposto origine alla fine
-        piramide(lF);
+        pyramid(lf);
         win.popMatrix();
 
-        win.fill(0, 0, 255, alfa); // blu = z
+        win.fill(0, 0, 255, alpha); // blu = z
         win.pushMatrix();
         win.translate(0, 0, p / 2.0f);  //disegno in base
         win.box(h, b, p);
         win.translate(0, 0, p / 2.0f);  //sposto origine alla fine
-        piramide(lF);
+        pyramid(lf);
         win.popMatrix();
         win.popStyle();
     }
 
-    private void piramide(int h) {
+    public void pyramid(int h) {
         win.beginShape();
         win.vertex(-h, -h);
         win.vertex(+h, -h);

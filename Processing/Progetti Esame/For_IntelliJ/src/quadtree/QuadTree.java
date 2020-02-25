@@ -1,531 +1,595 @@
 package quadtree;
-/*
- * Adapted from https://github.com/varunpant/Quadtree
- * https://github.com/varunpant/Quadtree/commit/3acd4676673551b082ab532a3d26c3237d5ad7c9
- * 
- * The MIT License
- * 
- * Copyright (c) 2014 Varun Pant
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- * 
- * This is a Java version of [Quadtree](http://en.wikipedia.org/wiki/Quadtree)
- * 
- */
 
-import java.util.ArrayList;
-import java.util.List;
+import processing.core.PApplet;
+
+import static quadtree.Coord.*;
+import static quadtree.Side.*;
+
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Stack;
+
+import geometry.*;
+import processingElement.Obstacle;
+
+
+// The method to find neighbor are describe here:
+//http://web.archive.org/web/20120907211934/http://ww1.ucmss.com/books/LFS/CSREA2006/MSV4517.pdf
+// or in Doc directory of the project
+/*                           _______
+ *  			N           | 0 | 1 |
+ *  		W		E       |---|---| cell order
+ *  			S           | 2 | 3 |
+ */
 
 /**
- * Datastructure: A point Quad Tree for representing 2D data. Each
- * region has the same ratio as the bounds for the tree.
- * <p/>
- * The implementation currently requires pre-determined bounds for data as it
- * can not rebalance itself to that degree.
+ * Ogni classe QuadTree è essa stessa un nodo, se
+ * QuadTree northWest = null;
+ * QuadTree northEast = null;
+ * QuadTree southWest = null;
+ * QuadTree southEast = null;
+ * Allora è una foglia, altrimenti è uno splitPoint
  */
-public class QuadTree<T> {
+public class QuadTree {
+    //Global tree define
+    /**
+     * WARNING: non sovrascrivere i metodi hash() e toString() (necessari per far funzionare il grafo)
+     */
 
-
-    private Node<T> root_;
-    private int count_ = 0;
+    private final int MAX_CAPACITY = 4;
 
     /**
-     * Constructs a new quad tree.
-     *
-     * @param {double} minX Minimum x-value that can be held in tree.
-     * @param {double} minY Minimum y-value that can be held in tree.
-     * @param {double} maxX Maximum x-value that can be held in tree.
-     * @param {double} maxY Maximum y-value that can be held in tree.
-     */
-    public QuadTree(double minX, double minY, double maxX, double maxY) {
-        this.root_ = new Node<T>(minX, minY, maxX - minX, maxY - minY, null);
+     * Tree structure variable
+     **/
+    private int level = 0;
+    String myCode = "";
+    private QuadTree dad = null;
+
+    private QuadTree northWest = null;      //0
+    private QuadTree northEast = null;      //1
+    private QuadTree southWest = null;      //2
+    private QuadTree southEast = null;      //3
+    private Boundary boundary;
+
+    //Data attribute
+    private boolean freeSpace;
+
+    /**
+     * Costruttore radice
+     **/
+    public QuadTree(Boundary boundary) {
+        this.level = 1;
+        this.boundary = boundary;
+        freeSpace = true;
+        this.myCode = "";
     }
 
-    /**
-     * Returns a reference to the tree's root node.  Callers shouldn't modify nodes,
-     * directly.  This is a convenience for visualization and debugging purposes.
-     *
-     * @return {Node<T>} The root node.
-     */
-    public Node<T> getRootNode() {
-        return this.root_;
+    public QuadTree(Obstacle[] obst, Boundary boundary, float minSize) {
+        this.level = 1;
+        this.boundary = boundary;
+        freeSpace = true;
+        this.myCode = "";
+        foundFreeSpace(this, obst, minSize);
     }
 
-    /**
-     * Sets the value of an (x, y) point within the quad-tree.
-     *
-     * @param {double} x The x-coordinate.
-     * @param {double} y The y-coordinate.
-     * @param {Object} value The value associated with the point.
-     */
-    public void set(double x, double y, T value) {
+    private static void foundFreeSpace(QuadTree node, Obstacle[] obst, float minSize) {
+        // entro con i nodi bianchi, nell'avanzare li rendo neri o li splitto
+        int i = 0;
+        for (Obstacle ob : obst) {
 
-        Node<T> root = this.root_;
-        if (x < root.getX() || y < root.getY() || x > root.getX() + root.getW() || y > root.getY() + root.getH()) {
-            throw new QuadTreeException("Out of bounds : (" + x + ", " + y + ")");
+            // se la finestra interseca un ostacolo
+            if (Sat.haveCollided(ob.getPoly(), node.getBoundary().getPoly())) {
+                // se La finestra è contenuta in un ostacolo allora è occupata
+                if (Sat.contains(ob.getPoly(), node.getBoundary().getPoly())) {
+                    node.setFreeSpace(false);
+                    return;
+                }
+                // Se l'attuale bordo è troppo piccolo coloro nero e vado avanti
+                if (node.getBoundary().getMinExtension() < minSize) {
+                    node.setFreeSpace(false);
+                    return;
+                }
+                node.split();
+                // Get the slice of the Array
+                foundFreeSpace(node.getNode(NW), Arrays.copyOfRange(obst, i, obst.length), minSize);
+                foundFreeSpace(node.getNode(NE), Arrays.copyOfRange(obst, i, obst.length), minSize);
+                foundFreeSpace(node.getNode(SW), Arrays.copyOfRange(obst, i, obst.length), minSize);
+                foundFreeSpace(node.getNode(SE), Arrays.copyOfRange(obst, i, obst.length), minSize);
+                return;
+            }
+
+            i++;
         }
-        if (this.insert(root, new Point<T>(x, y, value))) {
-            this.count_++;
+    }
+
+    /**
+     * Costruttore dei nodi
+     **/
+    protected QuadTree(int level, Boundary boundary, String myCode) {
+        this.level = level;
+        this.boundary = boundary;
+        this.myCode = myCode.replaceAll("[^0123]", "");
+        freeSpace = true;
+    }
+
+    public QuadTree getDad() {
+        return dad;
+    }
+
+    public QuadTree getNode(char c) throws RuntimeException {
+        switch (c) {
+            case '0':
+                return getNode(NW);
+            case '1':
+                return getNode(NE);
+            case '2':
+                return getNode(SW);
+            case '3':
+                return getNode(SE);
+            default:
+                throw new RuntimeException("Codice:" + c + " impossibile!!");
         }
     }
 
-    /**
-     * Gets the value of the point at (x, y) or null if the point is empty.
-     *
-     * @param {double} x The x-coordinate.
-     * @param {double} y The y-coordinate.
-     * @param {Object} opt_default The default value to return if the node doesn't
-     *                 exist.
-     * @return {*} The value of the node, the default value if the node
-     *         doesn't exist, or undefined if the node doesn't exist and no default
-     *         has been provided.
-     */
-    public Object get(double x, double y, Object opt_default) {
-        Node<T> node = this.find(this.root_, x, y);
-        return node != null ? node.getPoint().getValue() : opt_default;
+    public QuadTree getNode(Coord c) {
+        switch (c) {
+            case NE:
+                return northEast;
+            case NW:
+                return northWest;
+            case SW:
+                return southWest;
+            case SE:
+                return southEast;
+        }
+        return null;
     }
 
-    /**
-     * Removes a point from (x, y) if it exists.
-     *
-     * @param {double} x The x-coordinate.
-     * @param {double} y The y-coordinate.
-     * @return {Object} The value of the node that was removed, or null if the
-     *         node doesn't exist.
-     */
-    public Object remove(double x, double y) {
-        Node<T> node = this.find(this.root_, x, y);
-        if (node != null) {
-            Object value = node.getPoint().getValue();
-            node.setPoint(null);
-            node.setNodeType(NodeType.EMPTY);
-            this.balance(node);
-            this.count_--;
-            return value;
-        } else {
+    public static Stack<QuadTree> qt2leaves(QuadTree root) {
+        // tale funzione si proccupa di creare uno stack di nodi foglia del quadtree, e contemporaneamente genera i
+        // nodi del grafo per il percorso del robot. Successivamente, un'altra funzione si preoccuperà di creare gli
+        // archi tra nodi adiacenti, utilizzando lo stack ritornato da questa funzione.
+        // todo: sviluppare la funzione che genera gli archi
+
+        Queue<QuadTree> q = new LinkedList<QuadTree>();
+        Stack<QuadTree> s = new Stack<QuadTree>();
+        q.add(root);// add the root node to the queue
+
+        while (!q.isEmpty()) {
+            // add the children to the queue
+            QuadTree n = q.remove();
+            if (!n.isLeaf()) {
+                q.add(n.getNode(NE));
+                q.add(n.getNode(NW));
+                q.add(n.getNode(SW));
+                q.add(n.getNode(SE));
+            }
+            // add the extracted node to the Stack
+            // here we must insert all the logic
+            if (n.isLeaf() && n.isFreeSpace()) {
+                s.push(n);
+            }
+            //so we add only white valid tiles
+        }
+        return s;
+    }
+
+    // Ritorna il nodo padre più vicino alla coordinata richiesta
+    public static QuadTree nearestParent(QuadTree tree, String code) throws RuntimeException {
+        code = code.replaceAll("[^0123]", "");
+
+        QuadTree node = tree;
+        char c;
+        for (int i = 0; i < code.length(); i++) {
+            c = code.charAt(i);
+            node = node.getNode(c);
+            if (node.isLeaf())
+                break;
+        }
+        return node;
+    }
+
+    public QuadTree nearestPoint(Vertex v) throws RuntimeException {
+        return nearestPoint(this, v);
+    }
+
+    public QuadTree nearestPoint(float x, float y) throws RuntimeException {
+        return nearestPoint(this, new Vertex(x, y));
+    }
+
+    public static QuadTree nearestPoint(QuadTree tree, Vertex v) throws RuntimeException {
+        if (tree.isLeaf())
+            return tree;
+        for (Coord c : Coord.values()) {
+            QuadTree n = tree.getNode(c);
+            if (n.getBoundary().inRange(v))
+                return nearestPoint(n, v);
+        }
+        throw new RuntimeException("Point" + v.toString() + " OUT OF BOUNDARY");
+    }
+
+    //Ritorna in quale lato è vicino il nodo n
+    // HALT = Non è vicino/non sono una foglia
+    public Side neighborsSide(QuadTree n){
+        if(!this.isLeaf())
             return null;
+        String neighCode;
+        for (Side s: Side.values()) {
+            neighCode=FSMneighbors(this.myCode,s);
+            if(neighCode.equals(n.myCode))
+                return s;
         }
+        return HALT;
     }
 
-    /**
-     * Returns true if the point at (x, y) exists in the tree.
-     *
-     * @param {double} x The x-coordinate.
-     * @param {double} y The y-coordinate.
-     * @return {boolean} Whether the tree contains a point at (x, y).
-     */
-    public boolean contains(double x, double y) {
-        return this.get(x, y, null) != null;
-    }
+    // Usando la tabella nel paper, genera il codice del vicino richiestp
+    public static String FSMneighbors(String code, Side side) {
+        if (side == HALT)
+            return "";
+        code = code.replaceAll("[^0123]", "");
+        char[] codeBuf = code.toCharArray();
 
-    /**
-     * @return {boolean} Whether the tree is empty.
-     */
-    public boolean isEmpty() {
-        return this.root_.getNodeType() == NodeType.EMPTY;
-    }
-
-    /**
-     * @return {number} The number of items in the tree.
-     */
-    public int getCount() {
-        return this.count_;
-    }
-
-    /**
-     * Removes all items from the tree.
-     */
-    public void clear() {
-        this.root_.setNw(null);
-        this.root_.setNe(null);
-        this.root_.setSw(null);
-        this.root_.setSe(null);
-        this.root_.setNodeType(NodeType.EMPTY);
-        this.root_.setPoint(null);
-        this.count_ = 0;
-    }
-
-    /**
-     * Returns an array containing the coordinates of each point stored in the tree.
-     * @return {Array.<Point>} Array of coordinates.
-     */
-    @SuppressWarnings("unchecked")
-	public Point<T>[] getKeys() {
-        final List<Point<T>> arr = new ArrayList<Point<T>>();
-        this.traverse(this.root_, new Visitor<T>() {
-            public void visit(QuadTree<T> quadTree, Node<T> node) {
-                arr.add(node.getPoint());
-            }
-        });
-        return arr.toArray(new Point[] {});
-    }
-
-    /**
-     * Returns an array containing all values stored within the tree.
-     * @return {Array.<Object>} The values stored within the tree.
-     */
-    public Object[] getValues() {
-        final List<Object> arr = new ArrayList<Object>();
-        this.traverse(this.root_, new Visitor<T>() {
-            public void visit(QuadTree<T> quadTree, Node<T> node) {
-                arr.add(node.getPoint().getValue());
-            }
-        });
-
-        return arr.toArray(new Object[arr.size()]);
-    }
-
-    @SuppressWarnings("unchecked")
-	public Point<T>[] searchIntersect(final double xmin, final double ymin, final double xmax, final double ymax) {
-        final List<Point<T>> arr = new ArrayList<Point<T>>();
-        this.navigate(this.root_, new Visitor<T>() {
-            public void visit(QuadTree<T> quadTree, Node<T> node) {
-                Point<T> pt = node.getPoint();
-                if (pt.getX() < xmin || pt.getX() > xmax || pt.getY() < ymin || pt.getY() > ymax) {
-                    // Definitely not within the polygon!
-                } else {
-                    arr.add(node.getPoint());
-                }
-
-            }
-        }, xmin, ymin, xmax, ymax);
-        return arr.toArray(new Point[] {});
-    }
-
-    @SuppressWarnings("unchecked")
-	public Point<T>[] searchWithin(final double xmin, final double ymin, final double xmax, final double ymax) {
-        final List<Point<T>> arr = new ArrayList<Point<T>>();
-        this.navigate(this.root_, new Visitor<T>() {
-            public void visit(QuadTree<T> quadTree, Node<T> node) {
-                Point<T> pt = node.getPoint();
-                if (pt.getX() > xmin && pt.getX() < xmax && pt.getY() > ymin && pt.getY() < ymax) {
-                    arr.add(node.getPoint());
-                }
-            }
-        }, xmin, ymin, xmax, ymax);
-        return arr.toArray(new Point[] {});
-    }
-    
-    public T nearest(double x, double y, double searchDistance) {
-		
-		Point<T>[] points =
-				this.searchWithin(x - searchDistance, y - searchDistance, x + searchDistance, y + searchDistance);
-		// System.out.println("Candidate points : " + points.length);
-		T candidate = null;
-		double distance = 0.0;
-		for (Point<T> p : points) {
-			double d = Math.sqrt(Math.pow(p.getX() - x, 2) + Math.pow(p.getY() - y , 2));
-			if (candidate == null) {
-				candidate = p.getValue();
-				distance = d;
-				continue;
-			}
-			if (d == 0.0) {
-				return p.getValue();
-			} else if (d < distance) {
-				candidate = p.getValue();
-				distance = d;
-			}
-		}
-		return candidate;
-		
-	}
-
-	public void navigate(Node<T> node, Visitor<T> func, double xmin, double ymin, double xmax, double ymax) {
-        switch (node.getNodeType()) {
-            case LEAF:
-                func.visit(this, node);
-                break;
-
-            case POINTER:
-                if (intersects(xmin, ymax, xmax, ymin, node.getNe()))
-                    this.navigate(node.getNe(), func, xmin, ymin, xmax, ymax);
-                if (intersects(xmin, ymax, xmax, ymin, node.getSe()))
-                    this.navigate(node.getSe(), func, xmin, ymin, xmax, ymax);
-                if (intersects(xmin, ymax, xmax, ymin, node.getSw()))
-                    this.navigate(node.getSw(), func, xmin, ymin, xmax, ymax);
-                if (intersects(xmin, ymax, xmax, ymin, node.getNw()))
-                    this.navigate(node.getNw(), func, xmin, ymin, xmax, ymax);
-                break;
-                
-            case EMPTY:
-            	break;
-        }
-    }
-
-    private boolean intersects(double left, double bottom, double right, double top, Node<T> node) {
-        return !(node.getX() > right ||
-                (node.getX() + node.getW()) < left ||
-                node.getY() > bottom ||
-                (node.getY() + node.getH()) < top);
-    }
-    /**
-     * Clones the quad-tree and returns the new instance.
-     * @return {QuadTree} A clone of the tree.
-     */
-    public QuadTree<T> clone() {
-        double x1 = this.root_.getX();
-        double y1 = this.root_.getY();
-        double x2 = x1 + this.root_.getW();
-        double y2 = y1 + this.root_.getH();
-        final QuadTree<T> clone = new QuadTree<T>(x1, y1, x2, y2);
-        // This is inefficient as the clone needs to recalculate the structure of the
-        // tree, even though we know it already.  But this is easier and can be
-        // optimized when/if needed.
-        this.traverse(this.root_, new Visitor<T>() {
-            public void visit(QuadTree<T> quadTree, Node<T> node) {
-                clone.set(node.getPoint().getX(), node.getPoint().getY(), node.getPoint().getValue());
-            }
-        });
-
-
-        return clone;
-    }
-
-    /**
-     * Traverses the tree depth-first, with quadrants being traversed in clockwise
-     * order (NE, SE, SW, NW).  The provided function will be called for each
-     * leaf node that is encountered.
-     * @param {QuadTree.Node<T>} node The current node.
-     * @param {function(QuadTree.Node<T>)} fn The function to call
-     *     for each leaf node. This function takes the node as an argument, and its
-     *     return value is irrelevant.
-     * @private
-     */
-    public void traverse(Node<T> node, Visitor<T> func) {
-        switch (node.getNodeType()) {
-            case LEAF:
-                func.visit(this, node);
-                break;
-
-            case POINTER:
-                this.traverse(node.getNe(), func);
-                this.traverse(node.getSe(), func);
-                this.traverse(node.getSw(), func);
-                this.traverse(node.getNw(), func);
-                break;
-                
-            case EMPTY:
-            	break;
-        }
-    }
-
-    /**
-     * Finds a leaf node with the same (x, y) coordinates as the target point, or
-     * null if no point exists.
-     * @param {QuadTree.Node<T>} node The node to search in.
-     * @param {number} x The x-coordinate of the point to search for.
-     * @param {number} y The y-coordinate of the point to search for.
-     * @return {QuadTree.Node<T>} The leaf node that matches the target,
-     *     or null if it doesn't exist.
-     * @private
-     */
-    public Node<T> find(Node<T> node, double x, double y) {
-        Node<T> resposne = null;
-        switch (node.getNodeType()) {
-            case EMPTY:
-                break;
-
-            case LEAF:
-                resposne = node.getPoint().getX() == x && node.getPoint().getY() == y ? node : null;
-                break;
-
-            case POINTER:
-                resposne = this.find(this.getQuadrantForPoint(node, x, y), x, y);
-                break;
-
-            default:
-                throw new QuadTreeException("Invalid nodeType");
-        }
-        return resposne;
-    }
-
-    /**
-     * Inserts a point into the tree, updating the tree's structure if necessary.
-     * @param {.QuadTree.Node<T>} parent The parent to insert the point
-     *     into.
-     * @param {QuadTree.Point} point The point to insert.
-     * @return {boolean} True if a new node was added to the tree; False if a node
-     *     already existed with the correpsonding coordinates and had its value
-     *     reset.
-     * @private
-     */
-    private boolean insert(Node<T> parent, Point<T> point) {
-        Boolean result = false;
-        switch (parent.getNodeType()) {
-            case EMPTY:
-                this.setPointForNode(parent, point);
-                result = true;
-                break;
-            case LEAF:
-                if (parent.getPoint().getX() == point.getX() && parent.getPoint().getY() == point.getY()) {
-                    this.setPointForNode(parent, point);
-                    result = false;
-                } else {
-                    this.split(parent);
-                    result = this.insert(parent, point);
-                }
-                break;
-            case POINTER:
-                result = this.insert(
-                        this.getQuadrantForPoint(parent, point.getX(), point.getY()), point);
-                break;
-
-            default:
-                throw new QuadTreeException("Invalid nodeType in parent");
-        }
-        return result;
-    }
-
-    /**
-     * Converts a leaf node to a pointer node and reinserts the node's point into
-     * the correct child.
-     * @param {QuadTree.Node<T>} node The node to split.
-     * @private
-     */
-    private void split(Node<T> node) {
-        Point<T> oldPoint = node.getPoint();
-        node.setPoint(null);
-
-        node.setNodeType(NodeType.POINTER);
-
-        double x = node.getX();
-        double y = node.getY();
-        double hw = node.getW() / 2;
-        double hh = node.getH() / 2;
-
-        node.setNw(new Node<T>(x, y, hw, hh, node));
-        node.setNe(new Node<T>(x + hw, y, hw, hh, node));
-        node.setSw(new Node<T>(x, y + hh, hw, hh, node));
-        node.setSe(new Node<T>(x + hw, y + hh, hw, hh, node));
-
-        this.insert(node, oldPoint);
-    }
-
-    /**
-     * Attempts to balance a node. A node will need balancing if all its children
-     * are empty or it contains just one leaf.
-     * @param {QuadTree.Node<T>} node The node to balance.
-     * @private
-     */
-    private void balance(Node<T> node) {
-        switch (node.getNodeType()) {
-            case EMPTY:
-            case LEAF:
-                if (node.getParent() != null) {
-                    this.balance(node.getParent());
-                }
-                break;
-
-            case POINTER: {
-                Node<T> nw = node.getNw();
-                Node<T> ne = node.getNe();
-                Node<T> sw = node.getSw();
-                Node<T> se = node.getSe();
-                Node<T> firstLeaf = null;
-
-                // Look for the first non-empty child, if there is more than one then we
-                // break as this node can't be balanced.
-                if (nw.getNodeType() != NodeType.EMPTY) {
-                    firstLeaf = nw;
-                }
-                if (ne.getNodeType() != NodeType.EMPTY) {
-                    if (firstLeaf != null) {
-                        break;
+        for (int i = code.length() - 1; i != -1; i--) {
+            char c = codeBuf[i];
+            switch (side) {
+                case R:     //Right
+                    switch (c) {
+                        case '0':
+                            codeBuf[i] = '1';
+                            side = HALT;
+                            break;
+                        case '1':
+                            codeBuf[i] = '0';
+                            side = R;
+                            break;
+                        case '2':
+                            codeBuf[i] = '3';
+                            side = HALT;
+                            break;
+                        case '3':
+                            codeBuf[i] = '2';
+                            side = R;
+                            break;
+                        default:
+                            break;
                     }
-                    firstLeaf = ne;
-                }
-                if (sw.getNodeType() != NodeType.EMPTY) {
-                    if (firstLeaf != null) {
-                        break;
-                    }
-                    firstLeaf = sw;
-                }
-                if (se.getNodeType() != NodeType.EMPTY) {
-                    if (firstLeaf != null) {
-                        break;
-                    }
-                    firstLeaf = se;
-                }
-
-                if (firstLeaf == null) {
-                    // All child nodes are empty: so make this node empty.
-                    node.setNodeType(NodeType.EMPTY);
-                    node.setNw(null);
-                    node.setNe(null);
-                    node.setSw(null);
-                    node.setSe(null);
-
-                } else if (firstLeaf.getNodeType() == NodeType.POINTER) {
-                    // Only child was a pointer, therefore we can't rebalance.
                     break;
-
-                } else {
-                    // Only child was a leaf: so update node's point and make it a leaf.
-                    node.setNodeType(NodeType.LEAF);
-                    node.setNw(null);
-                    node.setNe(null);
-                    node.setSw(null);
-                    node.setSe(null);
-                    node.setPoint(firstLeaf.getPoint());
-                }
-
-                // Try and balance the parent as well.
-                if (node.getParent() != null) {
-                    this.balance(node.getParent());
-                }
+                case L:     //Left
+                    switch (c) {
+                        case '0':
+                            codeBuf[i] = '1';
+                            side = L;
+                            break;
+                        case '1':
+                            codeBuf[i] = '0';
+                            side = HALT;
+                            break;
+                        case '2':
+                            codeBuf[i] = '3';
+                            side = L;
+                            break;
+                        case '3':
+                            codeBuf[i] = '2';
+                            side = HALT;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case D:     //Down
+                    switch (c) {
+                        case '0':
+                            codeBuf[i] = '2';
+                            side = HALT;
+                            break;
+                        case '1':
+                            codeBuf[i] = '3';
+                            side = HALT;
+                            break;
+                        case '2':
+                            codeBuf[i] = '0';
+                            side = D;
+                            break;
+                        case '3':
+                            codeBuf[i] = '1';
+                            side = D;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case U:     //Up
+                    switch (c) {
+                        case '0':
+                            codeBuf[i] = '2';
+                            side = U;
+                            break;
+                        case '1':
+                            codeBuf[i] = '3';
+                            side = U;
+                            break;
+                        case '2':
+                            codeBuf[i] = '0';
+                            side = HALT;
+                            break;
+                        case '3':
+                            codeBuf[i] = '1';
+                            side = HALT;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case RU:     //Right-Up
+                    switch (c) {
+                        case '0':
+                            codeBuf[i] = '3';
+                            side = U;
+                            break;
+                        case '1':
+                            codeBuf[i] = '2';
+                            side = RU;
+                            break;
+                        case '2':
+                            codeBuf[i] = '1';
+                            side = HALT;
+                            break;
+                        case '3':
+                            codeBuf[i] = '0';
+                            side = R;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case RD:     //Right-Down
+                    switch (c) {
+                        case '0':
+                            codeBuf[i] = '3';
+                            side = HALT;
+                            break;
+                        case '1':
+                            codeBuf[i] = '2';
+                            side = R;
+                            break;
+                        case '2':
+                            codeBuf[i] = '1';
+                            side = D;
+                            break;
+                        case '3':
+                            codeBuf[i] = '0';
+                            side = RD;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case LD:     //Left-Down
+                    switch (c) {
+                        case '0':
+                            codeBuf[i] = '3';
+                            side = L;
+                            break;
+                        case '1':
+                            codeBuf[i] = '2';
+                            side = HALT;
+                            break;
+                        case '2':
+                            codeBuf[i] = '1';
+                            side = LD;
+                            break;
+                        case '3':
+                            codeBuf[i] = '0';
+                            side = D;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case LU:     //Left-Up
+                    switch (c) {
+                        case '0':
+                            codeBuf[i] = '3';
+                            side = LU;
+                            break;
+                        case '1':
+                            codeBuf[i] = '2';
+                            side = U;
+                            break;
+                        case '2':
+                            codeBuf[i] = '1';
+                            side = L;
+                            break;
+                        case '3':
+                            codeBuf[i] = '0';
+                            side = HALT;
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case HALT:
+                    break;
             }
-            break;
         }
+        if (side != HALT)  // Sto saltando tipo "PacMAn"
+            code = "";
+        else
+            code = String.valueOf(codeBuf);
+        return code;
     }
 
-    /**
-     * Returns the child quadrant within a node that contains the given (x, y)
-     * coordinate.
-     * @param {QuadTree.Node<T>} parent The node.
-     * @param {number} x The x-coordinate to look for.
-     * @param {number} y The y-coordinate to look for.
-     * @return {QuadTree.Node<T>} The child quadrant that contains the
-     *     point.
-     * @private
-     */
-    private Node<T> getQuadrantForPoint(Node<T> parent, double x, double y) {
-        double mx = parent.getX() + parent.getW() / 2;
-        double my = parent.getY() + parent.getH() / 2;
-        if (x < mx) {
-            return y < my ? parent.getNw() : parent.getSw();
+
+
+    // Trova il vicino richiesto del nodo corrente
+    public QuadTree FSMneighbors(Side side) {
+        if (!this.isLeaf())
+            return null;
+        if (side == HALT)
+            return null;
+        String tgCode = FSMneighbors(this.myCode, side);
+        if (tgCode.equals(""))  //Lato senza vicini
+            return null;
+        QuadTree tree = this;
+        while (!tree.isRoot())
+            tree = tree.dad;
+        return nearestParent(tree, tgCode);
+    }
+
+    //Divido il nodo trasformandolo da foglia a split point
+    public void split() throws RuntimeException {
+        if (!isLeaf())
+            throw new RuntimeException("Non è una foglia");
+
+        northWest = new QuadTree(this.level + 1, getBoundary().getSector(NW), myCode + "0");
+        northWest.dad = this;
+
+        northEast = new QuadTree(this.level + 1, getBoundary().getSector(NE), myCode + "1");
+        northEast.dad = this;
+
+        southWest = new QuadTree(this.level + 1, getBoundary().getSector(SW), myCode + "2");
+        southWest.dad = this;
+
+        southEast = new QuadTree(this.level + 1, getBoundary().getSector(SE), myCode + "3");
+        southEast.dad = this;
+
+        setFreeSpace(false);
+
+    }
+
+    public static void main(String[] args) {
+        // Riprodico QuadTree presente nella publicazione
+        QuadTree qt = new QuadTree(new Boundary(-100, -100, 100, 100));
+        qt.split();
+        qt.getNode('1').split();
+        qt.getNode('2').split();
+        qt.getNode('2').getNode('1').split();
+        qt.getNode('3').split();
+        qt.getNode('3').getNode('0').split();
+        qt.getNode('3').getNode('2').split();
+
+        //Traveling the graph
+        QuadTree.dfs(qt);
+        System.out.println();
+        //Test neighbors method
+
+        QuadTree node = QuadTree.nearestParent(qt, "321");
+        System.out.println(node.dataNode());
+
+        System.out.print("Find Coord of Est neighbors of 302: ");
+        System.out.println(QuadTree.FSMneighbors("302", R));
+
+        System.out.print("Find Coord of West neighbors of 320: ");
+        System.out.println(QuadTree.FSMneighbors("320", L));
+
+        System.out.println("Find Node West neighbors 320:");
+        System.out.println("\t" + QuadTree.nearestParent(qt, "320").FSMneighbors(L).dataNode());
+
+        System.out.println("Find Node Sud neighbors 323 (Out of range):");
+        node = QuadTree.nearestParent(qt, "323").FSMneighbors(D);
+        if (node != null)
+            System.out.println("\t" + node.dataNode());
+        else
+            System.out.println("\t Il nodo non esiste");
+
+        System.out.println("Find Node Est neighbors 0 (Split Node):");
+        node = QuadTree.nearestParent(qt, "0").FSMneighbors(R);
+        if (node != null)
+            System.out.println("\t" + node.dataNode());
+        else
+            System.out.println("\t Il nodo non esiste");
+
+    }
+
+    /* Traveling the QTGraph using Depth First Search*/
+    public static void dfs(QuadTree node) {
+        if (node == null)
+            return;
+
+        System.out.print(node.dataNode());
+
+        if (node.isLeaf()) {
+            System.out.print("|");
+            for (int i = 0; i < node.level; i++)
+                System.out.print("\t");
+            System.out.println("\tLeaf Node. FreeSpace:" + node.isFreeSpace() + "\tCode:" + node.myCode);
         } else {
-            return y < my ? parent.getNe() : parent.getSe();
+            for (int i = 0; i < node.level; i++)
+                System.out.print("|-----");
+            System.out.print("NW:");
+            dfs(node.northWest);
+
+            for (int i = 0; i < node.level; i++)
+                System.out.print("|-----");
+            System.out.print("NE:");
+            dfs(node.northEast);
+
+            for (int i = 0; i < node.level; i++)
+                System.out.print("|-----");
+            System.out.print("SW:");
+            dfs(node.southWest);
+
+            for (int i = 0; i < node.level; i++)
+                System.out.print("|-----");
+            System.out.print("SE:");
+            dfs(node.southEast);
         }
     }
 
-    /**
-     * Sets the point for a node, as long as the node is a leaf or empty.
-     * @param {QuadTree.Node<T>} node The node to set the point for.
-     * @param {QuadTree.Point} point The point to set.
-     * @private
-     */
-    private void setPointForNode(Node<T> node, Point<T> point) {
-        if (node.getNodeType() == NodeType.POINTER) {
-            throw new QuadTreeException("Can not set point for node of type POINTER");
+    // non lascia invariato lo stile
+    static public void dfs(QuadTree node, PApplet win) {
+        if (node == null)
+            return;
+
+        if (node.isLeaf()) {
+            if (node.isFreeSpace())
+                win.noFill();
+            win.rect((float) node.boundary.getxMin(), (float) node.boundary.getyMin(), (float) node.boundary.getW(), (float) node.boundary.getH());
+
+        } else {
+
+            win.fill(255, 0, 0);
+            dfs(node.northEast, win);
+
+            win.fill(0, 255, 0);
+            dfs(node.northWest, win);
+
+            win.fill(0, 0, 255);
+            dfs(node.southWest, win);
+
+            win.fill(0, 255, 255);
+            dfs(node.southEast, win);
         }
-        node.setNodeType(NodeType.LEAF);
-        node.setPoint(point);
+
+    }
+
+    public void printTree() {
+        QuadTree.dfs(this);
+    }
+
+    public Boundary getBoundary() {
+        return boundary;
+    }
+
+    public boolean isRoot() {
+        return dad == null;
+    }
+
+    public boolean isLeaf() {
+        return northWest == null && northEast == null &&
+                southWest == null && southEast == null;
+    }
+
+    public boolean isFreeSpace() {
+        return freeSpace;
+    }
+
+    public void setFreeSpace(boolean freeSpace) {
+        this.freeSpace = freeSpace;
+    }
+
+    public String dataNode() {
+        return String.format("L%d code:%s; isLeaf:%s; isFree:%s %s", level, myCode, isLeaf(), isFreeSpace(), boundary.dataBoundary());
     }
 }
