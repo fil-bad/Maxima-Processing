@@ -246,6 +246,7 @@ public class QTGraph {
             edge = edgeIterator.next();
             src = qtGraph.getEdgeSource(edge).getBoundary();
             tg = qtGraph.getEdgeTarget(edge).getBoundary();
+            win.strokeWeight((float) qtGraph.getEdgeWeight(edge)/80);
             win.line((float) src.getX(), (float) src.getY(), (float) tg.getX(), (float) tg.getY());
         }
 

@@ -67,7 +67,7 @@ public class ProcessingClass extends PApplet {
 
         Obstacle[] obstacles = {ob1, ob2};
         qt = new QuadTree(obstacles, new Boundary(-400, -200, 400, 200), 10);
-        qtGraph = new QTGraph(this, qt, 10, obstacles);
+        qtGraph = new QTGraph(this, qt, 12, obstacles);
 
         Vertex v_start = new Vertex(-30, 150);
         Vertex v_end = new Vertex(310, 100);
