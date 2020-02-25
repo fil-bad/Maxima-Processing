@@ -135,7 +135,7 @@ public class Vertex {
         win.stroke(0);
         win.strokeWeight(1);
         win.pushMatrix();
-        win.translate(0, 0, 1);
+        win.translate(0, 0, 2);
 
         win.circle((float) this.getX(), (float) this.getY(), (float) r);
 

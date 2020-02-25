@@ -1,7 +1,5 @@
 package graph;
 
-import com.sun.javafx.geom.Edge;
-import geometry.Polygon;
 import geometry.Sat;
 import geometry.Vertex;
 import org.jgrapht.GraphPath;
@@ -11,7 +9,6 @@ import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.traverse.DepthFirstIterator;
 
 import processing.core.PApplet;
-import processingElement.Box;
 import processingElement.Obstacle;
 import quadtree.Boundary;
 import quadtree.QuadTree;
@@ -24,7 +21,6 @@ public class QTGraph {
 
     private SimpleWeightedGraph<QuadTree, DefaultWeightedEdge> qtGraph;
     private QuadTree root;
-    // private DijkstraShortestPath<QuadTree, DefaultWeightedEdge> path;
     private Vector<Vertex> node2visit = null;
 
     public QTGraph(QuadTree qt, float rRobot, Obstacle[] obs) {
@@ -114,9 +110,6 @@ public class QTGraph {
                 }
             }
         }
-        // ### CREO LA STRUTTRA PER I PATH ###
-        // this.path = new DijkstraShortestPath<>(this.qtGraph);
-
     }
 
     public Vertex middleBoundary(QuadTree n1, QuadTree n2) {
@@ -157,64 +150,11 @@ public class QTGraph {
         }
     }
 
-    public static void main(String[] args) {
-        QuadTree qt = new QuadTree(new Boundary(-100, -100, 100, 100));
-        qt.split();
-        qt.getNode('1').split();
-        qt.getNode('2').split();
-        qt.getNode('2').getNode('1').split();
-        qt.getNode('3').split();
-        qt.getNode('3').getNode('0').split();
-        qt.getNode('3').getNode('2').split();
-        QTGraph graph = new QTGraph(qt);
-        graph.printNodeEdges(qt.nearestPoint(-50, 50));
-
-//
-//        Box ob1 = new Box(2, 3, 10);
-//        Box ob2 = new Box(1, 5, 10);
-//        ob2.setD(3, 2, 0);
-//        Obstacle[] ob = {ob1, ob2};
-//
-//        QuadTree qtAuto = new QuadTree(ob, new Boundary(-5, -5, 5, 5), 0.5f);
-//        qtAuto.printTree();
-//
-//        QTGraph graphAuto = new QTGraph(qtAuto, 40, ob);
-//
-//        graphAuto.printNodes();
-//        graphAuto.printEdges();
-
-    }
 
     public void printEdge(DefaultWeightedEdge edge) {
         System.out.println(edge.toString());
         System.out.println("##[SRC]##\t" + qtGraph.getEdgeSource(edge).dataNode());
         System.out.println("##[TAR]##\t" + qtGraph.getEdgeTarget(edge).dataNode() + "\n");
-    }
-
-    public void printPath(PApplet win, float r) {
-
-        win.pushStyle();
-        win.strokeWeight(r / 2);
-        win.stroke(130, 0, 0, 200);
-
-        if (this.node2visit == null) {
-            win.popStyle();
-            System.out.println("Nothing to print");
-            return;
-        }
-
-        for (Vertex v : this.node2visit) {
-            v.printVertex();
-        }
-        System.out.println("");
-
-        Vertex src, tg;
-        for (int i = 0; i < this.node2visit.size() - 1; i++) {
-            src = this.node2visit.get(i);
-            tg = this.node2visit.get(i + 1);
-            win.line((float) src.getX(), (float) src.getY(), (float) tg.getX(), (float) tg.getY());
-        }
-        win.popStyle();
     }
 
     public void printNodeEdges(QuadTree n) {
@@ -232,6 +172,19 @@ public class QTGraph {
         }
     }
 
+    public static void main(String[] args) {
+        QuadTree qt = new QuadTree(new Boundary(-100, -100, 100, 100));
+        qt.split();
+        qt.getNode('1').split();
+        qt.getNode('2').split();
+        qt.getNode('2').getNode('1').split();
+        qt.getNode('3').split();
+        qt.getNode('3').getNode('0').split();
+        qt.getNode('3').getNode('2').split();
+        QTGraph graph = new QTGraph(qt);
+        graph.printNodeEdges(qt.nearestPoint(-50, 50));
+    }
+
     public void printGraph(PApplet win, float r) {
         win.pushStyle();
         Set<DefaultWeightedEdge> edgeSet = this.qtGraph.edgeSet();
@@ -246,7 +199,7 @@ public class QTGraph {
             edge = edgeIterator.next();
             src = qtGraph.getEdgeSource(edge).getBoundary();
             tg = qtGraph.getEdgeTarget(edge).getBoundary();
-            win.strokeWeight((float) qtGraph.getEdgeWeight(edge)/80);
+            win.strokeWeight((float) qtGraph.getEdgeWeight(edge) / 80);
             win.line((float) src.getX(), (float) src.getY(), (float) tg.getX(), (float) tg.getY());
         }
 
@@ -276,7 +229,6 @@ public class QTGraph {
             return DijkstraShortestPath.findPathBetween(this.qtGraph, s, e);
 
         } catch (RuntimeException e) {
-
             return null;
         }
     }
@@ -297,10 +249,27 @@ public class QTGraph {
             this.node2visit.add(q.getBoundary().getVertex());
         }
         this.node2visit.add(end);
-        for (Vertex v : this.node2visit) {
-            v.printVertex();
+    }
+
+    public void printPath(PApplet win, float r) {
+
+        win.pushStyle();
+        win.strokeWeight(r / 2);
+        win.stroke(130, 0, 0, 200);
+
+        if (this.node2visit == null) {
+            win.popStyle();
+            System.out.println("Nothing to print");
+            return;
         }
-        System.out.println("");
+
+        Vertex src, tg;
+        for (int i = 0; i < this.node2visit.size() - 1; i++) {
+            src = this.node2visit.get(i);
+            tg = this.node2visit.get(i + 1);
+            win.line((float) src.getX(), (float) src.getY(), (float) tg.getX(), (float) tg.getY());
+        }
+        win.popStyle();
     }
 
 }

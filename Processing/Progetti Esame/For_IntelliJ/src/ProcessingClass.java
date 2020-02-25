@@ -34,18 +34,14 @@ public class ProcessingClass extends PApplet {
         cameraInit();
         frameRate(60);
 
-
         com = CommonDraw.getInstance(this);
         gnd = new Terra(this, 800, 400, color(200, 150, 100));
         point = new Pointer(this, 60, 800, 400);
         ob1 = new Box(this, 50, 40, 10, color(255, 150, 0, 100));
         ob2 = new Box(this, 50, 40, 10, color(0, 255, 0, 100));
 
-
-//        ob1.setR(radians(50));
+//      ob1.setR(radians(50));
         ob2.setD(150, -60, 0);
-
-
     }
 
 
@@ -63,7 +59,6 @@ public class ProcessingClass extends PApplet {
         point.draw();
 
         ob1.setD(point.getX(), point.getY(), 0);
-
 
         Obstacle[] obstacles = {ob1, ob2};
         qt = new QuadTree(obstacles, new Boundary(-400, -200, 400, 200), 10);
@@ -90,9 +85,6 @@ public class ProcessingClass extends PApplet {
     public void keyPressed() {
         if (key == 'r') {
             cameraInit();
-        }
-        if (key == 'd') {
-            qtGraph.calcVert2Visit(new Vertex(-30, 150), new Vertex(310, 100));
         }
     }
 
@@ -141,34 +133,6 @@ public class ProcessingClass extends PApplet {
             eyeX = centerX + x * d;
             eyeY = centerY + y * d;
             eyeZ = centerZ + z * d;
-
-            //Allenamento per l'uso delle matrici
-//            SimpleMatrix look = new SimpleMatrix(3,1);
-//            look.set(0,0, eyeX);
-//            look.set(1,0, eyeY);
-//            look.set(2,0, eyeZ);
-//            println("look");
-//            look.print();
-//            SimpleMatrix center = new SimpleMatrix(3,1);
-//            center.set(0,0, centerX);
-//            center.set(1,0, centerY);
-//            center.set(2,0, centerZ);
-//            println("center");
-//            center.print();
-//            float d = dist(eyeX,eyeY,eyeZ,centerX,centerY,centerZ);
-//            d += mouseY - pmouseY;
-//
-//            SimpleMatrix pos = new SimpleMatrix(3,1);
-//            pos.set(look.plus(-1,center)); //look-center
-//            pos = pos.divide(NormOps_DDRM.normP2(pos.getDDRM())); //normalize
-//            println("pos");
-//            pos.print();
-//            center = center.plus(d,pos);
-//            center.print();
-//
-//            eyeX = (float)center.get(0,0);
-//            eyeY = (float)center.get(1,0);
-//            eyeZ = (float)center.get(2,0);
             Zrot += (mouseX - pmouseX) / 200.0;
 
         } else if (mousePressed && (mouseButton == RIGHT)) {    // traslazione xy
@@ -205,38 +169,38 @@ public class ProcessingClass extends PApplet {
     private int h = 10;     //altezza
     private int lF = 10;   //lunghezza semi lato freccia
 
-    private void assi(float alfa) {
+    private void axes(float alpha) {
         pushStyle();
         strokeWeight((float) 0.5);
-        fill(255, 0, 0, alfa); // rosso = x
+        fill(255, 0, 0, alpha); // rosso = x
         pushMatrix();
         rotateY(PI / 2);
         translate(0, 0, p >> 1);  //disegno in base
         box(h, b, p);
         translate(0, 0, p >> 1);  //sposto origine alla fine
-        piramide(lF);
+        pyramid(lF);
         popMatrix();
 
-        fill(0, 255, 0, alfa); // verde = y
+        fill(0, 255, 0, alpha); // verde = y
         pushMatrix();
         rotateX(-PI / 2);
         translate(0, 0, p >> 1);  //disegno in base
         box(h, b, p);
         translate(0, 0, p >> 1);  //sposto origine alla fine
-        piramide(lF);
+        pyramid(lF);
         popMatrix();
 
-        fill(0, 0, 255, alfa); // blu = z
+        fill(0, 0, 255, alpha); // blu = z
         pushMatrix();
         translate(0, 0, p >> 1);  //disegno in base
         box(h, b, p);
         translate(0, 0, p >> 1);  //sposto origine alla fine
-        piramide(lF);
+        pyramid(lF);
         popMatrix();
         popStyle();
     }
 
-    private void piramide(int h) {
+    private void pyramid(int h) {
         beginShape();
         vertex(-h, -h);
         vertex(+h, -h);
