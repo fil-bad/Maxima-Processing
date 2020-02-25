@@ -11,7 +11,6 @@ public abstract class Sat {
     // True if inside the circle there are almost one vertex of the polygon
     public static boolean haveCollided(Polygon poly1, Vertex c, double r) {
         for (Vertex v : poly1.getVertices()) {
-            v.printVertex();
             if (c.dist(v) <= r)
                 return true;
         }

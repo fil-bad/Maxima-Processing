@@ -71,7 +71,7 @@ public class ProcessingClass extends PApplet {
 
 
         QuadTree.dfs(qt, this);
-        qtGraph.printGraph(this, 10);
+        //qtGraph.printGraph(this, 10);
 //        qtGraph.printPath(this, 10);
 
         ob1.draw();
