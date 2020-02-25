@@ -1,4 +1,6 @@
-package processingElement;
+package javaMisc;
+
+import javaMisc.Link;
 
 public class PrismLink implements Link {
 
@@ -8,7 +10,7 @@ public class PrismLink implements Link {
     private float alpha;
     private float a;
 
-    public PrismLink(float theta, String qi, float alpha, float a){
+    public PrismLink(float theta, String qi, float alpha, float a) {
         this.theta = theta;
         this.d_qi = qi;
         this.alpha = alpha;
@@ -33,5 +35,10 @@ public class PrismLink implements Link {
     @Override
     public String whichQ_iIs() {
         return this.d_qi;
+    }
+
+    @Override
+    public void update() {
+
     }
 }

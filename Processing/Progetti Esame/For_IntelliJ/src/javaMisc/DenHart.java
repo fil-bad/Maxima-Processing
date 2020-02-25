@@ -1,5 +1,7 @@
-package processingElement;
+package javaMisc;
+
 import static java.lang.Math.*;
+
 import java.util.ArrayList;
 
 public class DenHart {

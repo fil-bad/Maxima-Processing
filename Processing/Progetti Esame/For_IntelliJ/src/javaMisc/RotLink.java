@@ -1,4 +1,6 @@
-package processingElement;
+package javaMisc;
+
+import javaMisc.Link;
 
 public class RotLink implements Link {
 
@@ -8,7 +10,7 @@ public class RotLink implements Link {
     private float alpha;
     private float a;
 
-    public RotLink(String qi, float d, float alpha, float a){
+    public RotLink(String qi, float d, float alpha, float a) {
         this.theta_qi = qi;
         this.d = d;
         this.alpha = alpha;
@@ -33,5 +35,10 @@ public class RotLink implements Link {
     @Override
     public String whichQ_iIs() {
         return this.theta_qi;
+    }
+
+    @Override
+    public void update() {
+
     }
 }

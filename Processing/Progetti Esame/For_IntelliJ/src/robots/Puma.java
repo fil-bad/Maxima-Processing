@@ -1,9 +1,7 @@
 package robots;
 
-import com.jogamp.opengl.math.Matrix4;
 import org.ejml.data.DMatrix4x4;
-import org.ejml.data.Matrix;
-import processingElement.DenHart;
+import javaMisc.DenHart;
 
 public class Puma {
 
