@@ -24,8 +24,8 @@ public class QTGraph {
 
     private SimpleWeightedGraph<QuadTree, DefaultWeightedEdge> qtGraph;
     private QuadTree root;
-    private DijkstraShortestPath<QuadTree, DefaultWeightedEdge> path = null;
-    private ArrayList<Vertex> node2visit = null;
+    // private DijkstraShortestPath<QuadTree, DefaultWeightedEdge> path;
+    private Vector<Vertex> node2visit = null;
 
     public QTGraph(QuadTree qt, float rRobot, Obstacle[] obs) {
         this(null, QuadTree.qt2leaves(qt), rRobot, obs);
@@ -115,7 +115,8 @@ public class QTGraph {
             }
         }
         // ### CREO LA STRUTTRA PER I PATH ###
-        this.path = new DijkstraShortestPath<>(this.qtGraph);
+        // this.path = new DijkstraShortestPath<>(this.qtGraph);
+
     }
 
     public Vertex middleBoundary(QuadTree n1, QuadTree n2) {
@@ -156,12 +157,6 @@ public class QTGraph {
         }
     }
 
-    public void printEdge(DefaultWeightedEdge edge) {
-        System.out.println(edge.toString());
-        System.out.println("##[SRC]##\t" + qtGraph.getEdgeSource(edge).dataNode());
-        System.out.println("##[TAR]##\t" + qtGraph.getEdgeTarget(edge).dataNode() + "\n");
-    }
-
     public static void main(String[] args) {
         QuadTree qt = new QuadTree(new Boundary(-100, -100, 100, 100));
         qt.split();
@@ -190,19 +185,33 @@ public class QTGraph {
 
     }
 
-    public void printPath(PApplet win, float r) {
-// todo: fare il print e il calcolo di dijkstra DENTRO il print del grafo, per non farlo crashare
-        if (this.node2visit == null) calcVert2Visit(new Vertex(-300, 20), new Vertex(350, 150));
-        //todo: sistemare il caso iniziale dove non è dichiarato
-        win.pushStyle();
-        win.strokeWeight(r);
-        win.stroke(200, 0, 0);
+    public void printEdge(DefaultWeightedEdge edge) {
+        System.out.println(edge.toString());
+        System.out.println("##[SRC]##\t" + qtGraph.getEdgeSource(edge).dataNode());
+        System.out.println("##[TAR]##\t" + qtGraph.getEdgeTarget(edge).dataNode() + "\n");
+    }
 
-        ArrayList<Vertex> vertexSet = this.node2visit;
+    public void printPath(PApplet win, float r) {
+
+        win.pushStyle();
+        win.strokeWeight(r / 2);
+        win.stroke(130, 0, 0, 200);
+
+        if (this.node2visit == null) {
+            win.popStyle();
+            System.out.println("Nothing to print");
+            return;
+        }
+
+        for (Vertex v : this.node2visit) {
+            v.printVertex();
+        }
+        System.out.println("");
+
         Vertex src, tg;
-        for (int i = 0; i < vertexSet.size() - 1; i++) {
-            src = vertexSet.get(i);
-            tg = vertexSet.get(i + 1);
+        for (int i = 0; i < this.node2visit.size() - 1; i++) {
+            src = this.node2visit.get(i);
+            tg = this.node2visit.get(i + 1);
             win.line((float) src.getX(), (float) src.getY(), (float) tg.getX(), (float) tg.getY());
         }
         win.popStyle();
@@ -257,22 +266,40 @@ public class QTGraph {
     }
 
     private GraphPath<QuadTree, DefaultWeightedEdge> findPath(Vertex start, Vertex end) {
-        return path.getPath(root.nearestPoint(start), root.nearestPoint(end));
+        try {
+            QuadTree s = root.nearestPoint(start);
+            QuadTree e = root.nearestPoint(end);
+
+            if (!s.isFreeSpace() || !e.isFreeSpace())
+                return null;
+            return DijkstraShortestPath.findPathBetween(this.qtGraph, s, e);
+
+        } catch (RuntimeException e) {
+
+            return null;
+        }
     }
 
     public void calcVert2Visit(Vertex start, Vertex end) {
-        ArrayList<Vertex> list = new ArrayList<Vertex>(0);
-        list.add(start);
+        this.node2visit = new Vector<>(0);
+        this.node2visit.add(start);
 
         GraphPath<QuadTree, DefaultWeightedEdge> graphPath = this.findPath(start, end);
+        if (graphPath == null) {
+            System.err.println("### Cammino non esistente, uno dei due punti è su un ostacolo ###");
+            return;
+        }
+
         List<QuadTree> vert_list = graphPath.getVertexList();
 
         for (QuadTree q : vert_list) {
-            list.add(q.getBoundary().getVertex());
+            this.node2visit.add(q.getBoundary().getVertex());
         }
-        list.add(end);
-
-        this.node2visit = list;
+        this.node2visit.add(end);
+        for (Vertex v : this.node2visit) {
+            v.printVertex();
+        }
+        System.out.println("");
     }
 
 }

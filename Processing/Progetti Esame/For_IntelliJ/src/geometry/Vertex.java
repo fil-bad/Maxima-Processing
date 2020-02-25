@@ -3,6 +3,7 @@ package geometry;
 import org.ejml.data.DMatrix2;
 import org.ejml.data.DMatrix2x2;
 import org.ejml.dense.fixed.CommonOps_DDF2;
+import processing.core.PApplet;
 
 import static java.lang.Math.*;
 
@@ -126,6 +127,20 @@ public class Vertex {
 
     public void printVertex() {
         System.out.print(this.toString());
+    }
+
+    public void printVertex(PApplet win, float r) {
+        win.pushStyle();
+        win.fill(255, 90, 0);
+        win.stroke(0);
+        win.strokeWeight(1);
+        win.pushMatrix();
+        win.translate(0, 0, 1);
+
+        win.circle((float) this.getX(), (float) this.getY(), (float) r);
+
+        win.popMatrix();
+        win.popStyle();
     }
 
     @Override
