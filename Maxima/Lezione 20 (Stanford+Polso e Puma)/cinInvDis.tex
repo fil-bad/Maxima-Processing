@@ -168,13 +168,13 @@ Avremo che $q_4,q_5,q_6$ sono:
 \begin{itemize}
 \item  $c(\beta) = r_{33} \Longrightarrow s(\beta) = \pm \sqrt{1-r_{33}^2}
 		\hfill \longrightarrow \hfill
-		\beta = atan2 (\pm s_5, c_5) = \left \{ \begin{array}{rl}
+		\beta = atan2 (\pm s(\beta), c(\beta)) = \left \{ \begin{array}{rl}
 		q_5\\
 		-q_5
 		\end{array}
 		\right.$
 \end{itemize}
-Se $q_5 \neq 0,\pi$ (non sono dunque in singolarità):
+Se $\beta\neq 0,\pi$ (non sono dunque in singolarità):
 \begin{itemize}	
 
 \item $\left \{ \begin{array}{rl}
@@ -187,16 +187,9 @@ Se $q_5 \neq 0,\pi$ (non sono dunque in singolarità):
 		c(\gamma)=\dfrac{r_{13}}{s(\beta)} \\
 		s(\gamma)=\dfrac{r_{23}}{s(\beta)}
 		\end{array}
-		\right.
-		\longrightarrow
-		\left \{ \begin{array}{rl}
-		s(\gamma)=\pm s_4\\
-		c(\gamma)=\pm c_4
-		\end{array}
-		\right.
-		\longrightarrow $
-				
-		$\gamma = atan2 (\pm s_4,\pm c_4) =
+		\right.$
+			
+$\gamma = atan2 (\pm s(\gamma), \pm c(\gamma)) =   atan2 (\pm \dfrac {r_{23}}{s(\beta)}\pm \dfrac {r_{13}}{s(\beta)})=
 		\left \{ \begin{array}{rl}
 		q_4\\
 		q_4+\pi
@@ -211,27 +204,22 @@ Se $q_5 \neq 0,\pi$ (non sono dunque in singolarità):
 		\right. %il punto serve per non far chiamare errore
 		\longrightarrow
 		\left \{ \begin{array}{rl}
-		c(\alpha)=\dfrac{r_{31}}{s(\beta)} \\
+		c(\alpha)=\dfrac{r_{31}}{-s(\beta)} \\
 		s(\alpha)=\dfrac{r_{32}}{s(\beta)}
 		\end{array}
-		\right.
-		\longrightarrow
-		\left \{ \begin{array}{rl}
-		c(\alpha)=\pm c_6\\
-		s(\alpha)=\pm s_6
-		\end{array}
-		\right.
-		\longrightarrow $
+		\right.$
 				
-		$\alpha = atan2 (\pm s_6,\pm c_6) =
+		$\alpha = atan2 (\pm s(\alpha),\mp c(\alpha)) = atan2 (\pm \dfrac {r_{32}}{s(\beta)}\mp \dfrac {r_{31}}{s(\beta)})=
 		\left \{ \begin{array}{rl}
 		q_6\\
 		q_6+\pi
 		\end{array}
 		\right.$
 
-N.B. Il segno meno di $-s(\beta)$ si semplifica in quanto ${ r_{31}}$ risulta pari a ${-s_5 c_6}$.
 \end{itemize}
+
+N.B. $s(\beta)$ che è al denominatore non è pari a  $\pm \sqrt{1-r_{33}^2}$ bensì al seno del valore di $\beta$ che ho ricavato.
+
 \newpage
 \section{Cinematica inversa completa: Manipolatore di Stanford + Polso Sferico}
 \subsection{Calcolo posizione disaccoppiata}
@@ -268,7 +256,7 @@ $\begin{pmatrix}{{\mathit{df}}_1}-{L_6} {r_{13}}\\
 Applicando la cinematica inversa del Manipolatore di Stanford ricavo il valore delle variabili di giunto che servono per posizionare il polso sferico rispetto al sistema di riferimento di base:
 \begin{itemize}
 %\item $q_3 = \sqrt{(df_1-L_6 r_{13})^2 +(df_2-L_6 r_{23})^2+(df_3-L_6 r_{33}-L_1)-L_2^2}$
-\item $q_3 = \sqrt{x^2 +y^2+(z-L_1)-L_2^2}$
+\item $q_3 = \sqrt{x^2 +y^2+(z-L_1)^2-L_2^2}$
 \item $q_2 = atan2(\pm\sqrt{\dfrac{x^2+y^2-L2^2}{q_3^2}},\dfrac{z-L_1}{q_3})$
 \item $q_1 = atan2(q_3 s_{q_2}y-L_2x,q_3s_{q2}x+L_2y)$
 \end{itemize}
@@ -322,10 +310,10 @@ Applicando la cinematica inversa dell'Antropomorfo ricavo il valore delle variab
 \begin{itemize}
 %\item $q_3 = \sqrt{(df_1-L_6 r_{13})^2 +(df_2-L_6 r_{23})^2+(df_3-L_6 r_{33}-L_1)-L_2^2}$
 \item $q_3 = atan2(\pm\sqrt{1-a^2},a) \leftarrow a=\dfrac{x^2+y^2+(z-L_1)^2-D_3^2-D_2^2}{2D_2D_3}$
-\item $q_2 = atan2(zD_3c_{q_3} + zD_2 - L_1D_3c_{q_3} - L_1D_2 \pm \sqrt{x^2+y^2}D_3s_{q_3},$
+\item $q_2 = atan2(zD_3c_{q_3} + zD_2 - L_1D_3c_{q_3} - L_1D_2 \mp \sqrt{x^2+y^2}D_3s_{q_3},$
 
-\hspace{20mm} $ \mp \sqrt{x^2+y^2}D_3s_{q_3} \mp \sqrt{x^2+y^2}D_2 + zD_3s_{q_3} - L_1D_3c_{q_3})$
-\item $q_1 = atan2(\dfrac{y}{-a},\dfrac{x}{-a})$
+\hspace{20mm} $ \pm \sqrt{x^2+y^2}D_3c_{q_3} \pm \sqrt{x^2+y^2}D_2 + zD_3s_{q_3} - L_1D_3s_{q_3})$
+\item $q_1 = atan2(\dfrac{y}{D_2c_{q_2}+D_3c_{q_2+q_3}},\dfrac{x}{D_2c_{q_2}+D_3c_{q_2+q_3}})$
 \end{itemize}
 
 \subsection{Calcolo Orientamento disaccoppiato}
