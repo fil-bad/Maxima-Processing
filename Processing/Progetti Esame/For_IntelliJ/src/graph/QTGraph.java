@@ -28,10 +28,18 @@ public class QTGraph {
     private ArrayList<Vertex> node2visit = null;
 
     public QTGraph(QuadTree qt, float rRobot, Obstacle[] obs) {
-        this(QuadTree.qt2leaves(qt), rRobot, obs);
+        this(null, QuadTree.qt2leaves(qt), rRobot, obs);
     }
 
-    protected QTGraph(Stack<QuadTree> qtStack, float rRobot, Obstacle[] obs) {
+    public QTGraph(PApplet win, QuadTree qt, float rRobot, Obstacle[] obs) {
+        this(win, QuadTree.qt2leaves(qt), rRobot, obs);
+    }
+
+    public QTGraph(QuadTree qt) {
+        this(null, QuadTree.qt2leaves(qt), 0, null);
+    }
+
+    protected QTGraph(PApplet win, Stack<QuadTree> qtStack, float rRobot, Obstacle[] obs) {
         // ### CREO IL GRAFO ###
         QuadTree tallest = qtStack.get(0);
         while (!tallest.isRoot())
@@ -61,63 +69,66 @@ public class QTGraph {
                     continue;
                 }
                 if (node.isFreeSpace()) {
-                    //Todo: se un collegamento diagonale, verifico che nel raggio rRobot, non ci siano ostacoli
-                    DefaultWeightedEdge e = this.qtGraph.addEdge(n, node);
-                    double weight = Math.sqrt(n.getBoundary().getX() * node.getBoundary().getX() +
-                            node.getBoundary().getY() * node.getBoundary().getY());
-                    if (e != null) {// arco non ancora esistente
+                    DefaultWeightedEdge e = null;
+                    boolean add = true;
+                    if (obs != null) {
                         switch (s) {
                             case U:
                             case D:
                             case R:
                             case L:
-                                this.qtGraph.setEdgeWeight(e, weight);
+                                add = true;
                                 break;
                             case LD:
                             case LU:
                             case RD:
                             case RU:
-                                //todo Capire perchè non funziona il check sulla diagonale
-                                boolean res = false;
                                 for (Obstacle ob : obs) {
-                                    Vertex mid = middleBoundary(e);
+                                    Vertex mid = middleBoundary(n, node);
                                     if (mid != null) {
-                                        if (!Sat.haveCollided(ob.getPoly(), mid, rRobot)) {
-                                            res = true;
+                                        if (win != null) {
+                                            win.fill(255, 255, 0);
+                                            win.circle((float) mid.getX(), (float) mid.getY(), 5);
+                                        }
+                                        if (Sat.haveCollided(ob.getPoly(), mid, rRobot)) {
+                                            if (win != null) {
+                                                win.fill(255, 0, 0, 150);
+                                                win.circle((float) mid.getX(), (float) mid.getY(), rRobot * 2);
+                                            }
+                                            add = false;
                                             break;
                                         }
                                     }
                                 }
-                                if (res)
-                                    System.out.println("dentro res");
-                                    this.qtGraph.setEdgeWeight(e, weight);
                                 break;
                             case HALT:
                                 continue;
                         }
                     }
+                    if (add)
+                        e = this.qtGraph.addEdge(n, node);
+                    if (e == null)
+                        continue;// arco già esistente
+                    double weight = n.getBoundary().getVertex().dist(node.getBoundary().getVertex());
+                    this.qtGraph.setEdgeWeight(e, weight);
                 }
             }
         }
         // ### CREO LA STRUTTRA PER I PATH ###
         this.path = new DijkstraShortestPath<>(this.qtGraph);
-
     }
 
-    // return null if the edge not exist, or if side is halt
-    public Vertex middleBoundary(DefaultWeightedEdge edge){
-        if(edge==null)
+    public Vertex middleBoundary(QuadTree n1, QuadTree n2) {
+        Side sideBigFromSmall;
+        sideBigFromSmall = n1.neighborsSide(n2);
+        if (sideBigFromSmall == null)
             return null;
         Boundary big, small;
-        Side sideBigFromSmall;
-        if(qtGraph.getEdgeTarget(edge).getBoundary().getMinExtension()>=qtGraph.getEdgeSource(edge).getBoundary().getMinExtension()){
-            big = qtGraph.getEdgeTarget(edge).getBoundary();
-            small = qtGraph.getEdgeSource(edge).getBoundary();
-            sideBigFromSmall = qtGraph.getEdgeSource(edge).neighborsSide(qtGraph.getEdgeTarget(edge));
-        }else {
-            big = qtGraph.getEdgeSource(edge).getBoundary();
-            small = qtGraph.getEdgeTarget(edge).getBoundary();
-            sideBigFromSmall = qtGraph.getEdgeTarget(edge).neighborsSide(qtGraph.getEdgeSource(edge));
+        if (n1.getBoundary().getMinExtension() >= n2.getBoundary().getMinExtension()) {
+            small = n2.getBoundary();
+            sideBigFromSmall = n2.neighborsSide(n1);    // DEVO cambiare la variabile del side
+        } else {
+            small = n1.getBoundary();
         }
         return small.getVertex(sideBigFromSmall);
     }
@@ -141,10 +152,14 @@ public class QTGraph {
         System.out.println("### PRINTING EDGES OF GRAPH ###");
         while (iterator.hasNext()) {
             edge = iterator.next();
-            System.out.println(edge.toString());
-            System.out.println("##[SRC]##\t" + qtGraph.getEdgeSource(edge).dataNode());
-            System.out.println("##[TAR]##\t" + qtGraph.getEdgeTarget(edge).dataNode() + "\n");
+            printEdge(edge);
         }
+    }
+
+    public void printEdge(DefaultWeightedEdge edge) {
+        System.out.println(edge.toString());
+        System.out.println("##[SRC]##\t" + qtGraph.getEdgeSource(edge).dataNode());
+        System.out.println("##[TAR]##\t" + qtGraph.getEdgeTarget(edge).dataNode() + "\n");
     }
 
     public static void main(String[] args) {
@@ -156,19 +171,22 @@ public class QTGraph {
         qt.getNode('3').split();
         qt.getNode('3').getNode('0').split();
         qt.getNode('3').getNode('2').split();
-
-        Stack<QuadTree> qtStack = QuadTree.qt2leaves(qt);
-        Box ob1 = new Box(50, 40, 10);
-        Box ob2 = new Box(50, 40, 10);
-        ob2.setD(50,10,0);
-        Obstacle[] ob = {ob1, ob2};
-        QTGraph graph = new QTGraph(qtStack, 10, ob);
-
+        QTGraph graph = new QTGraph(qt);
         graph.printNodeEdges(qt.nearestPoint(-50, 50));
-        //graph.printNodes();
 
-        //graph.printEdges();
-
+//
+//        Box ob1 = new Box(2, 3, 10);
+//        Box ob2 = new Box(1, 5, 10);
+//        ob2.setD(3, 2, 0);
+//        Obstacle[] ob = {ob1, ob2};
+//
+//        QuadTree qtAuto = new QuadTree(ob, new Boundary(-5, -5, 5, 5), 0.5f);
+//        qtAuto.printTree();
+//
+//        QTGraph graphAuto = new QTGraph(qtAuto, 40, ob);
+//
+//        graphAuto.printNodes();
+//        graphAuto.printEdges();
 
     }
 
