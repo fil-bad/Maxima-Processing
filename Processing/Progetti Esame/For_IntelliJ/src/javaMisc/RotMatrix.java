@@ -5,6 +5,7 @@ import javaMisc.math.autodiff.DifferentialRealFunctionFactory;
 import javaMisc.math.autodiff.Variable;
 
 import javaMisc.math.*;
+import org.ejml.data.DMatrix4x4;
 
 public class RotMatrix {
 
@@ -15,7 +16,6 @@ public class RotMatrix {
 
     public void getXRot(double th) {
         Variable<DoubleReal> q = DFFactory.var("q", new DoubleReal(th));
-
 
     }
 
