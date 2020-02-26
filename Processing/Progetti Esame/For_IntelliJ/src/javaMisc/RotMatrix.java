@@ -1,10 +1,10 @@
 package javaMisc;
 
-import math.autodiff.DifferentialMatrixFunction;
-import math.autodiff.DifferentialRealFunctionFactory;
-import math.autodiff.Variable;
+import javaMisc.math.autodiff.DifferentialMatrixFunction;
+import javaMisc.math.autodiff.DifferentialRealFunctionFactory;
+import javaMisc.math.autodiff.Variable;
 
-import math.*;
+import javaMisc.math.*;
 
 public class RotMatrix {
 
