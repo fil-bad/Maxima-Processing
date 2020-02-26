@@ -1,6 +1,7 @@
 import geometry.Vertex;
 import graph.QTGraph;
 import processing.core.*;
+import processing.event.MouseEvent;
 import processingElement.*;
 import quadtree.Boundary;
 import quadtree.QuadTree;
@@ -19,10 +20,10 @@ public class ProcessingClass extends PApplet {
         size(1200, 720, P3D);
     }
 
-    Box ob1, ob2;
     CommonDraw com;
     Terra gnd;
     Pointer point;
+    SceneExpert scene;
 
     QuadTree qt;
     QTGraph qtGraph;
@@ -37,15 +38,14 @@ public class ProcessingClass extends PApplet {
         com = CommonDraw.getInstance(this);
         gnd = new Terra(this, 800, 400, color(200, 150, 100));
         point = new Pointer(this, 60, 800, 400);
-        ob1 = new Box(this, 50, 40, 10, color(255, 150, 0, 100));
-        ob2 = new Box(this, 50, 40, 10, color(0, 255, 0, 100));
+        scene = new SceneExpert();
+        scene.addObstacle(new Box(this, 50, 40, 10, color(255, 150, 0, 100)), 50);
+        scene.addObstacle(new Box(this, 50, 40, 10, color(0, 255, 0, 100)), 150, -60, 0);
 
-//      ob1.setR(radians(50));
-        ob2.setD(150, -60, 0);
+
     }
 
-
-    int a = 0;
+    Obstacle selected = null;
 
     @Override
     public void draw() {
@@ -58,11 +58,13 @@ public class ProcessingClass extends PApplet {
         com.axes(255);
         point.draw();
 
-        ob1.setD(point.getX(), point.getY(), 0);
+        if (selected != null) {
+            selected.setD(point.getX(), point.getY(), 0);
+        }
 
-        Obstacle[] obstacles = {ob1, ob2};
-        qt = new QuadTree(obstacles, new Boundary(-400, -200, 400, 200), 10);
-        qtGraph = new QTGraph(this, qt, 12, obstacles);
+
+        qt = new QuadTree(scene.getObstacles(), new Boundary(-400, -200, 400, 200), 10);
+        qtGraph = new QTGraph(this, qt, 12, scene.getObstacles());
 
         Vertex v_start = new Vertex(-30, 150);
         Vertex v_end = new Vertex(310, 100);
@@ -77,8 +79,34 @@ public class ProcessingClass extends PApplet {
         qtGraph.printGraph(this, 10);
         qtGraph.printPath(this, 15);
 
-        ob1.draw();
-        ob2.draw();
+        scene.drawScene();
+    }
+
+    @Override
+    public void mouseClicked() {
+        if (mouseButton == LEFT) {
+            if (selected != null) {
+                selected.highlight(false);
+                selected.setD(point.getX(), point.getY(), 0);
+                selected = null;
+            } else {
+                Obstacle newSelected = scene.getObstacle(point.get());
+                if (newSelected == null)
+                    selected = null;
+                else {
+                    selected = newSelected;
+                    selected.highlight(true);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void mouseWheel(MouseEvent event) {
+        if (selected != null) {
+            selected.addR(event.getCount() / 10.0);
+        } else
+            XRot += event.getCount() / 10.0;
     }
 
     @Override
@@ -91,7 +119,7 @@ public class ProcessingClass extends PApplet {
 
     private float eyeX, eyeY, eyeZ;
     private float centerX, centerY, centerZ;
-    private float Zrot;
+    private float Zrot, XRot;
     Vertex addPoint; // variabile per calcolare di quanto spostare il puntatore
 
     // Set camera e sistema ortonormale destro
@@ -104,7 +132,8 @@ public class ProcessingClass extends PApplet {
         centerY = 0.0f;
         centerZ = 0.0f;
 
-        Zrot = 0.0f;
+        Zrot = radians(0);
+        XRot = radians(0);
 
         addPoint = new Vertex(0, 0);
     }
@@ -118,7 +147,12 @@ public class ProcessingClass extends PApplet {
 
         float d = dist(eyeX, eyeY, eyeZ, centerX, centerY, centerZ);
 
-        if (mousePressed && (mouseButton == LEFT)) { //zoom e rotazione
+        if (mousePressed && (mouseButton == RIGHT)) {    // traslazione xy
+            eyeX -= (mouseX - pmouseX) / 2.0;
+            centerX -= (mouseX - pmouseX) / 2.0;
+            eyeY -= (mouseY - pmouseY) / 2.0;
+            centerY -= (mouseY - pmouseY) / 2.0;
+        } else if (mousePressed && (mouseButton == CENTER)) {    // Seleziona
             float x, y, z, dn;
             x = eyeX - centerX;
             y = eyeY - centerY;
@@ -134,13 +168,6 @@ public class ProcessingClass extends PApplet {
             eyeY = centerY + y * d;
             eyeZ = centerZ + z * d;
             Zrot += (mouseX - pmouseX) / 200.0;
-
-        } else if (mousePressed && (mouseButton == RIGHT)) {    // traslazione xy
-            eyeX -= (mouseX - pmouseX) / 2.0;
-            centerX -= (mouseX - pmouseX) / 2.0;
-            eyeY -= (mouseY - pmouseY) / 2.0;
-            centerY -= (mouseY - pmouseY) / 2.0;
-        } else if (mousePressed && (mouseButton == CENTER)) {    // Seleziona
 
         } else {
             //
@@ -160,6 +187,7 @@ public class ProcessingClass extends PApplet {
         //Ortonormale Destro
         //rotateZ(PI/2);
         scale(1, -1, 1);
+        rotateX(XRot);
         rotateZ(Zrot);
     }
 
@@ -169,67 +197,67 @@ public class ProcessingClass extends PApplet {
     private int h = 10;     //altezza
     private int lF = 10;   //lunghezza semi lato freccia
 
-    private void axes(float alpha) {
-        pushStyle();
-        strokeWeight((float) 0.5);
-        fill(255, 0, 0, alpha); // rosso = x
-        pushMatrix();
-        rotateY(PI / 2);
-        translate(0, 0, p >> 1);  //disegno in base
-        box(h, b, p);
-        translate(0, 0, p >> 1);  //sposto origine alla fine
-        pyramid(lF);
-        popMatrix();
-
-        fill(0, 255, 0, alpha); // verde = y
-        pushMatrix();
-        rotateX(-PI / 2);
-        translate(0, 0, p >> 1);  //disegno in base
-        box(h, b, p);
-        translate(0, 0, p >> 1);  //sposto origine alla fine
-        pyramid(lF);
-        popMatrix();
-
-        fill(0, 0, 255, alpha); // blu = z
-        pushMatrix();
-        translate(0, 0, p >> 1);  //disegno in base
-        box(h, b, p);
-        translate(0, 0, p >> 1);  //sposto origine alla fine
-        pyramid(lF);
-        popMatrix();
-        popStyle();
-    }
-
-    private void pyramid(int h) {
-        beginShape();
-        vertex(-h, -h);
-        vertex(+h, -h);
-        vertex(0, 0, 2 * h);
-        endShape(CLOSE);
-
-        beginShape();
-        vertex(+h, -h);
-        vertex(+h, +h);
-        vertex(0, 0, 2 * h);
-        endShape(CLOSE);
-
-        beginShape();
-        vertex(+h, +h);
-        vertex(-h, +h);
-        vertex(0, 0, 2 * h);
-        endShape(CLOSE);
-
-        beginShape();
-        vertex(-h, +h);
-        vertex(-h, -h);
-        vertex(0, 0, 2 * h);
-        endShape(CLOSE);
-
-        beginShape();
-        vertex(-h, -h);
-        vertex(+h, -h);
-        vertex(+h, +h);
-        vertex(-h, +h);
-        endShape(CLOSE);
-    }
+//    private void axes(float alpha) {
+//        pushStyle();
+//        strokeWeight((float) 0.5);
+//        fill(255, 0, 0, alpha); // rosso = x
+//        pushMatrix();
+//        rotateY(PI / 2);
+//        translate(0, 0, p >> 1);  //disegno in base
+//        box(h, b, p);
+//        translate(0, 0, p >> 1);  //sposto origine alla fine
+//        pyramid(lF);
+//        popMatrix();
+//
+//        fill(0, 255, 0, alpha); // verde = y
+//        pushMatrix();
+//        rotateX(-PI / 2);
+//        translate(0, 0, p >> 1);  //disegno in base
+//        box(h, b, p);
+//        translate(0, 0, p >> 1);  //sposto origine alla fine
+//        pyramid(lF);
+//        popMatrix();
+//
+//        fill(0, 0, 255, alpha); // blu = z
+//        pushMatrix();
+//        translate(0, 0, p >> 1);  //disegno in base
+//        box(h, b, p);
+//        translate(0, 0, p >> 1);  //sposto origine alla fine
+//        pyramid(lF);
+//        popMatrix();
+//        popStyle();
+//    }
+//
+//    private void pyramid(int h) {
+//        beginShape();
+//        vertex(-h, -h);
+//        vertex(+h, -h);
+//        vertex(0, 0, 2 * h);
+//        endShape(CLOSE);
+//
+//        beginShape();
+//        vertex(+h, -h);
+//        vertex(+h, +h);
+//        vertex(0, 0, 2 * h);
+//        endShape(CLOSE);
+//
+//        beginShape();
+//        vertex(+h, +h);
+//        vertex(-h, +h);
+//        vertex(0, 0, 2 * h);
+//        endShape(CLOSE);
+//
+//        beginShape();
+//        vertex(-h, +h);
+//        vertex(-h, -h);
+//        vertex(0, 0, 2 * h);
+//        endShape(CLOSE);
+//
+//        beginShape();
+//        vertex(-h, -h);
+//        vertex(+h, -h);
+//        vertex(+h, +h);
+//        vertex(-h, +h);
+//        endShape(CLOSE);
+//    }
 }

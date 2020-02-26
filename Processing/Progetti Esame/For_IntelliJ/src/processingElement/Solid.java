@@ -34,16 +34,36 @@ public abstract class Solid implements Obj3D {
         d.set(m);
     }
 
+    @Override
     public void setD(float x, float y, float z) {
-        SimpleMatrix m = new SimpleMatrix(3,1);
-        m.set(0,0,x);
-        m.set(1,0,y);
-        m.set(2,0,z);
+        SimpleMatrix m = new SimpleMatrix(3, 1);
+        m.set(0, 0, x);
+        m.set(1, 0, y);
+        m.set(2, 0, z);
         this.setD(m);
+    }
+
+    @Override
+    public void addD(SimpleMatrix m) {
+        d.plus(m);
+    }
+
+    @Override
+    public void addD(float x, float y, float z) {
+        SimpleMatrix m = new SimpleMatrix(3, 1);
+        m.set(0, 0, x);
+        m.set(1, 0, y);
+        m.set(2, 0, z);
+        this.addD(m);
     }
 
     @Override
     public void setR(double rad) {
         this.angle = rad;
+    }
+
+    @Override
+    public void addR(double rad) {
+        this.angle += rad;
     }
 }
