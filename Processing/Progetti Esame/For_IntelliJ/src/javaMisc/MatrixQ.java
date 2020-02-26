@@ -194,6 +194,9 @@ public class MatrixQ implements DifferentialMatrixFunction {
 
 
     public static void main(String[] args) {
+
+        //todo: fare più test case, almeno uno per ogni funzione
+
         MatrixQ mat = new MatrixQ();
 
         mat.setIdentity();
