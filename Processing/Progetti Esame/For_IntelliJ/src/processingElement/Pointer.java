@@ -1,5 +1,6 @@
 package processingElement;
 
+import geometry.Vertex;
 import processing.core.PApplet;
 
 public class Pointer {
@@ -37,14 +38,20 @@ public class Pointer {
     public void draw() {
         win.push();
         win.translate(x, y);
-        //win.circle(0, 0, 30);
-//        win.translate(0, 0, h);
 
-        win.fill(0, 255, 255); // azzurro
+        //Cerchio su terreno
         win.pushMatrix();
-        win.scale(1,1,-1);
+        win.fill(0, 255, 255); // azzurro
+        win.translate(0, 0, 3);
+        win.circle(0, 0, 30);
+        win.popMatrix();
+
+        //Freccia
+        win.translate(0, 0, h);
+        win.pushMatrix();
+        win.scale(1, 1, -1);
         win.translate(0, 0, h / 4.0f);  //disegno in base
-        win.box(b, b, h/2.0f);
+        win.box(b, b, h / 2.0f);
         win.translate(0, 0, h / 4.0f);  //sposto origine alla fine
         com.pyramid(lF);
         win.popMatrix();
@@ -94,5 +101,9 @@ public class Pointer {
 
     public float getY() {
         return y;
+    }
+
+    public Vertex get() {
+        return new Vertex(getX(), getY());
     }
 }

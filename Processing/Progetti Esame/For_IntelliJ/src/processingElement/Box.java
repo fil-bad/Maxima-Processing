@@ -3,13 +3,14 @@ import geometry.Polygon;
 import geometry.Vertex;
 import processing.core.PApplet;
 
-public class Box extends Solid implements Obj3D, Obstacle {
+public class Box extends Solid implements Obstacle {
     private CommonDraw com;
 
 
-    private int w,l,h;
+    private int w, l, h;
     private int color, highlight, showCol;
-    public Box (PApplet win, int w, int l, int h, int color) {
+
+    public Box(PApplet win, int w, int l, int h, int color) {
         super(win);
         com = CommonDraw.getInstance();
         this.w = w;
@@ -38,7 +39,6 @@ public class Box extends Solid implements Obj3D, Obstacle {
         win.translate(0,0,h/2.0f);
         win.fill(showCol);
         win.box(w, l, h);
-        com.axes(100);
         win.translate(0, 0, h);
         com.axes(100);
 
@@ -48,20 +48,28 @@ public class Box extends Solid implements Obj3D, Obstacle {
 
     @Override
     public void highlight(boolean b) {
-        if(b)
+        if (b)
             this.showCol = this.highlight;
         else
             this.showCol = this.color;
     }
 
     @Override
+    public void highlight() {
+        if (this.showCol == this.highlight)
+            this.showCol = this.color;
+        else
+            this.showCol = this.highlight;
+    }
+
+    @Override
     public Polygon getPoly() {
 
         Vertex[] v_s = {
-                new Vertex(+w/2.0, +l/2.0),     // Nord-Est
-                new Vertex(-w/2.0, +l/2.0),     // Nord-Ovest
-                new Vertex(-w/2.0, -l/2.0),     // Sud-Ovest
-                new Vertex(+w/2.0, -l/2.0),     // Sud-Est
+                new Vertex(+w / 2.0, +l / 2.0),     // Nord-Est
+                new Vertex(-w / 2.0, +l / 2.0),     // Nord-Ovest
+                new Vertex(-w / 2.0, -l / 2.0),     // Sud-Ovest
+                new Vertex(+w / 2.0, -l / 2.0),     // Sud-Est
         };
         Polygon p = new Polygon(v_s);
         p.rotate(this.getR());
