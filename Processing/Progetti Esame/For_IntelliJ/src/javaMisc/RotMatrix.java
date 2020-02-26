@@ -1,16 +1,22 @@
 package javaMisc;
 
-import org.ejml.data.DMatrix3x3;
-import org.ejml.data.Matrix;
-import org.ejml.interfaces.MatrixType;
-import org.ejml.simple.SimpleMatrix;
+import math.autodiff.DifferentialMatrixFunction;
+import math.autodiff.DifferentialRealFunctionFactory;
+import math.autodiff.Variable;
 
-public abstract class RotMatrix {
+import math.*;
 
-    private static Matrix rot;
+public class RotMatrix {
 
-    public static Matrix getRotX() {
-        return RotMatrix.rot;
+    private final DoubleRealFactory RNFactory = DoubleRealFactory.instance();
+    private final DifferentialRealFunctionFactory<DoubleReal> DFFactory = new DifferentialRealFunctionFactory<DoubleReal>(RNFactory);
+
+    private DifferentialMatrixFunction<DoubleReal> matrix; // todo: implementare questa interfaccia!
+
+    public void getXRot(double th) {
+        Variable<DoubleReal> q = DFFactory.var("q", new DoubleReal(th));
+
+
     }
 
 }

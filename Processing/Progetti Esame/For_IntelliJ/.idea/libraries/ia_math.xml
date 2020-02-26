@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="ia_math">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/lib/ia_math" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$PROJECT_DIR$/lib/ia_math" recursive="false" />
+  </library>
+</component>
