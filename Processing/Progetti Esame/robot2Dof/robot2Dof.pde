@@ -1,6 +1,9 @@
 import grafica.*;
 public GPlot plot2;
 
+/*Utilizzare l'input da tastiera per controllare un parametro numerico. L'immissione a una  sola cifra ottiene un valore "semplice" (ad es. 10, 20, 30, .. .) 
+La voce a due cifre ottiene il valore "raffinato" (ad es. 03, 25, 99), '0' e '00' sono trattati come 100 */ 
+
 int xOff, yOff;
 int nPointPlot=500;
 GPointsArray q1p = new GPointsArray(nPointPlot);
@@ -24,25 +27,25 @@ void setup() {
   plot2.getYAxis().getAxisLabel().setText("Rad");
 
   plot2.addLayer("objQ1", q1p);
-  plot2.getLayer("objQ1").setPointColor(cRfin);
+  plot2.getLayer("objQ1").setLineColor( color(cRfin) );
   plot2.addLayer("objQ2", q2p);
-  plot2.getLayer("objQ2").setPointColor(cRfin);
+  plot2.getLayer("objQ2").setLineColor( color(cRfin) );
 
   plot2.addLayer("inverseQ1", qr1p);
-  plot2.getLayer("inverseQ1").setPointColor(cRinv);
+  plot2.getLayer("inverseQ1").setLineColor( color(cRinv) );
   plot2.addLayer("inverseQ2", qr2p); 
-  plot2.getLayer("inverseQ2").setPointColor(cRinv);
+  plot2.getLayer("inverseQ2").setLineColor( color(cRinv) );
 
   plot2.addLayer("newtonQ1", qn1p);
-  plot2.getLayer("newtonQ1").setPointColor(cRnewton);
+  plot2.getLayer("newtonQ1").setLineColor( color(cRnewton) );
   plot2.addLayer("newtonQ2", qn2p);
-  plot2.getLayer("newtonQ2").setPointColor(cRnewton);
+  plot2.getLayer("newtonQ2").setLineColor( color(cRnewton) );
 
   plot2.addLayer("gradientQ1", qg1p); 
-  plot2.getLayer("gradientQ1").setPointColor(cRGradiente);
+  plot2.getLayer("gradientQ1").setLineColor( color(cRGradiente) );
   plot2.addLayer("gradientQ2", qg1p);
-  plot2.getLayer("gradientQ2").setPointColor(cRGradiente);
-
+  plot2.getLayer("gradientQ2").setLineColor( color(cRGradiente) );
+  
   //plot2.activateZooming(1.5);
 }
 
@@ -356,3 +359,6 @@ void mouseWheel(MouseEvent event) {
   //  increase=0.1;
   println(kp);
 }
+
+
+/*public void setLineColor(int newLineColor)*/

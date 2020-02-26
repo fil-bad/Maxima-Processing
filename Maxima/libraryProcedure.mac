@@ -390,7 +390,7 @@ MatrBar(vett,cost):=block( /*matrice che mi permette di spostarte il sistema di 
 MatrFinale(tabDH,vett,cost):=Cin_dir_Den_Hart(tabDH).MatrBar(vett,cost)$
 
 /* [wxMaxima: section start ]
-Energia cinetica
+Energia Cinetica
    [wxMaxima: section end   ] */
 
 
@@ -399,16 +399,9 @@ Matr_Inerzia:matrix(
         [I_yx,I_yy,I_yz],
         [I_zx,I_zy,I_zz]
         )$
+M:MatrFinale(port_cilindrica,e_y,-50);
 
 /* Ricavo ω (data la matrice della cinematica diretta M (M:MatrFinale(tabDH,vett,cost))con origine del sistema di riferimento nel baricentro del corpo): */
-
-port_cilindrica:matrix(
-    [q_1(t),L_1,0,0],
-    [0,q_2(t),-%pi/2,0],
-    [0,q_3(t),0,0]
-    )$
-Cin_dir_Den_Hart(port_cilindrica)$
-M:MatrFinale(port_cilindrica,e_y,-50);
 
 R:submatrix(4,M,4)$
 
@@ -417,7 +410,7 @@ R_t:transpose(R)$
 R_dot:diff(R,t)$
 
 S_omega:R_dot.R_t$
-S_omega:trigsimp(result)$
+S_omega:trigsimp(S_omega)$
 
 omega(omega_x,omega_y,omega_z):=matrix(
     [omega_x],[omega_y],[omega_z]
@@ -426,7 +419,7 @@ omega:omega(S_omega[3,2],S_omega[1,3],S_omega[2,1])$
 
 /* Ricavo l'energia cinetica di rotazione: */
 
-T_r:1/2*transpose(omega).R.MatrInerzia.R_t.omega$
+T_r:1/2*transpose(omega).R.Matr_Inerzia.R_t.omega$
 T_r:trigsimp(T_r)$
 
 /* Ricavo l'energia cinetica di traslazione: */
@@ -453,5 +446,68 @@ g(g_x,g_y,g_z):=matrix(
 g:g(0,0,9.8)$
 
 U:-Massa*transpose(g).d$
+
+/* [wxMaxima: section start ]
+Funzione di Rayleigh
+   [wxMaxima: section end   ] */
+
+
+q:transpose( [q_1(t),q_2(t),q_3(t)])$
+q_dot:diff(q,t)$
+/*D_11,D_22,D_33 sono le forze di attrito applicate rispettivamente sul giunto 1,2,3*/
+D(D_11,D_22,D_33):=matrix(
+        [D_11,0,0],
+        [0,D_22,0],
+        [0,0,D_33]
+        )$
+F:1/2*transpose(q_dot).D(0,1,0).q_dot$
+
+/* [wxMaxima: section start ]
+Forze esterne
+   [wxMaxima: section end   ] */
+
+
+/*u_1,u_2,u_3 sono le forze esterne applicate sui giunti 1,2,3*/
+u(u_1,u_2,u_3):=transpose( [u_1,u_2,u_3])$
+
+/* [wxMaxima: section start ]
+Derivate
+   [wxMaxima: section end   ] */
+
+
+/*Determino la Lagrangiana*/
+L:T-U$
+
+/*Ricavo la derivata della Lagrangiana rispetto a q_punto e poi derivo il risultato rispetto al tempo*/
+/*first: derivata della Lagrangiana rispetto al q_punto considerato (q_punto è pari a diff(q(t),t));
+second: derivata rispetto a t del risultato ottenuto da first*/
+first1:diff(L,diff(q_1(t),t))$
+first2:diff(L,diff(q_2(t),t))$
+first3:diff(L,diff(q_3(t),t))$
+second1:diff(first1,t)$
+second2:diff(first2,t)$
+second3:diff(first3,t)$
+
+/*Ricavo la derivata della Lagrangiana rispetto a q considerato*/
+diff(L,q_1(t))$
+diff(L,q_2(t))$
+diff(L,q_3(t))$
+
+/*Ricavo la derivata della funzione di Rayleigh rispetto a q_punto*/
+diff(F,diff(q_1(t),t))$
+diff(F,diff(q_2(t),t))$
+diff(F,diff(q_3(t),t))$
+
+/* [wxMaxima: section start ]
+Equazioni del moto
+   [wxMaxima: section end   ] */
+
+
+/*Prima equazione del moto*/
+eq_moto_1:second1-diff(L,q_1(t))+diff(F,diff(q_1(t),t))=u(0,1,2)[1,1]$
+/*Seconda equazione del moto*/
+eq_moto_2:second2-diff(L,q_2(t))+diff(F,diff(q_2(t),t))=u(0,1,2)[2,1]$
+/*Terza equazione del moto*/
+eq_moto_3:second3-diff(L,q_3(t))+diff(F,diff(q_3(t),t))=u(0,1,2)[3,1]$
 
 
