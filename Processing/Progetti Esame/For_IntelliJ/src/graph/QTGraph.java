@@ -41,10 +41,12 @@ public class QTGraph {
         while (!tallest.isRoot())
             tallest = tallest.getDad();
         this.root = tallest;
-
         this.qtGraph = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
-        // genero i vertici da collegare
+        extendGraph(win, qtStack, rRobot, obs);
+    }
 
+    private void extendGraph(PApplet win, Stack<QuadTree> qtStack, float rRobot, Obstacle[] obs) {
+        // genero i vertici da collegare
         for (int i = qtStack.size() - 1; i != -1; i--) {
             QuadTree node = qtStack.get(i);
             // System.out.println(node.dataNode());
@@ -89,7 +91,7 @@ public class QTGraph {
                                         if (Sat.haveCollided(ob.getPoly(), mid, rRobot)) {
                                             if (win != null) {
                                                 win.fill(255, 0, 0, 150);
-                                                win.circle((float) mid.getX(), (float) mid.getY(), rRobot * 2);
+                                                win.circle((float) mid.getX(), (float) mid.getY(), rRobot * 2.0f);
                                             }
                                             add = false;
                                             break;
@@ -200,7 +202,7 @@ public class QTGraph {
         win.translate(0, 0, 1);
         while (vertexIterator.hasNext()) {
             node = vertexIterator.next();
-            win.circle((float) node.getBoundary().getX(), (float) node.getBoundary().getY(), (float) Math.min(r, node.getBoundary().getMinExtension()));
+            win.circle((float) node.getBoundary().getX(), (float) node.getBoundary().getY(), (float) Math.min(r, node.getBoundary().getMinExtension() / 2.0f));
         }
         win.popMatrix();
         win.popStyle();
@@ -222,10 +224,24 @@ public class QTGraph {
 
     //todo ritornare lista di vertici, con i vertici medi ortogonali o diagonali
     public void calcVert2Visit(Vertex start, Vertex end) {
+
+        GraphPath<QuadTree, DefaultWeightedEdge> graphPath;
+//todo far splittare al massimo i nodi e su quelli trovare il percorso
+//        graphPath = this.findPath(start, end);
+//        if (graphPath == null) {
+//            System.err.println("### Cammino non esistente (MIN SPLIT), uno dei due punti è su un ostacolo ###");
+//            return;
+//        }
+//
+//        for (QuadTree n : graphPath.getVertexList()) {
+//            n.maxSplit();
+//            extendGraph(null,QuadTree.qt2leaves(n),0,null);
+//        }
+
         this.node2visit = new Vector<>(0);
         this.node2visit.add(start);
 
-        GraphPath<QuadTree, DefaultWeightedEdge> graphPath = this.findPath(start, end);
+        graphPath = this.findPath(start, end);
         if (graphPath == null) {
             System.err.println("### Cammino non esistente, uno dei due punti è su un ostacolo ###");
             return;
@@ -233,13 +249,19 @@ public class QTGraph {
 
         List<QuadTree> vert_list = graphPath.getVertexList();
 
-        for (QuadTree q : vert_list) {
+        for (int i = 0, vert_listSize = vert_list.size() - 1; i < vert_listSize; i++) {
+            QuadTree q = vert_list.get(i);
+            Side nextSide = q.neighborsSide(vert_list.get(i + 1));
+            Vertex v = q.getBoundary().getVertex(nextSide);
             this.node2visit.add(q.getBoundary().getVertex());
+            if (v != null)
+                this.node2visit.add(v);
         }
         this.node2visit.add(end);
     }
 
     public void printPath(PApplet win, float r) {
+        QuadTree.dfs(this.root, win);
 
         win.pushStyle();
         win.strokeWeight(r / 2);
@@ -250,6 +272,13 @@ public class QTGraph {
             System.out.println("Nothing to print");
             return;
         }
+        win.push();
+        win.translate(0, 0, 5);
+        win.fill(150);
+        for (Vertex v : this.node2visit) {
+            win.circle((float) v.getX(), (float) v.getY(), 2);
+        }
+        win.pop();
 
         Vertex src, tg;
         for (int i = 0; i < this.node2visit.size() - 1; i++) {

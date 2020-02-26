@@ -43,7 +43,7 @@ public class Pointer {
         win.pushMatrix();
         win.fill(0, 255, 255); // azzurro
         win.translate(0, 0, 3);
-        win.circle(0, 0, 30);
+        win.circle(0, 0, 10);
         win.popMatrix();
 
         //Freccia

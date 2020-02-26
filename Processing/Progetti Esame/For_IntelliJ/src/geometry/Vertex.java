@@ -99,7 +99,7 @@ public class Vertex {
             }else{                      //a prima di b
                 return a.compareTo(this) == 1 && b.compareTo(this) == -1;   // dopo di a, prima b
             }
-        }else
+        } else
             return false;
 
     }
@@ -108,7 +108,13 @@ public class Vertex {
         pos.set(x, y);
     }
 
-    /** Returns a new vector which is orthogonal to the current vector **/
+    public void set(Vertex v) {
+        pos.set(v.getX(), v.getY());
+    }
+
+    /**
+     * Returns a new vector which is orthogonal to the current vector
+     **/
     public Vertex orthogonal() {
         return new Vertex(-getY(), getX());
     }

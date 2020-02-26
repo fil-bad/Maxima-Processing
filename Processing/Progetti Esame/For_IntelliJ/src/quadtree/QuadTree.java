@@ -44,6 +44,7 @@ public class QuadTree {
      **/
     private int level = 0;
     String myCode = "";
+    float minSize;
     private QuadTree dad = null;
 
     private QuadTree northWest = null;      //0
@@ -62,6 +63,7 @@ public class QuadTree {
         this.level = 1;
         this.boundary = boundary;
         freeSpace = true;
+        float minSize = 0.1f;
         this.myCode = "";
     }
 
@@ -70,7 +72,20 @@ public class QuadTree {
         this.boundary = boundary;
         freeSpace = true;
         this.myCode = "";
+        this.minSize = minSize;
         foundFreeSpace(this, obst, minSize);
+    }
+
+
+    /**
+     * Costruttore dei nodi
+     **/
+    protected QuadTree(int level, Boundary boundary, String myCode, float minSize) {
+        this.level = level;
+        this.boundary = boundary;
+        this.myCode = myCode.replaceAll("[^0123]", "");
+        this.minSize = minSize;
+        freeSpace = true;
     }
 
     private static void foundFreeSpace(QuadTree node, Obstacle[] obst, float minSize) {
@@ -101,16 +116,6 @@ public class QuadTree {
 
             i++;
         }
-    }
-
-    /**
-     * Costruttore dei nodi
-     **/
-    protected QuadTree(int level, Boundary boundary, String myCode) {
-        this.level = level;
-        this.boundary = boundary;
-        this.myCode = myCode.replaceAll("[^0123]", "");
-        freeSpace = true;
     }
 
     public QuadTree getDad() {
@@ -211,16 +216,24 @@ public class QuadTree {
 
     //Ritorna in quale lato è vicino il nodo n
     // HALT = Non è vicino/non sono una foglia
-    public Side neighborsSide(QuadTree n){
-        if(!this.isLeaf())
+    public Side neighborsSide(QuadTree n) {
+        if (!this.isLeaf())
             return null;
-        String neighCode;
-        for (Side s: Side.values()) {
-            neighCode=FSMneighbors(this.myCode,s);
-            if(neighCode.equals(n.myCode))
-                return s;
+        String neighCode = "";
+        Side sRet = HALT;
+        int minDigit;
+        for (Side s : Side.values()) {
+            neighCode = FSMneighbors(this.myCode, s);
+//            System.out.println("neighborsSide s=" + s.name() + "  neighCode=" + neighCode + "  digit " + neighCode.length() + "  myCode=" + n.myCode + "  digit " + n.myCode.length());
+            minDigit = Math.min(neighCode.length(), n.myCode.length());
+            if (sRet == HALT)
+                // devo troncare i nomi al più corto per confrontarli
+                if (neighCode.substring(0, minDigit).equals(n.myCode.substring(0, minDigit)))
+                    sRet = s;
+            if (sRet == U || sRet == D || sRet == L || sRet == R)
+                break;
         }
-        return HALT;
+        return sRet;
     }
 
     // Usando la tabella nel paper, genera il codice del vicino richiestp
@@ -421,7 +434,6 @@ public class QuadTree {
     }
 
 
-
     // Trova il vicino richiesto del nodo corrente
     public QuadTree FSMneighbors(Side side) {
         if (!this.isLeaf())
@@ -442,20 +454,32 @@ public class QuadTree {
         if (!isLeaf())
             throw new RuntimeException("Non è una foglia");
 
-        northWest = new QuadTree(this.level + 1, getBoundary().getSector(NW), myCode + "0");
+        northWest = new QuadTree(this.level + 1, getBoundary().getSector(NW), myCode + "0", minSize);
         northWest.dad = this;
 
-        northEast = new QuadTree(this.level + 1, getBoundary().getSector(NE), myCode + "1");
+        northEast = new QuadTree(this.level + 1, getBoundary().getSector(NE), myCode + "1", minSize);
         northEast.dad = this;
 
-        southWest = new QuadTree(this.level + 1, getBoundary().getSector(SW), myCode + "2");
+        southWest = new QuadTree(this.level + 1, getBoundary().getSector(SW), myCode + "2", minSize);
         southWest.dad = this;
 
-        southEast = new QuadTree(this.level + 1, getBoundary().getSector(SE), myCode + "3");
+        southEast = new QuadTree(this.level + 1, getBoundary().getSector(SE), myCode + "3", minSize);
         southEast.dad = this;
 
         setFreeSpace(false);
 
+    }
+
+    public void maxSplit() throws RuntimeException {
+        if (this.getBoundary().getMinExtension() < minSize)
+            return;
+        else {
+            split();
+            for (Coord c : Coord.values()) {
+                QuadTree node = this.getNode(c);
+                node.maxSplit();
+            }
+        }
     }
 
     public static void main(String[] args) {

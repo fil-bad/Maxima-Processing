@@ -20,20 +20,24 @@ public class ProcessingClass extends PApplet {
         size(1200, 720, P3D);
     }
 
+    // Dati per il disegno del mondo
     CommonDraw com;
     Terra gnd;
     Pointer point;
     SceneExpert scene;
+
+    // Dati per la pianificazione del percorso
+    Vertex roverStart, roverEnd;
 
     QuadTree qt;
     QTGraph qtGraph;
 
     @Override
     public void setup() {
-        // TODO: Your custom drawing and setup on applet start belongs here
         clear();
         cameraInit();
         frameRate(60);
+
 
         com = CommonDraw.getInstance(this);
         gnd = new Terra(this, 800, 400, color(200, 150, 100));
@@ -42,6 +46,8 @@ public class ProcessingClass extends PApplet {
         scene.addObstacle(new Box(this, 50, 40, 10, color(255, 150, 0, 100)), 50);
         scene.addObstacle(new Box(this, 50, 40, 10, color(0, 255, 0, 100)), 150, -60, 0);
 
+        roverStart = new Vertex(-100, 100);
+        roverEnd = new Vertex(100, -100);
 
     }
 
@@ -49,7 +55,6 @@ public class ProcessingClass extends PApplet {
 
     @Override
     public void draw() {
-        // TODO: Do your drawing for each frame here
         clear();
         cameraSet();
 
@@ -64,15 +69,9 @@ public class ProcessingClass extends PApplet {
 
 
         qt = new QuadTree(scene.getObstacles(), new Boundary(-400, -200, 400, 200), 10);
-        qtGraph = new QTGraph(this, qt, 12, scene.getObstacles());
+        qtGraph = new QTGraph(this, qt, 10, scene.getObstacles());
 
-        Vertex v_start = new Vertex(-30, 150);
-        Vertex v_end = new Vertex(310, 100);
-
-        v_start.printVertex(this, 15);
-        v_end.printVertex(this, 15);
-
-        qtGraph.calcVert2Visit(v_start, v_end);
+        qtGraph.calcVert2Visit(roverStart, roverEnd);
 
 
         QuadTree.dfs(qt, this);
@@ -104,29 +103,44 @@ public class ProcessingClass extends PApplet {
     @Override
     public void mouseWheel(MouseEvent event) {
         if (selected != null) {
-            selected.addR(event.getCount() / 10.0);
+            selected.addR(radians(event.getCount() * 5));
         } else
             XRot += event.getCount() / 10.0;
+        if (XRot < radians(-45))
+            XRot = radians(-45);
+        if (XRot > radians(135))
+            XRot = radians(135);
     }
 
     @Override
     public void keyPressed() {
-        if (key == 'r') {
+        if (key == 'r' || key == 'R') {
             cameraInit();
         }
+        if (key == 's' || key == 'S') {
+            roverStart.set(point.get());
+        }
+        if (key == 'e' || key == 'E') {
+            roverEnd.set(point.get());
+        }
+        if (key == 'o' || key == 'O') {
+            scene.addObstacle(new Box(this, (int) random(10, 100), (int) random(10, 100), (int) random(10, 30), color(random(255), random(255), random(255), 100)));
+        }
+
     }
 
 
     private float eyeX, eyeY, eyeZ;
     private float centerX, centerY, centerZ;
-    private float Zrot, XRot;
+    private float Zrot, XRot, zoom;
     Vertex addPoint; // variabile per calcolare di quanto spostare il puntatore
 
     // Set camera e sistema ortonormale destro
     private void cameraInit() {
+        resetMatrix();
         eyeX = 0.0f;
         eyeY = 400.f;
-        eyeZ = 400.0f;
+        eyeZ = 400.f;
 
         centerX = 0.0f;
         centerY = 0.0f;
@@ -134,6 +148,7 @@ public class ProcessingClass extends PApplet {
 
         Zrot = radians(0);
         XRot = radians(0);
+        zoom = 1;
 
         addPoint = new Vertex(0, 0);
     }
@@ -144,120 +159,44 @@ public class ProcessingClass extends PApplet {
 
         directionalLight(223, 126, 126, 0, 0, (float) -1);
         ambientLight(200, 200, 200);
+        float d = dist(0, 0, 0, eyeX, eyeY, eyeZ);
 
-        float d = dist(eyeX, eyeY, eyeZ, centerX, centerY, centerZ);
+        if (mousePressed && (mouseButton == LEFT)) {
 
-        if (mousePressed && (mouseButton == RIGHT)) {    // traslazione xy
-            eyeX -= (mouseX - pmouseX) / 2.0;
+        } else if (mousePressed && (mouseButton == RIGHT)) {    // traslazione xy
             centerX -= (mouseX - pmouseX) / 2.0;
-            eyeY -= (mouseY - pmouseY) / 2.0;
             centerY -= (mouseY - pmouseY) / 2.0;
         } else if (mousePressed && (mouseButton == CENTER)) {    // Seleziona
-            float x, y, z, dn;
-            x = eyeX - centerX;
-            y = eyeY - centerY;
-            z = eyeZ - centerZ;
-            dn = dist(0, 0, 0, x, y, z);
-            x /= dn;
-            y /= dn;
-            z /= dn;
+            float x, y, z;
+            x = eyeX / d;
+            y = eyeY / d;
+            z = eyeZ / d;
             d += mouseY - pmouseY;
-            if (d < 10)    // 150
-                d = 10;
-            eyeX = centerX + x * d;
-            eyeY = centerY + y * d;
-            eyeZ = centerZ + z * d;
-            Zrot += (mouseX - pmouseX) / 200.0;
+            if (d < 150)
+                d = 150;
+            eyeX = x * d;
+            eyeY = y * d;
+            eyeZ = z * d;
 
+            Zrot += (mouseX - pmouseX) / 200.0;
         } else {
-            //
             addPoint.set((mouseX - pmouseX), -(mouseY - pmouseY));
             addPoint.rotate(-Zrot);
             point.addX((float) addPoint.getX() * d / 800);
             point.addY((float) addPoint.getY() * d / 800);
         }
 
-//        if (centerZ + 10 > eyeZ)
-//            centerZ = eyeZ - 15;
-
         camera(eyeX, eyeY, eyeZ, // eyeX, eyeY, eyeZ
-                centerX, centerY, centerZ, // centerX, centerY, centerZ
+                0, 0, 0, // centerX, centerY, centerZ
                 0.0f, 1.0f, 0.0f); // upX, upY, upZ
 
         //Ortonormale Destro
         //rotateZ(PI/2);
         scale(1, -1, 1);
         rotateX(XRot);
+        translate(-centerX, centerY, 0);
+
         rotateZ(Zrot);
+
     }
-
-    // Funzione visualizzazione asse
-    private int p = 100;   //profondità
-    private int b = 10;    //base
-    private int h = 10;     //altezza
-    private int lF = 10;   //lunghezza semi lato freccia
-
-//    private void axes(float alpha) {
-//        pushStyle();
-//        strokeWeight((float) 0.5);
-//        fill(255, 0, 0, alpha); // rosso = x
-//        pushMatrix();
-//        rotateY(PI / 2);
-//        translate(0, 0, p >> 1);  //disegno in base
-//        box(h, b, p);
-//        translate(0, 0, p >> 1);  //sposto origine alla fine
-//        pyramid(lF);
-//        popMatrix();
-//
-//        fill(0, 255, 0, alpha); // verde = y
-//        pushMatrix();
-//        rotateX(-PI / 2);
-//        translate(0, 0, p >> 1);  //disegno in base
-//        box(h, b, p);
-//        translate(0, 0, p >> 1);  //sposto origine alla fine
-//        pyramid(lF);
-//        popMatrix();
-//
-//        fill(0, 0, 255, alpha); // blu = z
-//        pushMatrix();
-//        translate(0, 0, p >> 1);  //disegno in base
-//        box(h, b, p);
-//        translate(0, 0, p >> 1);  //sposto origine alla fine
-//        pyramid(lF);
-//        popMatrix();
-//        popStyle();
-//    }
-//
-//    private void pyramid(int h) {
-//        beginShape();
-//        vertex(-h, -h);
-//        vertex(+h, -h);
-//        vertex(0, 0, 2 * h);
-//        endShape(CLOSE);
-//
-//        beginShape();
-//        vertex(+h, -h);
-//        vertex(+h, +h);
-//        vertex(0, 0, 2 * h);
-//        endShape(CLOSE);
-//
-//        beginShape();
-//        vertex(+h, +h);
-//        vertex(-h, +h);
-//        vertex(0, 0, 2 * h);
-//        endShape(CLOSE);
-//
-//        beginShape();
-//        vertex(-h, +h);
-//        vertex(-h, -h);
-//        vertex(0, 0, 2 * h);
-//        endShape(CLOSE);
-//
-//        beginShape();
-//        vertex(-h, -h);
-//        vertex(+h, -h);
-//        vertex(+h, +h);
-//        vertex(-h, +h);
-//        endShape(CLOSE);
-//    }
 }
