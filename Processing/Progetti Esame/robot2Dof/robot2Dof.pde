@@ -4,13 +4,6 @@ public GPlot plot2;
 /*Utilizzare l'input da tastiera per controllare un parametro numerico. L'immissione a una  sola cifra ottiene un valore "semplice" (ad es. 10, 20, 30, .. .) 
 La voce a due cifre ottiene il valore "raffinato" (ad es. 03, 25, 99), '0' e '00' sono trattati come 100 */ 
 
-/*String inputStr = ""; 
-int inputVal = 100; 
-long lastDigitTime = 0;
-// Sequenza di cifre consentite fino a 
-// questo di molti millisecondi tra i tasti premuti long entrySeparation = 400;
-int fontSize = 20; 
-int tx, ty; // Posizione del testo utilizzata in txt () */
 int xOff, yOff;
 int nPointPlot=500;
 GPointsArray q1p = new GPointsArray(nPointPlot);
@@ -53,10 +46,6 @@ void setup() {
   plot2.addLayer("gradientQ2", qg1p);
   plot2.getLayer("gradientQ2").setLineColor( color(cRGradiente) );
   
-  /*size (640, 480);
-  textFont (createFont ("", fontSize)); // font predefinito 
-  ellipseMode (RADIUS); 
-  noCursor ();*/
   //plot2.activateZooming(1.5);
 }
 
