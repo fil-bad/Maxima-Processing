@@ -10,6 +10,8 @@ public abstract class Sat {
 
     // True if inside the circle there are almost one vertex of the polygon
     public static boolean haveCollided(Polygon poly1, Vertex c, double r) {
+        //todo: non è sufficente verificare uno spigolo
+        // bisogna verificare l'intersezione anche con i lati del poligono
         for (Vertex v : poly1.getVertices()) {
             if (c.dist(v) <= r)
                 return true;

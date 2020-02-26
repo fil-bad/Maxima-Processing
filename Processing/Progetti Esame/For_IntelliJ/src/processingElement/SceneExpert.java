@@ -10,9 +10,18 @@ public class SceneExpert {
     Vector<Obj3D> bodies;
     Vector<Obstacle> obs;
 
-    public SceneExpert() {
+    //todo: Quando si avrà robot calcolarlo parametricamente
+    public float robotR = 10;
+
+    protected static SceneExpert instance = new SceneExpert();
+
+    protected SceneExpert() {
         bodies = new Vector<>();
         obs = new Vector<>();
+    }
+
+    public static SceneExpert getInstance() {
+        return instance;
     }
 
     public void addObstacle(Obstacle ob) {

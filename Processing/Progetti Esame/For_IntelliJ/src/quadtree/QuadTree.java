@@ -12,6 +12,7 @@ import java.util.Stack;
 
 import geometry.*;
 import processingElement.Obstacle;
+import processingElement.SceneExpert;
 
 
 // The method to find neighbor are describe here:

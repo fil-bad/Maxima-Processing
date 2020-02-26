@@ -42,7 +42,7 @@ public class ProcessingClass extends PApplet {
         com = CommonDraw.getInstance(this);
         gnd = new Terra(this, 800, 400, color(200, 150, 100));
         point = new Pointer(this, 60, 800, 400);
-        scene = new SceneExpert();
+        scene = SceneExpert.getInstance();
         scene.addObstacle(new Box(this, 50, 40, 10, color(255, 150, 0, 100)), 50);
         scene.addObstacle(new Box(this, 50, 40, 10, color(0, 255, 0, 100)), 150, -60, 0);
 
@@ -69,7 +69,7 @@ public class ProcessingClass extends PApplet {
 
 
         qt = new QuadTree(scene.getObstacles(), new Boundary(-400, -200, 400, 200), 10);
-        qtGraph = new QTGraph(this, qt, 10, scene.getObstacles());
+        qtGraph = new QTGraph(this, qt, SceneExpert.getInstance().robotR, SceneExpert.getInstance().getObstacles());
 
         qtGraph.calcVert2Visit(roverStart, roverEnd);
 
