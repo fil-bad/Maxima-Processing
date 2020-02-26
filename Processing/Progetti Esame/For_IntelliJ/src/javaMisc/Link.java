@@ -10,4 +10,5 @@ public interface Link {
 
     void update();
 
+
 }
