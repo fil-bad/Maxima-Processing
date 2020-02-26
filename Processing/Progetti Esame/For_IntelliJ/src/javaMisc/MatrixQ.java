@@ -3,7 +3,8 @@ package javaMisc;
 import javaMisc.math.DoubleReal;
 import javaMisc.math.DoubleRealFactory;
 import javaMisc.math.autodiff.*;
-import org.ejml.data.Matrix;
+
+import java.util.ArrayList;
 
 public class MatrixQ implements DifferentialMatrixFunction {
 
@@ -23,11 +24,13 @@ public class MatrixQ implements DifferentialMatrixFunction {
     private int col;
     private DifferentialFunction<DoubleReal>[][] matrix;
 
+    private ArrayList<String> var_s = new ArrayList<String>(0);
+
     public MatrixQ() {
-        this(4, 4);
+        this(4, 4, "");
     }
 
-    public MatrixQ(int row, int col) {
+    public MatrixQ(int row, int col, String... var_s) {
         // default, 4x4 row
 
         this.row = row;
@@ -41,21 +44,20 @@ public class MatrixQ implements DifferentialMatrixFunction {
                 this.matrix[i][j] = zero;
             }
         }
-    }
+        for (String var : var_s) {
+            if (var.isEmpty()) continue;
+            this.var_s.add(var);
+        }
 
-    public MatrixQ(DifferentialFunction<DoubleReal>[][] mat) {
-        this(mat.length, mat[0].length);
-        this.matrix = mat;
     }
-
 
     public MatrixQ(MatrixQ mat) {
-        this(mat.getRowDim(), mat.getColDim());
+        this(mat.getRowDim(), mat.getColDim(), mat.getVar_s());
         this.matrix = mat.getMatrix();
     }
 
     @Override
-    public MatrixQ mul(Object i_v) {
+    public MatrixQ mul(Object i_v) { // todo: add var_s
 
         DifferentialFunction<DoubleReal>[][] mat2mul = ((MatrixQ) i_v).getMatrix();
 
@@ -98,22 +100,22 @@ public class MatrixQ implements DifferentialMatrixFunction {
     }
 
     @Override
-    public MatrixQ plus(Object i_v) {
-        DifferentialFunction<DoubleReal>[][] mat2sub = ((MatrixQ) i_v).getMatrix();
+    public MatrixQ plus(Object i_v) { // todo: add var_s
+        DifferentialFunction<DoubleReal>[][] mat2add = ((MatrixQ) i_v).getMatrix();
 
         assert (this.getRowDim() == ((MatrixQ) i_v).getRowDim() &&
                 this.getColDim() == ((MatrixQ) i_v).getColDim());
 
         for (int i = 0; i < this.row; i++) {
             for (int j = 0; j < this.col; j++) {
-                this.matrix[i][j] = this.matrix[i][j].plus(mat2sub[i][j]);
+                this.matrix[i][j] = this.matrix[i][j].plus(mat2add[i][j]);
             }
         }
         return this;
     }
 
     @Override
-    public MatrixQ minus(Object i_v) {
+    public MatrixQ minus(Object i_v) { // todo: add var_s
 
         DifferentialFunction<DoubleReal>[][] mat2sub = ((MatrixQ) i_v).getMatrix();
 
@@ -129,7 +131,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
     }
 
     @Override
-    public MatrixQ mul(long i_n) {
+    public MatrixQ mul(long i_n) { // todo: add var_s
         for (int i = 0; i < this.row; i++) {
             for (int j = 0; j < this.col; j++) {
                 this.matrix[i][j] = this.matrix[i][j].mul(i_n);
@@ -139,11 +141,34 @@ public class MatrixQ implements DifferentialMatrixFunction {
     }
 
     @Override
-    public MatrixQ diff(Variable i_v) { //todo: fare la derivata di vettore
-        return null;
+    public MatrixQ diff(Variable i_v) {
+        assert (this.getColDim() == 1); // trattiamo solo i vettori colonna
+
+        for (int i = 0; i < this.row; i++) {
+            this.matrix[i][1] = this.matrix[i][1].diff(i_v);
+        }
+        return this;
     }
 
-    public MatrixQ setIdentity() {
+    public MatrixQ jacobian() { // todo: complete
+        assert (this.getColDim() == 1); // trattiamo solo i vettori colonna
+
+        String[] qi_s = this.getVar_s();
+        int num_var = qi_s.length;
+
+        Variable<DoubleReal>[] tmp_vars = new Variable[num_var];
+
+        for (int j = 0; j < num_var; j++) { //questo per ogni colonna
+            tmp_vars[j] = DFFactory.var(qi_s[j], new DoubleReal(0));
+
+            for (int i = 0; i < this.row; i++) {
+                this.matrix[i][j] = this.matrix[i][j].diff(tmp_vars[j]);
+            }
+        }
+        return this;
+    }
+
+    public MatrixQ setIdentity() { // todo: clean var_s
         assert this.row == this.col;
 
         for (int i = 0; i < this.row; i++) {
@@ -162,15 +187,17 @@ public class MatrixQ implements DifferentialMatrixFunction {
         return this.matrix;
     }
 
-    public void setMatrix(MatrixQ mat) {
-
-        DifferentialFunction<DoubleReal>[][] new_mat = mat.getMatrix();
+    public void setMatrix(DifferentialFunction<DoubleReal>[][] new_mat) {
 
         for (int i = 0; i < this.row; i++) {
             for (int j = 0; j < this.col; j++) {
                 this.matrix[i][j] = new_mat[i][j];
             }
         }
+    }
+
+    public String[] getVar_s() {
+        return (String[]) this.var_s.toArray(new String[var_s.size()]);
     }
 
     public int getRowDim() {
@@ -185,30 +212,47 @@ public class MatrixQ implements DifferentialMatrixFunction {
     public void printMatrix() {
         for (DifferentialFunction<DoubleReal>[] row : this.matrix) {
             for (DifferentialFunction<DoubleReal> col : row) {
-                System.out.print(col.getValue() + "\t");
+                System.out.print(col.getValue() + " \t");
             }
             System.out.println("");
         }
         System.out.println("");
     }
 
+    public void printVar_s() {
+        System.out.print("[");
+        for (String v : this.var_s) {
+            System.out.print(v + " \t");
+        }
+        System.out.println("]");
+    }
 
     public static void main(String[] args) {
 
         //todo: fare più test case, almeno uno per ogni funzione
 
-        MatrixQ mat = new MatrixQ();
+        MatrixQ m1 = new MatrixQ();
 
-        mat.setIdentity();
-        mat.printMatrix();
+        m1.setIdentity();
+        m1.printMatrix();
 
-        mat.negate();
-        mat.printMatrix();
+        m1.negate();
+        m1.printMatrix();
+        m1.mul(12);
 
-        mat.mul(10);
-        mat.printMatrix();
+        System.out.println("M1:");
+        m1.printMatrix();
 
-        //
+        MatrixQ m2 = new MatrixQ(4, 4, "q1", "q2").setIdentity().mul(5).plus(m1);
+        System.out.println("M2:");
+        m2.printMatrix();
 
+        MatrixQ m3 = m1.mul(m2);
+        System.out.println("M3:");
+        m3.printMatrix();
+
+
+        MatrixQ m4 = new MatrixQ(m2);
+        m4.printVar_s();
     }
 }
