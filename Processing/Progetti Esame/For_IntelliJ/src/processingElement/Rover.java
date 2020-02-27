@@ -91,14 +91,20 @@ public class Rover {
         er.set(2, 0, pos.getX() - obj.getX());
         er.set(3, 0, pos.getY() - obj.getY());
 
-        if (er.normF() < 0.0001) {
+        // Errore troppo piccolo, smetto di fare l'update
+
+
+        //Cambio obiettivo prima di fermarsi
+        if (er.normF() < 1) {
             if (!checkPoint.isEmpty())
                 obj = checkPoint.remove(0);
-            return;
         }
 
-
         er = er.scale(-kp);
+
+        if (er.normF() < 0.0001) {
+            return;
+        }
         x.print();
         xnew.print();
         SimpleMatrix u = new SimpleMatrix(2, 1);
