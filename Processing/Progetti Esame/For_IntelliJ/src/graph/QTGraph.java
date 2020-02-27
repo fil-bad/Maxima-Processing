@@ -1,5 +1,6 @@
 package graph;
 
+import geometry.Polygon;
 import geometry.Sat;
 import geometry.Vertex;
 import org.jgrapht.GraphPath;
@@ -72,41 +73,35 @@ public class QTGraph {
                 if (node.isFreeSpace()) {
                     DefaultWeightedEdge e = null;
                     boolean add = true;
+                    double weight = n.getBoundary().getVertex().dist(node.getBoundary().getVertex());
                     if (obs != null) {
-                        switch (s) {
-                            case U:
-                            case D:
-                            case R:
-                            case L:
-                                add = true;
+                        // Genero un corridoio a forma rettangolare tra 2 nodi, di larghezza pari al robot
+                        Vertex n1, n2;
+                        n1 = n.getBoundary().getVertex();
+                        n2 = node.getBoundary().getVertex();
+                        Vertex dRel = n1.minus(n2);
+                        dRel = dRel.orthogonal();
+                        dRel.norm();
+                        dRel.scale(rRobot);
+                        ArrayList<Vertex> v = new ArrayList<>(4);
+                        v.add(n1.plus(dRel));
+                        v.add(n1.plus(dRel.neg()));
+                        v.add(n2.plus(dRel.neg()));
+                        v.add(n2.plus(dRel));
+                        Polygon aisle = new Polygon(v.toArray(Vertex[]::new));
+                        // se gli ostacoli si intersecano con il corridoio, l'arco non viene aggiunto
+                        for (Obstacle ob : obs) {
+                            if (Sat.haveCollided(ob.getPoly(), aisle)) {
+                                add = false;
                                 break;
-                            case LD:
-                            case LU:
-                            case RD:
-                            case RU:
-                                for (Obstacle ob : obs) {
-                                    Vertex mid = middleBoundary(n, node);
-                                    if (mid != null) {
-                                        if (Sat.haveCollided(ob.getPoly(), mid, rRobot)) {
-                                            if (win != null) {
-                                                win.fill(255, 0, 0, 150);
-                                                win.circle((float) mid.getX(), (float) mid.getY(), rRobot * 2.0f);
-                                            }
-                                            add = false;
-                                            break;
-                                        }
-                                    }
-                                }
-                                break;
-                            case HALT:
-                                continue;
+                            }
                         }
                     }
                     if (add)
                         e = this.qtGraph.addEdge(n, node);
                     if (e == null)
                         continue;// arco già esistente
-                    double weight = n.getBoundary().getVertex().dist(node.getBoundary().getVertex());
+
                     this.qtGraph.setEdgeWeight(e, weight);
                 }
             }
@@ -225,18 +220,18 @@ public class QTGraph {
     public void calcVert2Visit(Vertex start, Vertex end) {
 
         GraphPath<QuadTree, DefaultWeightedEdge> graphPath;
-
-        graphPath = this.findPath(start, end);
-        if (graphPath == null) {
-            System.err.println("### Cammino non esistente (MIN SPLIT), uno dei due punti è su un ostacolo ###");
-            return;
-        }
-
-        for (QuadTree n : graphPath.getVertexList()) {
-            n.maxSplit();
-            this.qtGraph.removeVertex(n);
-            extendGraph(win, QuadTree.qt2leaves(n), SceneExpert.getInstance().robotR, SceneExpert.getInstance().getObstacles());
-        }
+        //Idea per il maxSplit, funziona ma non ci piace
+//        graphPath = this.findPath(start, end);
+//        if (graphPath == null) {
+//            System.err.println("### Cammino non esistente (MIN SPLIT), uno dei due punti è su un ostacolo ###");
+//            return;
+//        }
+//
+//        for (QuadTree n : graphPath.getVertexList()) {
+//            n.maxSplit();
+//            this.qtGraph.removeVertex(n);
+//            extendGraph(win, QuadTree.qt2leaves(n), SceneExpert.getInstance().robotR, SceneExpert.getInstance().getObstacles());
+//        }
 
         this.node2visit = new Vector<>(0);
         this.node2visit.add(start);
@@ -251,11 +246,11 @@ public class QTGraph {
 
         for (int i = 0, vert_listSize = vert_list.size() - 1; i < vert_listSize; i++) {
             QuadTree q = vert_list.get(i);
-            Side nextSide = q.neighborsSide(vert_list.get(i + 1));
-            Vertex v = q.getBoundary().getVertex(nextSide);
+//            Side nextSide = q.neighborsSide(vert_list.get(i + 1));
+//            Vertex v = q.getBoundary().getVertex(nextSide);
             this.node2visit.add(q.getBoundary().getVertex());
-            if (v != null)
-                this.node2visit.add(v);
+//            if (v != null)
+//                this.node2visit.add(v);
         }
         this.node2visit.add(end);
     }

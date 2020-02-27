@@ -3,6 +3,7 @@ package geometry;
 import org.ejml.data.DMatrix2;
 import org.ejml.data.DMatrix2x2;
 import org.ejml.dense.fixed.CommonOps_DDF2;
+import org.ejml.dense.fixed.NormOps_DDF2;
 import processing.core.PApplet;
 
 import static java.lang.Math.*;
@@ -29,20 +30,40 @@ public class Vertex {
         return Math.sqrt(sq(ap.a1) + sq(ap.a2));
     }
 
+    public void norm() {
+        NormOps_DDF2.normalizeF(pos);
+    }
+
+    public void scale(double r) {
+        CommonOps_DDF2.scale(r, pos);
+    }
+
+    public Vertex neg() {
+        return new Vertex(-getX(), -getY());
+    }
+
     static double sq(double x) {
         return x * x;
     }
-    double cross(Vertex v) { return this.getX() * v.getY() - getY() * v.getX(); }
-    double dot(Vertex v) { return (this.getX() * v.getX() + this.getY() * v.getY()); }
-    double norm2() { return this.getX() * this.getX() + this.getY() * this.getY(); }
 
-    boolean between(Vertex p, Vertex q)
-    {
+    double cross(Vertex v) {
+        return this.getX() * v.getY() - getY() * v.getX();
+    }
+
+    double dot(Vertex v) {
+        return CommonOps_DDF2.dot(this.get(), v.get());
+    }
+
+    double norm2() {
+        return this.getX() * this.getX() + this.getY() * this.getY();
+    }
+
+    boolean between(Vertex p, Vertex q) {
         return this.getX() < Math.max(p.getX(), q.getX()) + EPS && this.getX() + EPS > Math.min(p.getX(), q.getX())
                 && this.getY() < Math.max(p.getY(), q.getY()) + EPS && this.getY() + EPS > Math.min(p.getY(), q.getY());
     }
-    static boolean ccw(Vertex p, Vertex q, Vertex r)
-    {
+
+    static boolean ccw(Vertex p, Vertex q, Vertex r) {
         return new Vertex(p, q).cross(new Vertex(p, r)) > 0;
     }
 
@@ -51,6 +72,22 @@ public class Vertex {
     {
         Vertex oa = new Vertex(o, a), ob = new Vertex(o, b);
         return Math.acos(oa.dot(ob) / Math.sqrt(oa.norm2() * ob.norm2()));
+    }
+
+    public Vertex minus(Vertex v) {
+        return new Vertex(this, v);
+    }
+
+    public Vertex minus(Vertex v1, Vertex v2) {
+        return new Vertex(v1, v2);
+    }
+
+    public Vertex plus(Vertex v) {
+        return plus(this, v);
+    }
+
+    public Vertex plus(Vertex v1, Vertex v2) {
+        return new Vertex(v1.getX() + v2.getX(), v1.getY() + v2.getY());
     }
 
     public void translate(double x, double y) {
@@ -71,7 +108,7 @@ public class Vertex {
     }
 
     /**
-     *  +1 := Oltre l'asse X, o se sull'asse con Y maggiore
+     * +1 := Oltre l'asse X, o se sull'asse con Y maggiore
      * -1 := opposto
      * 0 := Stesso punto entro EPS
      **/
@@ -82,21 +119,22 @@ public class Vertex {
         return 0;
     }
 
-    /** returns true if this Vertex it is on the line defined by a and b **/
+    /**
+     * returns true if this Vertex it is on the line defined by a and b
+     **/
     boolean onLine(Vertex a, Vertex b) {
         if (a.compareTo(b) == 0) return compareTo(a) == 0;      // Se a,b molto vicini, li considero stesso punto
         // a X b = 0 se a//b
-        CommonOps_DDF2.subtract(a.get(),b.get(),ap);
+        CommonOps_DDF2.subtract(a.get(), b.get(), ap);
         double z = pos.a1 * ap.a2 - pos.a2 * ap.a1;     // x*ap.y - y*ap.x
         return Math.abs(z) < EPS; // a X b = 0 se a//b
     }
 
-    boolean onSegment(Vertex a, Vertex b)
-    {
-        if(onLine(a,b)){
-            if(a.compareTo(b) == 1){    //a oltre di b
+    boolean onSegment(Vertex a, Vertex b) {
+        if (onLine(a, b)) {
+            if (a.compareTo(b) == 1) {    //a oltre di b
                 return a.compareTo(this) == -1 && b.compareTo(this) == 1;   // prima di a, dopo b
-            }else{                      //a prima di b
+            } else {                      //a prima di b
                 return a.compareTo(this) == 1 && b.compareTo(this) == -1;   // dopo di a, prima b
             }
         } else
@@ -174,10 +212,9 @@ public class Vertex {
         Vertex l1 = new Vertex(5, 0);
         Vertex l2 = new Vertex(6, 0);
         Vertex l3 = new Vertex(7, 0);
-        System.out.println("\nl2 è tra sulla linea l1 e l3? "+ l2.onLine(l1,l3));
-        System.out.println("\nl1 è tra sulla linea l2 e l3? "+ l1.onLine(l2,l3));
-        System.out.println("\nl1 è tra sul segmento l2 e l3? "+ l1.onSegment(l2,l3));
-
+        System.out.println("\nl2 è tra sulla linea l1 e l3? " + l2.onLine(l1, l3));
+        System.out.println("\nl1 è tra sulla linea l2 e l3? " + l1.onLine(l2, l3));
+        System.out.println("\nl1 è tra sul segmento l2 e l3? " + l1.onSegment(l2, l3));
 
 
     }
