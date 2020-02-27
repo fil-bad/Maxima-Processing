@@ -44,8 +44,10 @@ public class MatrixQ implements DifferentialMatrixFunction {
                 this.matrix[i][j] = zero;
             }
         }
-        for (String var : var_s) {
-            if (!var.isEmpty()) this.var_s.add(var);
+        if (var_s != null) {
+            for (String var : var_s) {
+                if (!var.isEmpty()) this.var_s.add(var);
+            }
         }
 
     }
@@ -63,18 +65,17 @@ public class MatrixQ implements DifferentialMatrixFunction {
         int col_b = ((MatrixQ) i_v).getColDim();
         MatrixQ tmp = new MatrixQ(this.getRowDim(), col_b);
 
-        DifferentialFunction<DoubleReal>[][] tmpMat = tmp.getMatrix();
 
         for (int i = 0; i < this.getRowDim(); i++) { // aRow
             for (int j = 0; j < ((MatrixQ) i_v).getColDim(); j++) { // bColumn
                 for (int k = 0; k < this.getColDim(); k++) { // aColumn
-                    tmpMat[i][j] = tmpMat[i][j].plus(this.matrix[i][k].mul(mat2mul[k][j]));
+                    tmp.matrix[i][j] = tmp.matrix[i][j].plus(this.matrix[i][k].mul(mat2mul[k][j]));
                 }
             }
         }
         tmp.addVar_s(this.getVar_s()); //adding variables from 1st matrix
         tmp.addVar_s(((MatrixQ) i_v).getVar_s()); //adding variables from 2nd matrix
-        return tmp;
+        return tmp; //todo: variables added, not working matrix
     }
 
     @Override
@@ -193,6 +194,54 @@ public class MatrixQ implements DifferentialMatrixFunction {
         return this;
     }
 
+    public MatrixQ setRotX(String q_i) {
+        this.setIdentity();
+        if (!q_i.isEmpty()) this.var_s.add(q_i);
+
+        Variable<DoubleReal> q = DFFactory.var(q_i, new DoubleReal(0));
+
+        this.matrix[1][1] = DFFactory.cos(q);
+        this.matrix[1][2] = DFFactory.sin(q).negate();
+        this.matrix[2][1] = DFFactory.sin(q);
+        this.matrix[2][2] = DFFactory.cos(q);
+
+        return this;
+    }
+
+    public MatrixQ setRotZ(String q_i) {
+        this.setIdentity();
+        if (!q_i.isEmpty()) this.var_s.add(q_i);
+
+        Variable<DoubleReal> q = DFFactory.var(q_i, new DoubleReal(0));
+
+        this.matrix[0][0] = DFFactory.cos(q);
+        this.matrix[0][1] = DFFactory.sin(q).negate();
+        this.matrix[1][0] = DFFactory.sin(q);
+        this.matrix[1][1] = DFFactory.cos(q);
+        return this;
+    }
+
+    public MatrixQ setTraslZ(String q_i) {
+        this.setIdentity();
+        if (!q_i.isEmpty()) this.var_s.add(q_i);
+
+        Variable<DoubleReal> q = DFFactory.var(q_i, new DoubleReal(5));
+
+        this.matrix[2][3] = q;
+        return this;
+    }
+
+    public MatrixQ setTraslX(String q_i) {
+        this.setIdentity();
+        if (!q_i.isEmpty()) this.var_s.add(q_i);
+
+        Variable<DoubleReal> q = DFFactory.var(q_i, new DoubleReal(0));
+
+        this.matrix[0][3] = q;
+        return this;
+    }
+
+
     public DifferentialFunction<DoubleReal>[][] getMatrix() {
         return this.matrix;
     }
@@ -251,19 +300,30 @@ public class MatrixQ implements DifferentialMatrixFunction {
     public void printMatrix() {
         for (DifferentialFunction<DoubleReal>[] row : this.matrix) {
             for (DifferentialFunction<DoubleReal> col : row) {
-                System.out.print(col.getValue() + " \t");
+                System.out.print(col.toString() + " \t");
             }
             System.out.println("");
         }
         System.out.println("");
     }
 
+    public void printMatValue() {
+        for (DifferentialFunction<DoubleReal>[] row : this.matrix) {
+            for (DifferentialFunction<DoubleReal> col : row) {
+                System.out.print(col.getValue() + "\t\t");
+            }
+            System.out.println("");
+        }
+        System.out.println("");
+    }
+
+
     public void printVar_s() {
         System.out.print("[");
         for (String v : this.var_s) {
             System.out.print(v + " \t");
         }
-        System.out.println("]");
+        System.out.println("]\n");
     }
 
     public static void main(String[] args) {
@@ -294,7 +354,10 @@ public class MatrixQ implements DifferentialMatrixFunction {
         MatrixQ m4 = new MatrixQ(m2);
         m4.printVar_s();
 
-        m4.setIdentity();
+
+        m4.setIdentity().setRotZ("q1").mul(new MatrixQ().setTraslZ("q2"));
+        m4.printMatrix();
+
 
     }
 }
