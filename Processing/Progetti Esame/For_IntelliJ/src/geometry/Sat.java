@@ -10,22 +10,22 @@ public abstract class Sat {
 
     // True if inside the circle there are almost one vertex of the polygon
     public static boolean haveCollided(Polygon poly1, Vertex c, double r) {
-        //todo: non è sufficente verificare uno spigolo
-        // bisogna verificare l'intersezione anche con i lati del poligono
-        for (Vertex v : poly1.getVertices()) {
-            if (c.dist(v) <= r)
-                return true;
-        }
-        return false;
-    }
+        // Implements the actual SAT algorithm
+        ArrayList<Vertex> edges = polyToEdges(poly1.getVertices());
 
-    // True if inside the circle there are almost one vertex of the polygons
-    public static boolean haveCollided(Polygon[] pol, Vertex c, double r) {
-        for (Polygon p : pol) {
-            if (haveCollided(p, c, r))
-                return true;
+        Vertex[] axes = new Vertex[edges.size()];
+        for (int i = 0; i < edges.size(); i++) {
+            axes[i] = edges.get(i).orthogonal();
+            axes[i].norm();
         }
-        return false;
+        for (Vertex axis : axes) {
+            if (!overlap(project(poly1.getVertices(), axis), project(c, r, axis))) {
+                // The polys don't overlap on this axis so they can't be touching
+                return false;
+            }
+        }
+        // The polys overlap on all axes so they must be touching
+        return true;
     }
 
     // true if p1 intersect p2, or otherwise
@@ -62,6 +62,7 @@ public abstract class Sat {
         Vertex[] axes = new Vertex[edges.size()];
         for (int i = 0; i < edges.size(); i++) {
             axes[i] = edges.get(i).orthogonal();
+            axes[i].norm();
         }
         for (Vertex axis : axes) {
             if (!overlap(project(poly1, axis), project(poly2, axis))) {
@@ -110,9 +111,19 @@ public abstract class Sat {
     }
 
     /**
+     * Returns a vector showing how much of the Circle lies along the axis
+     */
+    private static Vertex project(Vertex center, double r, Vertex axis) {
+        double dot = dotProduct(center, axis);
+//        System.out.println("dot:"+dot);
+        return new Vertex(dot - r, dot + r);
+    }
+
+    /**
      * Returns a boolean indicating if the two projections overlap
      */
     private static boolean overlap(Vertex projection1, Vertex projection2) {
+//        System.out.println("banda1:"+ projection1.getX()+";"+projection1.getY()+"  banda2:"+ projection2.getX()+";"+projection2.getY());
         return projection1.getX() <= projection2.getY() &&
                 projection2.getX() <= projection1.getY();
     }
@@ -175,13 +186,23 @@ public abstract class Sat {
 
         System.out.println();
         // Circle test
-        System.out.println("####Circle and polygon:####");
+        System.out.println("####Circle have vertex of polygon inside:####");
         Vertex center = new Vertex(100, 20);
         System.out.print("Center: ");
         center.printVertex();
         System.out.println();
-        System.out.println("\tDo a & circle r = 20 collide? " + haveCollided(a, center,20));
-        System.out.println("\tDo a & circle r = 10 collide? " + haveCollided(a, center,10));
-        System.out.println("\tDo a & circle r = 5 collide? " + haveCollided(a, center,5));
+        System.out.println("\tDo a & circle r = 20 collide? " + haveCollided(a, center, 20));
+        System.out.println("\tDo a & circle r = 10 collide? " + haveCollided(a, center, 10));
+        System.out.println("\tDo a & circle r = 5 collide? " + haveCollided(a, center, 5));
+
+        System.out.println();
+        System.out.println("####Circle haven't vertex of polygon inside but collide:####");
+        Vertex center2 = new Vertex(1, 50);
+        System.out.print("Center: ");
+        center2.printVertex();
+        System.out.println();
+        System.out.println("\tDo a & circle r = 20 collide? " + haveCollided(a, center2, 20));
+        System.out.println("\tDo a & circle r = 10 collide? " + haveCollided(a, center2, 10));
+        System.out.println("\tDo a & circle r = 5 collide? " + haveCollided(a, center2, 5));
     }
 }
