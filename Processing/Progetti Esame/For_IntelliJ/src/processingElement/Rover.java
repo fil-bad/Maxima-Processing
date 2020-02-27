@@ -91,20 +91,10 @@ public class Rover {
         er.set(2, 0, pos.getX() - obj.getX());
         er.set(3, 0, pos.getY() - obj.getY());
 
-        // Errore troppo piccolo, smetto di fare l'update
-
-
-        //Cambio obiettivo prima di fermarsi
-        if (er.normF() < 1) {
-            if (!checkPoint.isEmpty())
-                obj = checkPoint.remove(0);
-        }
 
         er = er.scale(-kp);
 
-        if (er.normF() < 0.0001) {
-            return;
-        }
+
         x.print();
         xnew.print();
         SimpleMatrix u = new SimpleMatrix(2, 1);
@@ -116,9 +106,18 @@ public class Rover {
         er.print();
         u.print();
         System.out.println("uNorm:" + u.normF());
+        //Cambio obiettivo prima di fermarsi
+        if (u.normF() <= 1) {
+            if (!checkPoint.isEmpty())
+                obj = checkPoint.remove(0);
+        }
         if (u.normF() > 1)
             u = u.divide(u.normF());
-        u.print();
+
+        // Errore troppo piccolo, smetto di fare l'update
+        if (u.normF() < 0.0001) {
+            return;
+        }
 
         System.out.println("Matrici A*x e B*u");
         A.mult(x).print();
