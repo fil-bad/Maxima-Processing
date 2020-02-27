@@ -28,6 +28,8 @@ public class ProcessingClass extends PApplet {
 
     // Dati per la pianificazione del percorso
     Vertex roverStart, roverEnd;
+    Rover rover;
+
 
     QuadTree qt;
     QTGraph qtGraph;
@@ -48,6 +50,7 @@ public class ProcessingClass extends PApplet {
 
         roverStart = new Vertex(-100, 100);
         roverEnd = new Vertex(100, -100);
+        rover = new Rover(this, new Vertex(100, 100), 0.5, 0.5, 0.1);
 
     }
 
@@ -71,24 +74,25 @@ public class ProcessingClass extends PApplet {
         qt = new QuadTree(scene.getObstacles(), new Boundary(-400, -200, 400, 200), 10);
         qtGraph = new QTGraph(this, qt, SceneExpert.getInstance().robotR, SceneExpert.getInstance().getObstacles());
 
-        qtGraph.calcVert2Visit(roverStart, roverEnd);
-
 
         QuadTree.dfs(qt, this);
+        qtGraph.calcVert2Visit(rover.get(), roverEnd);
+
         qtGraph.printGraph(this, 10);
         qtGraph.printPath(this, 15);
 
         scene.drawScene();
+        rover.draw();
     }
 
     @Override
     public void mouseClicked() {
         if (mouseButton == LEFT) {
-            if (selected != null) {
+            if (selected != null) {             // se qualcosa è selezionato
                 selected.highlight(false);
                 selected.setD(point.getX(), point.getY(), 0);
                 selected = null;
-            } else {
+            } else {                            // nulla è selezionato
                 Obstacle newSelected = scene.getObstacle(point.get());
                 if (newSelected == null)
                     selected = null;
@@ -117,11 +121,14 @@ public class ProcessingClass extends PApplet {
         if (key == 'r' || key == 'R') {
             cameraInit();
         }
-        if (key == 's' || key == 'S') {
-            roverStart.set(point.get());
-        }
+//        if (key == 'd' || key == 'D') {
+//
+//        }
         if (key == 'e' || key == 'E') {
             roverEnd.set(point.get());
+            qtGraph.calcVert2Visit(rover.get(), roverEnd);
+            rover.clearObjs();
+            rover.setObjs(qtGraph.getCheckPoint());
         }
         if (key == 'o' || key == 'O') {
             scene.addObstacle(new Box(this, (int) random(10, 100), (int) random(10, 100), (int) random(10, 30), color(random(255), random(255), random(255), 100)));
@@ -157,10 +164,11 @@ public class ProcessingClass extends PApplet {
         //Fondale da disegnare
         background(color(0x96FCFA));
 
-        directionalLight(223, 126, 126, 0, 0, (float) -1);
+        directionalLight(100, 100, 100, 0, 0, (float) 0.5);
+
         ambientLight(200, 200, 200);
         float d = dist(0, 0, 0, eyeX, eyeY, eyeZ);
-
+//        com.axes(255);
         if (mousePressed && (mouseButton == LEFT)) {
 
         } else if (mousePressed && (mouseButton == RIGHT)) {    // traslazione xy
@@ -194,9 +202,8 @@ public class ProcessingClass extends PApplet {
         //rotateZ(PI/2);
         scale(1, -1, 1);
         rotateX(XRot);
-        translate(-centerX, centerY, 0);
-
         rotateZ(Zrot);
+        translate(-centerX, centerY, 0);
 
     }
 }
