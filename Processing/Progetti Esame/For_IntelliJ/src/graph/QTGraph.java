@@ -216,7 +216,10 @@ public class QTGraph {
         }
     }
 
-    //todo ritornare lista di vertici, con i vertici medi ortogonali o diagonali
+    public Vertex[] getCheckPoint() {
+        return node2visit.toArray(Vertex[]::new);
+    }
+
     public void calcVert2Visit(Vertex start, Vertex end) {
 
         GraphPath<QuadTree, DefaultWeightedEdge> graphPath;

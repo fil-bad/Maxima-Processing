@@ -9,7 +9,7 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         PApplet.main("ProcessingClass");
-        //launch(args);
+//        launch(args);
     }
 
     @Override

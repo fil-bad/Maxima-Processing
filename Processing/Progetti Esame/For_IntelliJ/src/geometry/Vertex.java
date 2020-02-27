@@ -24,10 +24,19 @@ public class Vertex {
         this(b.getX() - a.getX(), b.getY() - a.getY());
     }
 
+    // Vettore copia
+    public Vertex(Vertex a) {
+        this(a.getX(), a.getY());
+    }
+
 
     public double dist(Vertex p) {
         CommonOps_DDF2.subtract(pos, p.get(), ap);
         return Math.sqrt(sq(ap.a1) + sq(ap.a2));
+    }
+
+    public double len() {
+        return Math.sqrt(sq(pos.a1) + sq(pos.a2));
     }
 
     public void norm() {
