@@ -75,6 +75,7 @@ public class QTGraph {
                     boolean add = true;
                     double weight = n.getBoundary().getVertex().dist(node.getBoundary().getVertex());
                     if (obs != null) {
+                        // Genero un corridoio a forma rettangolare tra 2 nodi, di larghezza pari al robot
                         Vertex n1, n2;
                         n1 = n.getBoundary().getVertex();
                         n2 = node.getBoundary().getVertex();
@@ -88,7 +89,7 @@ public class QTGraph {
                         v.add(n2.plus(dRel.neg()));
                         v.add(n2.plus(dRel));
                         Polygon aisle = new Polygon(v.toArray(Vertex[]::new));
-
+                        // se gli ostacoli si intersecano con il corridoio, l'arco non viene aggiunto
                         for (Obstacle ob : obs) {
                             if (Sat.haveCollided(ob.getPoly(), aisle)) {
                                 add = false;
