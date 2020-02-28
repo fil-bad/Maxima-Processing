@@ -236,6 +236,13 @@ public class QTGraph {
 //            this.qtGraph.removeVertex(n);
 //            extendGraph(win, QuadTree.qt2leaves(n), SceneExpert.getInstance().robotR, SceneExpert.getInstance().getObstacles());
 //        }
+        QuadTree s = root.nearestPoint(start);
+        QuadTree e = root.nearestPoint(end);
+        if (s.equals(e)) {
+            this.node2visit.clear();
+            this.node2visit.add(new Vertex(end));
+            return node2visit.toArray(Vertex[]::new);
+        }
 
         GraphPath<QuadTree, DefaultWeightedEdge> graphPath = this.findPath(start, end);
         if (graphPath == null) {

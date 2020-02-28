@@ -5,13 +5,16 @@ import java.util.Vector;
 import geometry.Sat;
 import geometry.Vertex;
 import graph.QTGraph;
+import org.ejml.simple.SimpleMatrix;
 import processing.core.PApplet;
 import quadtree.QuadTree;
+import robots.Rover;
 
 
 public class SceneExpert implements Observer {
     protected static SceneExpert instance = null;
     PApplet win = null;
+    CommonDraw com = CommonDraw.getInstance();
 
     // Oggetti grafici della scena
     private Vector<Obj3D> bodies;
@@ -23,6 +26,9 @@ public class SceneExpert implements Observer {
     // Informazioni della scena
     QuadTree qt;
     QTGraph qtGraph;
+
+    //Parametri Robot
+    Rover rover;
 
     //todo: Quando si avrà robot calcolarlo parametricamente
     public float robotR = 30;
@@ -52,6 +58,14 @@ public class SceneExpert implements Observer {
 
     public Terra getGnd() {
         return this.gnd;
+    }
+
+    public void addRover(Rover r) {
+        this.rover = r;
+    }
+
+    public Rover getRover() {
+        return this.rover;
     }
 
     public void addObstacle(Obstacle ob) {
@@ -126,7 +140,12 @@ public class SceneExpert implements Observer {
         qtGraph.printGraph(win, 10);
         qtGraph.printPath(win, 15);
 
-
+        rover.draw();
+        win.push();
+        SimpleMatrix transl = rover.getD();
+        win.translate((float) transl.get(0), (float) transl.get(1), (float) transl.get(2));
+        com.axes(255);
+        win.pop();
     }
 
     @Override

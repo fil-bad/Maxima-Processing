@@ -1,11 +1,8 @@
-import geometry.Sat;
 import geometry.Vertex;
-import graph.QTGraph;
 import processing.core.*;
 import processing.event.MouseEvent;
 import processingElement.*;
-import quadtree.Boundary;
-import quadtree.QuadTree;
+import robots.Rover;
 
 
 public class ProcessingClass extends PApplet {
@@ -26,9 +23,6 @@ public class ProcessingClass extends PApplet {
 
     Pointer point;
     SceneExpert scene;
-
-    // Dati per la pianificazione del percorso
-    Rover rover;
 
 
     @Override
@@ -52,8 +46,8 @@ public class ProcessingClass extends PApplet {
         scene.addObstacle(new Box(this, 50, 40, 10, color(255, 150, 0, 100)), 50);
         scene.addObstacle(new Box(this, 50, 40, 10, color(0, 255, 0, 100)), 150, -60, 0);
 
+        scene.addRover(new Rover(this, new Vertex(100, 100), 0.1, 0.15, 0.03));
 
-        rover = new Rover(this, new Vertex(100, 100), 0.1, 0.15, 0.03);
     }
 
     Obstacle selected = null;
@@ -70,8 +64,6 @@ public class ProcessingClass extends PApplet {
         if (selected != null) {
             selected.setD(point.getX(), point.getY(), 0);
         }
-
-        rover.draw();
     }
 
     @Override
@@ -115,8 +107,8 @@ public class ProcessingClass extends PApplet {
 //        }
         if (key == 'e' || key == 'E') {
             if (scene.freePlace(point.get(), scene.robotR)) {
-                rover.clearObjs();
-                rover.setObjs(scene.getQtGraph().calcVert2Visit(rover.get(), point.get()));
+                scene.getRover().clearObjs();
+                scene.getRover().setObjs(scene.getQtGraph().calcVert2Visit(scene.getRover().get(), point.get()));
             } else
                 System.err.println("Il punto desiderato ha un ostacolo in un raggio:" + scene.robotR);
         }
