@@ -1,14 +1,15 @@
 package javaMisc;
 
+import javaMisc.math.DoubleReal;
+import javaMisc.math.autodiff.Variable;
+
 public interface Link {
 
-    float[] getCurrValues();
-    void setQ_iValue(float q_i);
-    void printLink();
+    MatrixQ getQLink();
+
+    Variable<DoubleReal> getVar();
 
     String whichQ_iIs();
 
-    void update(float qi_val);
-
-
+    void printLink();
 }
