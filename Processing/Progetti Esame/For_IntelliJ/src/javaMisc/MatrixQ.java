@@ -22,10 +22,10 @@ public class MatrixQ implements DifferentialMatrixFunction {
     // |_______.________|
 
     // matrix[row][col]
+
     private int row;
     private int col;
     private DifferentialFunction<DoubleReal>[][] matrix;
-
     private ArrayList<Variable<DoubleReal>> var_s = new ArrayList<Variable<DoubleReal>>(0);
 
     public MatrixQ() {
@@ -156,8 +156,9 @@ public class MatrixQ implements DifferentialMatrixFunction {
     }
 
     @Override
-    public MatrixQ diff(Variable i_v) { //possiamo differenziare per una sola variabile anche la matrice, diventando
-        // infatti una matrice cubica NxNx1 -> una matrice quadrata
+    public MatrixQ diff(Variable i_v) {
+        // we can differentiate even a matrix if we use only a variable, since it became a cubic matrix NxNx1
+        // -> it remains a square matrix
 
         MatrixQ tmp = new MatrixQ(this.getRowDim(), this.getColDim());
 
@@ -268,22 +269,62 @@ public class MatrixQ implements DifferentialMatrixFunction {
      * In this part, instead, we set the calling object to a new state
      */
 
-    public MatrixQ negateOnSelf() {
-        MatrixQ tmp = this.negate();
-        this.matrix = tmp.matrix;
+    public MatrixQ mulOnSelf(Object i_v) {
+        MatrixQ tmp = this.mul(i_v);
+        this.matrix = tmp.getMatrix();
+        this.row = tmp.getRowDim();
+        this.col = tmp.getColDim();
+        this.var_s = tmp.getVars();
         return this;
     }
+
+    public MatrixQ powOnSelf(int i_n) {
+        MatrixQ tmp = this.pow(i_n);
+        this.matrix = tmp.getMatrix();
+        return this;
+    }
+
+
+    public MatrixQ negateOnSelf() {
+        MatrixQ tmp = this.negate();
+        this.matrix = tmp.getMatrix();
+        return this;
+    }
+
+    public MatrixQ plusOnSelf(Object i_v) {
+        MatrixQ tmp = this.plus(i_v);
+        this.matrix = tmp.getMatrix();
+        this.var_s = tmp.getVars();
+        return this;
+    }
+
+    public MatrixQ minusOnSelf(Object i_v) {
+        MatrixQ tmp = this.minus(i_v);
+        this.matrix = tmp.getMatrix();
+        this.var_s = tmp.getVars();
+        return this;
+    }
+
+    public MatrixQ mulOnSelf(long i_n) {
+        MatrixQ tmp = this.mul(i_n);
+        this.matrix = tmp.getMatrix();
+        return this;
+    }
+
+    public MatrixQ diffOnSelf(Variable i_v) {
+        MatrixQ tmp = this.diff(i_v);
+        this.matrix = tmp.getMatrix();
+        return this;
+    }
+
 
     public MatrixQ setIdentity() {
         assert this.row == this.col;
 
         for (int i = 0; i < this.row; i++) {
             for (int j = 0; j < this.col; j++) {
-                if (i == j) {
-                    this.matrix[i][j] = DFFactory.val(new DoubleReal(1));
-                } else {
-                    this.matrix[i][j] = DFFactory.val(new DoubleReal(0));
-                }
+                if (i == j) this.matrix[i][j] = DFFactory.val(new DoubleReal(1));
+                else this.matrix[i][j] = DFFactory.val(new DoubleReal(0));
             }
         }
         this.var_s.clear(); //we remove all the variables
