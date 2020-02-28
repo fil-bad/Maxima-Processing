@@ -1,4 +1,6 @@
 package geometry;
+import processing.core.PApplet;
+
 import static java.lang.Math.*;
 
 public class Polygon {
@@ -32,23 +34,35 @@ public class Polygon {
             i.translate(x, y);
     }
 
-    public void printVertices(){
+    public void printVertices() {
         System.out.print("{");
-        for (Vertex elem: this.vertices){
+        for (Vertex elem : this.vertices) {
             elem.printVertex();
         }
         System.out.println("}");
     }
 
-    public double perimeter()
-    {
+    public void drawPoligon(PApplet win) {
+        if (win == null)
+            return;
+        win.pushStyle();
+        win.fill(255);
+        win.beginShape();
+        for (Vertex v : this.vertices) {
+            win.vertex((float) v.getX(), (float) v.getY());
+        }
+        win.endShape(win.CLOSE);
+        win.popStyle();
+    }
+
+    public double perimeter() {
         double sum = 0.0;
-        for(int i = 0; i < this.vertices.length - 1; ++i)
-            sum += this.vertices[i].dist(this.vertices[i+1]);
+        for (int i = 0; i < this.vertices.length - 1; ++i)
+            sum += this.vertices[i].dist(this.vertices[i + 1]);
         return sum;
     }
 
-    public double area() 		//clockwise/anti-clockwise check, for convex/concave polygons
+    public double area()        //clockwise/anti-clockwise check, for convex/concave polygons
     {
         double area = 0.0;
         for(int i = 0; i < this.vertices.length - 1; ++i)

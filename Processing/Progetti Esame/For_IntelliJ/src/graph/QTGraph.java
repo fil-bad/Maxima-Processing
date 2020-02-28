@@ -89,6 +89,7 @@ public class QTGraph {
                         v.add(n2.plus(dRel.neg()));
                         v.add(n2.plus(dRel));
                         Polygon aisle = new Polygon(v.toArray(Vertex[]::new));
+                        aisle.drawPoligon(win);
                         // se gli ostacoli si intersecano con il corridoio, l'arco non viene aggiunto
                         for (Obstacle ob : obs) {
                             if (Sat.haveCollided(ob.getPoly(), aisle)) {

@@ -2,6 +2,7 @@ package processingElement;
 
 import java.util.Vector;
 
+import geometry.Sat;
 import geometry.Vertex;
 import graph.QTGraph;
 import processing.core.PApplet;
@@ -24,7 +25,7 @@ public class SceneExpert implements Observer {
     QTGraph qtGraph;
 
     //todo: Quando si avrà robot calcolarlo parametricamente
-    public float robotR = 60;
+    public float robotR = 30;
 
 
     protected SceneExpert(PApplet win) {
@@ -89,6 +90,15 @@ public class SceneExpert implements Observer {
                 }
         }
         return o;
+    }
+
+    // true if the place is free from obstacle in a r radius
+    public boolean freePlace(Vertex c, double r) {
+        for (Obstacle ob : obs) {
+            if (Sat.haveCollided(ob.getPoly(), c, r))
+                return false;
+        }
+        return true;
     }
 
     public Obstacle[] getObstacles() {

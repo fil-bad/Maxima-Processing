@@ -1,3 +1,4 @@
+import geometry.Sat;
 import geometry.Vertex;
 import graph.QTGraph;
 import processing.core.*;
@@ -52,7 +53,7 @@ public class ProcessingClass extends PApplet {
         scene.addObstacle(new Box(this, 50, 40, 10, color(0, 255, 0, 100)), 150, -60, 0);
 
 
-        rover = new Rover(this, new Vertex(100, 100), 0.5, 2, 0.1);
+        rover = new Rover(this, new Vertex(100, 100), 0.1, 0.2, 0.1);
     }
 
     Obstacle selected = null;
@@ -69,11 +70,6 @@ public class ProcessingClass extends PApplet {
         if (selected != null) {
             selected.setD(point.getX(), point.getY(), 0);
         }
-
-
-//        qt = new QuadTree(scene.getObstacles(), new Boundary(-400, -200, 400, 200), 10);
-//        qtGraph = new QTGraph(this, qt, SceneExpert.getInstance().robotR, SceneExpert.getInstance().getObstacles());
-
 
         rover.draw();
     }
@@ -118,8 +114,11 @@ public class ProcessingClass extends PApplet {
 //
 //        }
         if (key == 'e' || key == 'E') {
-            rover.clearObjs();
-            rover.setObjs(scene.getQtGraph().calcVert2Visit(rover.get(), point.get()));
+            if (scene.freePlace(point.get(), scene.robotR)) {
+                rover.clearObjs();
+                rover.setObjs(scene.getQtGraph().calcVert2Visit(rover.get(), point.get()));
+            } else
+                System.err.println("Il punto desiderato ha un ostacolo in un raggio:" + scene.robotR);
         }
         if (key == 'o' || key == 'O') {
             scene.addObstacle(new Box(this, (int) random(10, 100), (int) random(10, 100), (int) random(10, 30), color(random(255), random(255), random(255), 100)));
@@ -163,8 +162,10 @@ public class ProcessingClass extends PApplet {
         if (mousePressed && (mouseButton == LEFT)) {
 
         } else if (mousePressed && (mouseButton == RIGHT)) {    // traslazione xy
-            centerX -= (mouseX - pmouseX) / 2.0;
-            centerY -= (mouseY - pmouseY) / 2.0;
+            addPoint.set(-(mouseX - pmouseX), -(mouseY - pmouseY));
+            addPoint.rotate(Zrot);
+            centerX += addPoint.getX() / 2.0;
+            centerY += addPoint.getY() / 2.0;
         } else if (mousePressed && (mouseButton == CENTER)) {    // Seleziona
             float x, y, z;
             x = eyeX / d;
