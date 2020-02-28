@@ -354,7 +354,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
         return tmp;
     }
 
-    public MatrixQ getVPos() { // todo: fare metodi che tornino una sottomatrice
+    public MatrixQ getVPos() {
         assert (this.getRowDim() == this.getColDim() && this.getRowDim() == 4); // for Rot&Trasl in 3D
         MatrixQ tmp = new MatrixQ(3, 1);
         tmp.addVar_s(this.getVars());

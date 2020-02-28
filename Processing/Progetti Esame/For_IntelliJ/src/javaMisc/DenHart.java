@@ -18,6 +18,8 @@ public class DenHart {
     private MatrixQ Q_tot;
     private ArrayList<Variable<DoubleReal>> vars;
 
+    // todo: add Jacobian matrix & update method
+
     /**
      * Constructors
      */
