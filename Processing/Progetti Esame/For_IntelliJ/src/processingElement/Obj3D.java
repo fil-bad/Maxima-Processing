@@ -1,6 +1,6 @@
 package processingElement;
+
 import org.ejml.simple.SimpleMatrix;
-import org.ejml.dense.row.DMatrixComponent;
 
 public interface Obj3D {
     void draw();

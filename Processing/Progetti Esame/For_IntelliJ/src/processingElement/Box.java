@@ -1,7 +1,7 @@
 package processingElement;
+
 import geometry.Polygon;
 import geometry.Vertex;
-import javafx.scene.Scene;
 import processing.core.PApplet;
 
 public class Box extends Solid {
@@ -19,11 +19,11 @@ public class Box extends Solid {
         this.h = h;
         this.color = color;
         this.showCol = this.color;
-        highlight = win.color(255,255,0);
+        highlight = win.color(255, 255, 0);
     }
 
     // !!! DA USARE SOLO PER AVERE DEGLI OSTACOLI
-    public Box (int w, int l, int h) {
+    public Box(int w, int l, int h) {
         super(null);
         this.w = w;
         this.l = l;
@@ -37,7 +37,7 @@ public class Box extends Solid {
 
         applyCoord();
 
-        win.translate(0,0,h/2.0f);
+        win.translate(0, 0, h / 2.0f);
         win.fill(showCol);
         win.box(w, l, h);
         win.translate(0, 0, h);
@@ -74,7 +74,7 @@ public class Box extends Solid {
         };
         Polygon p = new Polygon(v_s);
         p.rotate(this.getR());
-        p.translate(getD().get(0,0),d.get(1,0)); // getX, getY of d vector
+        p.translate(getD().get(0, 0), d.get(1, 0)); // getX, getY of d vector
         return p;
     }
 }

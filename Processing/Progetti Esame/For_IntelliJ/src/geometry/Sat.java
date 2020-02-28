@@ -8,6 +8,9 @@ import java.util.List;
 
 public abstract class Sat {
 
+    /**
+     * Test di Collisioni
+     **/
     // True if inside the circle there are almost one vertex of the polygon
     public static boolean haveCollided(Polygon poly1, Vertex c, double r) {
         // Implements the actual SAT algorithm
@@ -74,6 +77,7 @@ public abstract class Sat {
         return true;
     }
 
+    /** Calcoli utili**/
     /**
      * Returns a vector going from point1 to point2
      */
@@ -128,6 +132,7 @@ public abstract class Sat {
                 projection2.getX() <= projection1.getY();
     }
 
+    /** Demo main**/
     public static void main(String[] args) throws Exception {
         // creating two polygons
         System.out.println("####Intersect polygons:####");

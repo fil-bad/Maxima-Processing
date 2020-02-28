@@ -9,8 +9,8 @@ public class Terra {
     private int w, h;
     private int color;
 
-    private int h_wall= 10;
-    private int w_wall= 5;
+    private int h_wall = 10;
+    private int w_wall = 5;
 
     public Terra(PApplet win, int w, int h, int color) {
         this.win = win;
@@ -32,13 +32,13 @@ public class Terra {
 
         //Muri
         win.fill(156);
-        win.translate(-w / 2.0f - w_wall/2.0f, 0,h_wall/2.0f);
+        win.translate(-w / 2.0f - w_wall / 2.0f, 0, h_wall / 2.0f);
         win.box(w_wall, h + 2 * w_wall, h_wall);
 
         win.translate(w + w_wall, 0);
         win.box(w_wall, h + 2 * w_wall, h_wall);
 
-        win.translate(-w / 2.0f - w_wall/2.0f, h/2.0f + w_wall/2.0f);
+        win.translate(-w / 2.0f - w_wall / 2.0f, h / 2.0f + w_wall / 2.0f);
         win.box(w, w_wall, h_wall);
 
         win.translate(0, -h - w_wall);

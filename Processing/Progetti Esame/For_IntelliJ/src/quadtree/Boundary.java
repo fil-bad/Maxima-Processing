@@ -1,4 +1,5 @@
 package quadtree;
+
 import geometry.Polygon;
 import geometry.Vertex;
 
@@ -27,14 +28,14 @@ public class Boundary {
     }
 
     public boolean inRange(Vertex v) {
-        return (v.getX() >= this.getxMin() && v.getX()  <= this.getxMax()
-                && v.getY()  >= this.getyMin() && v.getY() <= this.getyMax());
+        return (v.getX() >= this.getxMin() && v.getX() <= this.getxMax()
+                && v.getY() >= this.getyMin() && v.getY() <= this.getyMax());
     }
 
-    public Boundary getSector(Coord c){
-        switch (c){
+    public Boundary getSector(Coord c) {
+        switch (c) {
             case NE:
-                return new Boundary(getX(), getY(), getxMax(),getyMax());
+                return new Boundary(getX(), getY(), getxMax(), getyMax());
             case NW:
                 return new Boundary(getxMin(), getY(), getX(), getyMax());
             case SW:
@@ -51,7 +52,7 @@ public class Boundary {
     }
 
     public double getMinExtension() {
-        return Math.min(getW(),getH());
+        return Math.min(getW(), getH());
     }
 
     public double getyMin() {
@@ -66,13 +67,23 @@ public class Boundary {
         return yMax;
     }
 
-    public double getW(){ return (xMax-xMin);}
-    public double getH(){ return (yMax-yMin);}
+    public double getW() {
+        return (xMax - xMin);
+    }
 
-    public double getX(){ return xMin + getW()/2.0;}
-    public double getY(){ return yMin + getH()/2.0;}
+    public double getH() {
+        return (yMax - yMin);
+    }
 
-    public Polygon getPoly() throws RuntimeException{
+    public double getX() {
+        return xMin + getW() / 2.0;
+    }
+
+    public double getY() {
+        return yMin + getH() / 2.0;
+    }
+
+    public Polygon getPoly() throws RuntimeException {
         Vertex[] v_s = {
                 new Vertex(xMin, yMin),     // Sud-Ovest
                 new Vertex(xMax, yMin),     // Sud-Est
@@ -90,23 +101,23 @@ public class Boundary {
 
     // return the vertex at the center of the size, halt return null
     public Vertex getVertex(Side s) {
-        switch (s){
+        switch (s) {
             case U:
-                return new Vertex(getX(),getyMax());
+                return new Vertex(getX(), getyMax());
             case LU:
-                return new Vertex(getxMin(),getyMax());
+                return new Vertex(getxMin(), getyMax());
             case L:
-                return new Vertex(getxMin(),getY());
+                return new Vertex(getxMin(), getY());
             case LD:
-                return new Vertex(getxMin(),getyMin());
+                return new Vertex(getxMin(), getyMin());
             case D:
-                return new Vertex(getX(),getyMin());
+                return new Vertex(getX(), getyMin());
             case RD:
-                return new Vertex(getxMax(),getyMin());
+                return new Vertex(getxMax(), getyMin());
             case R:
-                return new Vertex(getxMax(),getY());
+                return new Vertex(getxMax(), getY());
             case RU:
-                return new Vertex(getxMax(),getyMax());
+                return new Vertex(getxMax(), getyMax());
             case HALT:
                 return null;
         }

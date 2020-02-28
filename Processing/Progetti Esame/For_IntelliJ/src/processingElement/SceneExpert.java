@@ -1,7 +1,5 @@
 package processingElement;
 
-import java.util.Vector;
-
 import geometry.Sat;
 import geometry.Vertex;
 import graph.QTGraph;
@@ -9,6 +7,8 @@ import org.ejml.simple.SimpleMatrix;
 import processing.core.PApplet;
 import quadtree.QuadTree;
 import robots.Rover;
+
+import java.util.Vector;
 
 
 public class SceneExpert implements Observer {
@@ -24,14 +24,12 @@ public class SceneExpert implements Observer {
     boolean sceneChange = true;
 
     // Informazioni della scena
-    QuadTree qt;
-    QTGraph qtGraph;
+    private QuadTree qt;
+    private QTGraph qtGraph;
 
     //Parametri Robot
-    Rover rover;
-
-    //todo: Quando si avrà robot calcolarlo parametricamente
-    public float robotR = 30;
+    private Rover rover;
+    public float robotR;
 
 
     protected SceneExpert(PApplet win) {
@@ -52,6 +50,30 @@ public class SceneExpert implements Observer {
         return instance;
     }
 
+    public void drawScene() {
+        if (this.gnd != null)
+            gnd.draw();
+        for (Obj3D obj : bodies) {
+            obj.draw();
+        }
+        if (sceneChange) {
+            sceneChange = false;
+            qt = new QuadTree(getObstacles(), getGnd().getBoundary(), robotR);
+            qtGraph = new QTGraph(win, qt, robotR, getObstacles());
+        }
+
+        QuadTree.dfs(qt, win);
+        qtGraph.printGraph(win, 10);
+        qtGraph.printPath(win, 15);
+
+        rover.draw();
+        win.push();
+        SimpleMatrix transl = rover.getD();
+        win.translate((float) transl.get(0), (float) transl.get(1), (float) transl.get(2));
+        com.axes(255);
+        win.pop();
+    }
+
     public void addGnd(Terra g) {
         this.gnd = g;
     }
@@ -62,6 +84,7 @@ public class SceneExpert implements Observer {
 
     public void addRover(Rover r) {
         this.rover = r;
+        robotR = (float) r.getRatius();
     }
 
     public Rover getRover() {
@@ -89,9 +112,9 @@ public class SceneExpert implements Observer {
         ob.setD(x, y, z);
         ob.setR(rad);
     }
-
     // return the most high obstacle that have p inside
     // null if obstacle not exist at that point
+
     public Obstacle getObstacle(Vertex p) {
         Obstacle o = null;
         for (Obstacle ob : obs) {
@@ -105,8 +128,12 @@ public class SceneExpert implements Observer {
         }
         return o;
     }
-
     // true if the place is free from obstacle in a r radius
+
+    public Obstacle[] getObstacles() {
+        return obs.toArray(new Obstacle[0]);
+    }
+
     public boolean freePlace(Vertex c, double r) {
         for (Obstacle ob : obs) {
             if (Sat.haveCollided(ob.getPoly(), c, r))
@@ -115,38 +142,10 @@ public class SceneExpert implements Observer {
         return true;
     }
 
-    public Obstacle[] getObstacles() {
-        return obs.toArray(new Obstacle[0]);
-    }
-
     public QTGraph getQtGraph() {
         return qtGraph;
     }
 
-
-    public void drawScene() {
-        if (this.gnd != null)
-            gnd.draw();
-        for (Obj3D obj : bodies) {
-            obj.draw();
-        }
-        if (sceneChange) {
-            sceneChange = false;
-            qt = new QuadTree(getObstacles(), getGnd().getBoundary(), robotR);
-            qtGraph = new QTGraph(win, qt, robotR, getObstacles());
-        }
-
-        QuadTree.dfs(qt, win);
-        qtGraph.printGraph(win, 10);
-        qtGraph.printPath(win, 15);
-
-        rover.draw();
-        win.push();
-        SimpleMatrix transl = rover.getD();
-        win.translate((float) transl.get(0), (float) transl.get(1), (float) transl.get(2));
-        com.axes(255);
-        win.pop();
-    }
 
     @Override
     public void updateChange() {

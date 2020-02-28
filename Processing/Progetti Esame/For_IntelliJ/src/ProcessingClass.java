@@ -107,8 +107,8 @@ public class ProcessingClass extends PApplet {
 //        }
         if (key == 'e' || key == 'E') {
             if (scene.freePlace(point.get(), scene.robotR)) {
-                scene.getRover().clearObjs();
-                scene.getRover().setObjs(scene.getQtGraph().calcVert2Visit(scene.getRover().get(), point.get()));
+                scene.getRover().clearCheckPoint();
+                scene.getRover().setCheckPoint(scene.getQtGraph().calcVert2Visit(scene.getRover().get(), point.get()));
             } else
                 System.err.println("Il punto desiderato ha un ostacolo in un raggio:" + scene.robotR);
         }

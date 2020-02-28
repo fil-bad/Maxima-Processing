@@ -101,6 +101,93 @@ public class Rover implements Obj3D {
         win.pop();
     }
 
+    private void roverDraw() {
+        //Draw the robot
+        win.fill(0, 200, 60);
+        win.push();
+        win.translate(0, 0, h);
+        win.box(w - whellDeep * 1.2f, w - whellDeep * 1.2f, h);
+
+
+        omniWheel[0].rotateX((float) dx.get(3, 0) / h);
+        omniWheel[1].rotateX((float) dx.get(3, 0) / h);
+        omniWheel[2].rotateY((float) dx.get(2, 0) / h);
+        omniWheel[3].rotateY((float) dx.get(2, 0) / h);
+
+        for (PShape wheel : omniWheel) {
+            win.shape(wheel);
+        }
+        win.pop();
+    }
+
+    private void ctrlStep() {
+        x.set(xnew);
+
+        SimpleMatrix er = new SimpleMatrix(4, 1);
+        er.set(2, 0, pos.getX() - obj.getX());
+        er.set(3, 0, pos.getY() - obj.getY());
+
+        er = er.scale(-kp);
+
+        SimpleMatrix u = new SimpleMatrix(2, 1);
+        u.set(0, 0, er.get(2, 0));
+        u.set(1, 0, er.get(3, 0));
+
+        //Uso un controllo proporzionale, quindi moltiplico l'errore per kp
+//        System.out.println("Stato");
+//        x.print();
+//        System.out.println("errore");
+//        er.print();
+//        System.out.println("controllo");
+//        u.print();
+        //Cambio obiettivo prima di fermarsi
+        if (u.normF() <= 1) {
+            if (!checkPoint.isEmpty()) {
+                obj = checkPoint.pollFirst();
+            }
+        }
+        if (u.normF() > 1)
+            u = u.divide(u.normF());
+
+        // Errore troppo piccolo, smetto di fare l'update
+        if (u.normF() < 0.0001) {
+            return;
+        }
+        dx.set(A.mult(x).plus(B.mult(u)));  // la uso per far ruotare le ruote
+        xnew = x.plus(dx);
+
+        pos.set(xnew.get(2, 0), xnew.get(3, 0));
+    }
+
+    public void setCheckPoint(Vertex obj) {
+        if (obj != null)
+            this.obj.set(obj);
+    }
+
+    public void setCheckPoint(Vertex[] objs) {
+        if (objs == null) {
+            if (checkPoint.isEmpty())
+                setCheckPoint(this.get());
+            return;
+        }
+        for (Vertex v : objs) {
+            checkPoint.addLast(v);
+        }
+    }
+
+    public void clearCheckPoint() {
+        checkPoint.clear();
+        setCheckPoint(get());
+    }
+
+    public Vertex get() {
+        return pos;
+    }
+
+    public double getRatius() {
+        return Math.sqrt(2) * w / 2.0;      // diagonale quadrato/2 = raggio cerchio circoscritto
+    }
+
     @Override
     public void highlight(boolean b) {
 
@@ -154,104 +241,6 @@ public class Rover implements Obj3D {
     @Override
     public void addR(double rad) {
 
-    }
-
-    private void ctrlStep() {
-        x.set(xnew);
-
-        SimpleMatrix er = new SimpleMatrix(4, 1);
-        er.set(2, 0, pos.getX() - obj.getX());
-        er.set(3, 0, pos.getY() - obj.getY());
-
-        er = er.scale(-kp);
-
-        SimpleMatrix u = new SimpleMatrix(2, 1);
-        u.set(0, 0, er.get(2, 0));
-        u.set(1, 0, er.get(3, 0));
-
-        //Uso un controllo proporzionale, quindi moltiplico l'errore per kp
-//        System.out.println("Stato");
-//        x.print();
-//        System.out.println("errore");
-//        er.print();
-//        System.out.println("controllo");
-//        u.print();
-        //Cambio obiettivo prima di fermarsi
-        if (u.normF() <= 1) {
-            if (!checkPoint.isEmpty()) {
-                obj = checkPoint.pollFirst();
-            }
-        }
-        if (u.normF() > 1)
-            u = u.divide(u.normF());
-
-        // Errore troppo piccolo, smetto di fare l'update
-        if (u.normF() < 0.0001) {
-            return;
-        }
-        dx.set(A.mult(x).plus(B.mult(u)));  // la uso per far ruotare le ruote
-        xnew = x.plus(dx);
-
-        pos.set(xnew.get(2, 0), xnew.get(3, 0));
-    }
-
-    public void setObj(Vertex obj) {
-        if (obj != null)
-            this.obj.set(obj);
-    }
-
-    public void setObjs(Vertex[] objs) {
-        if (objs == null) {
-            if (checkPoint.isEmpty())
-                setObj(this.get());
-            return;
-        }
-        for (Vertex v : objs) {
-            checkPoint.addLast(v);
-        }
-    }
-
-    public void clearObjs() {
-        checkPoint.clear();
-        setObj(get());
-    }
-
-
-    private void roverDraw() {
-        //Draw the robot
-        win.fill(0, 200, 60);
-        win.push();
-        win.translate(0, 0, h);
-        win.box(w - whellDeep * 1.2f, w - whellDeep * 1.2f, h);
-
-
-        omniWheel[0].rotateX((float) dx.get(3, 0) / h);
-        omniWheel[1].rotateX((float) dx.get(3, 0) / h);
-        omniWheel[2].rotateY((float) dx.get(2, 0) / h);
-        omniWheel[3].rotateY((float) dx.get(2, 0) / h);
-
-        for (PShape wheel : omniWheel) {
-            win.shape(wheel);
-        }
-//        win.noStroke();
-//        win.translate(-(w) / 2.0f, 0);
-//        win.sphere(h);
-//        win.translate((w), 0);
-//        win.sphere(h);
-//        win.translate(-(w) / 2.0f, (w) / 2.0f);
-//        win.sphere(h);
-//        win.translate(0, -(w));
-//        win.sphere(h);
-        win.pop();
-    }
-
-    public Vertex get() {
-        return pos;
-    }
-
-
-    public double getRatius() {
-        return Math.sqrt(2 * w) / 2.0;      // Math.sqrt(2*w) = diagonale quadrato
     }
 
 

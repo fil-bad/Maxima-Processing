@@ -28,9 +28,9 @@ public class CommonDraw {
         // NECESSARIA, Java non può prendere un Hex direttamente, ma deve scomporre
         int[] RGBArray = new int[3];
 
-        RGBArray[0] =  Integer.valueOf( colorStr.substring( 1, 3 ), 16 );
-        RGBArray[1] =  Integer.valueOf( colorStr.substring( 3, 5 ), 16 );
-        RGBArray[2] =  Integer.valueOf( colorStr.substring( 5, 7 ), 16 );
+        RGBArray[0] = Integer.valueOf(colorStr.substring(1, 3), 16);
+        RGBArray[1] = Integer.valueOf(colorStr.substring(3, 5), 16);
+        RGBArray[2] = Integer.valueOf(colorStr.substring(5, 7), 16);
         return RGBArray;
     }
 
@@ -104,10 +104,10 @@ public class CommonDraw {
         win.endShape(win.CLOSE);
     }
 
-    public void setEnvMatrix(SimpleMatrix Q){
-        win.applyMatrix((float)Q.get(0,0),(float)Q.get(0,1),(float)Q.get(0,2),(float)Q.get(0,3),
-                (float)Q.get(1,0),(float)Q.get(1,1),(float)Q.get(1,2),(float)Q.get(1,3),
-                (float)Q.get(2,0),(float)Q.get(2,1),(float)Q.get(2,2),(float)Q.get(2,3),
-                (float)Q.get(3,0),(float)Q.get(3,1),(float)Q.get(3,2),(float)Q.get(3,3));
+    public void setEnvMatrix(SimpleMatrix Q) {
+        win.applyMatrix((float) Q.get(0, 0), (float) Q.get(0, 1), (float) Q.get(0, 2), (float) Q.get(0, 3),
+                (float) Q.get(1, 0), (float) Q.get(1, 1), (float) Q.get(1, 2), (float) Q.get(1, 3),
+                (float) Q.get(2, 0), (float) Q.get(2, 1), (float) Q.get(2, 2), (float) Q.get(2, 3),
+                (float) Q.get(3, 0), (float) Q.get(3, 1), (float) Q.get(3, 2), (float) Q.get(3, 3));
     }
 }

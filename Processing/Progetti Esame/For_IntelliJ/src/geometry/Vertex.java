@@ -13,6 +13,9 @@ public class Vertex {
     DMatrix2 pos, ap;
     static final double EPS = 1e-9;
 
+    /**
+     * Costruttori
+     **/
     public Vertex(double x, double y) {
         pos = new DMatrix2(x, y);
         ap = new DMatrix2();
@@ -29,7 +32,9 @@ public class Vertex {
         this(a.getX(), a.getY());
     }
 
-
+    /**
+     * Operazioni
+     **/
     public double dist(Vertex p) {
         CommonOps_DDF2.subtract(pos, p.get(), ap);
         return Math.sqrt(sq(ap.a1) + sq(ap.a2));
@@ -77,8 +82,7 @@ public class Vertex {
     }
 
 
-    static double angle(Vertex a, Vertex o, Vertex b)  // angle AOB
-    {
+    static double angle(Vertex a, Vertex o, Vertex b) {  // angle AOB
         Vertex oa = new Vertex(o, a), ob = new Vertex(o, b);
         return Math.acos(oa.dot(ob) / Math.sqrt(oa.norm2() * ob.norm2()));
     }
@@ -151,19 +155,22 @@ public class Vertex {
 
     }
 
+    /**
+     * Returns a new vector which is orthogonal to the current vector
+     **/
+    public Vertex orthogonal() {
+        return new Vertex(-getY(), getX());
+    }
+
+    /**
+     * Get & Setter
+     **/
     public void set(double x, double y) {
         pos.set(x, y);
     }
 
     public void set(Vertex v) {
         pos.set(v.getX(), v.getY());
-    }
-
-    /**
-     * Returns a new vector which is orthogonal to the current vector
-     **/
-    public Vertex orthogonal() {
-        return new Vertex(-getY(), getX());
     }
 
     public DMatrix2 get() {
@@ -178,6 +185,9 @@ public class Vertex {
         return pos.get(1, 0);
     }
 
+    /**
+     * Debug Utility
+     **/
     public void printVertex() {
         System.out.print(this.toString());
     }
@@ -201,6 +211,9 @@ public class Vertex {
         return "[" + getX() + ";" + getY() + "]";
     }
 
+    /**
+     * Demo main
+     **/
     public static void main(String[] args) {
         Vertex v1 = new Vertex(5, 2);
         v1.printVertex();

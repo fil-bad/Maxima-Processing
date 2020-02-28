@@ -62,12 +62,11 @@ public class Polygon {
         return sum;
     }
 
-    public double area()        //clockwise/anti-clockwise check, for convex/concave polygons
-    {
+    public double area() {        //clockwise/anti-clockwise check, for convex/concave polygons
         double area = 0.0;
-        for(int i = 0; i < this.vertices.length - 1; ++i)
-            area += this.vertices[i].getX() * this.vertices[i+1].getY() - this.vertices[i].getY() * this.vertices[i+1].getX();
-        return Math.abs(area) / 2.0;			//negative value in case of clockwise
+        for (int i = 0; i < this.vertices.length - 1; ++i)
+            area += this.vertices[i].getX() * this.vertices[i + 1].getY() - this.vertices[i].getY() * this.vertices[i + 1].getX();
+        return Math.abs(area) / 2.0;            //negative value in case of clockwise
     }
 
     public boolean contains(Vertex tested) {
