@@ -1,3 +1,4 @@
+import geometry.Sat;
 import geometry.Vertex;
 import graph.QTGraph;
 import processing.core.*;
@@ -22,36 +23,37 @@ public class ProcessingClass extends PApplet {
 
     // Dati per il disegno del mondo
     CommonDraw com;
-    Terra gnd;
+
     Pointer point;
     SceneExpert scene;
 
     // Dati per la pianificazione del percorso
-    Vertex roverStart, roverEnd;
     Rover rover;
 
-
-    QuadTree qt;
-    QTGraph qtGraph;
 
     @Override
     public void setup() {
         clear();
         cameraInit();
         frameRate(60);
+        com = CommonDraw.getInstance(this); // must be the first
 
 
-        com = CommonDraw.getInstance(this);
-        gnd = new Terra(this, 800, 400, color(200, 150, 100));
+        //Cursore a schermo
         point = new Pointer(this, 60, 800, 400);
-        scene = SceneExpert.getInstance();
+
+        //Classe di supporto con funzioni standard
+
+        //Setup della scena
+        scene = SceneExpert.getInstance(this);
+
+        scene.addGnd(new Terra(this, 800, 400, color(200, 150, 100)));
+
         scene.addObstacle(new Box(this, 50, 40, 10, color(255, 150, 0, 100)), 50);
         scene.addObstacle(new Box(this, 50, 40, 10, color(0, 255, 0, 100)), 150, -60, 0);
 
-        roverStart = new Vertex(-100, 100);
-        roverEnd = new Vertex(100, -100);
-        rover = new Rover(this, new Vertex(100, 100), 0.5, 0.5, 0.1);
 
+        rover = new Rover(this, new Vertex(100, 100), 0.1, 0.2, 0.1);
     }
 
     Obstacle selected = null;
@@ -62,26 +64,13 @@ public class ProcessingClass extends PApplet {
         cameraSet();
 
         //Oggetti da graficare
-        gnd.draw();
-        com.axes(255);
+        scene.drawScene();
         point.draw();
 
         if (selected != null) {
             selected.setD(point.getX(), point.getY(), 0);
         }
 
-
-        qt = new QuadTree(scene.getObstacles(), new Boundary(-400, -200, 400, 200), 10);
-        qtGraph = new QTGraph(this, qt, SceneExpert.getInstance().robotR, SceneExpert.getInstance().getObstacles());
-
-
-        QuadTree.dfs(qt, this);
-        qtGraph.calcVert2Visit(rover.get(), roverEnd);
-
-        qtGraph.printGraph(this, 10);
-        qtGraph.printPath(this, 15);
-
-        scene.drawScene();
         rover.draw();
     }
 
@@ -125,10 +114,11 @@ public class ProcessingClass extends PApplet {
 //
 //        }
         if (key == 'e' || key == 'E') {
-            roverEnd.set(point.get());
-            qtGraph.calcVert2Visit(rover.get(), roverEnd);
-            rover.clearObjs();
-            rover.setObjs(qtGraph.getCheckPoint());
+            if (scene.freePlace(point.get(), scene.robotR)) {
+                rover.clearObjs();
+                rover.setObjs(scene.getQtGraph().calcVert2Visit(rover.get(), point.get()));
+            } else
+                System.err.println("Il punto desiderato ha un ostacolo in un raggio:" + scene.robotR);
         }
         if (key == 'o' || key == 'O') {
             scene.addObstacle(new Box(this, (int) random(10, 100), (int) random(10, 100), (int) random(10, 30), color(random(255), random(255), random(255), 100)));
@@ -172,8 +162,10 @@ public class ProcessingClass extends PApplet {
         if (mousePressed && (mouseButton == LEFT)) {
 
         } else if (mousePressed && (mouseButton == RIGHT)) {    // traslazione xy
-            centerX -= (mouseX - pmouseX) / 2.0;
-            centerY -= (mouseY - pmouseY) / 2.0;
+            addPoint.set(-(mouseX - pmouseX), -(mouseY - pmouseY));
+            addPoint.rotate(Zrot);
+            centerX += addPoint.getX() / 2.0;
+            centerY += addPoint.getY() / 2.0;
         } else if (mousePressed && (mouseButton == CENTER)) {    // Seleziona
             float x, y, z;
             x = eyeX / d;

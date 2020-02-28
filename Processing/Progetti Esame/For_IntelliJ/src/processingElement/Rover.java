@@ -6,15 +6,16 @@ import org.ejml.data.DMatrix4x4;
 import org.ejml.simple.SimpleMatrix;
 import processing.core.PApplet;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Stack;
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 public class Rover {
     Vertex pos, obj;
     SimpleMatrix A, B, xnew, x;
 
-    Stack<Vertex> checkPoint = new Stack<>();
+    LinkedList<Vertex> checkPoint = new LinkedList<>();
 
     PApplet win;
     double rho, ka;
@@ -91,25 +92,24 @@ public class Rover {
         er.set(2, 0, pos.getX() - obj.getX());
         er.set(3, 0, pos.getY() - obj.getY());
 
-
         er = er.scale(-kp);
 
-
-        x.print();
-        xnew.print();
         SimpleMatrix u = new SimpleMatrix(2, 1);
         u.set(0, 0, er.get(2, 0));
         u.set(1, 0, er.get(3, 0));
 
         //Uso un controllo proporzionale, quindi moltiplico l'errore per kp
-        System.out.println("errore e controllo");
-        er.print();
-        u.print();
-        System.out.println("uNorm:" + u.normF());
+//        System.out.println("Stato");
+//        x.print();
+//        System.out.println("errore");
+//        er.print();
+//        System.out.println("controllo");
+//        u.print();
         //Cambio obiettivo prima di fermarsi
         if (u.normF() <= 1) {
-            if (!checkPoint.isEmpty())
-                obj = checkPoint.remove(0);
+            if (!checkPoint.isEmpty()) {
+                obj = checkPoint.pollFirst();
+            }
         }
         if (u.normF() > 1)
             u = u.divide(u.normF());
@@ -119,14 +119,7 @@ public class Rover {
             return;
         }
 
-        System.out.println("Matrici A*x e B*u");
-        A.mult(x).print();
-        B.mult(u).print();
         xnew = x.plus(A.mult(x).plus(B.mult(u)));
-        System.out.println("xNew");
-        xnew.print();
-        System.out.println("x");
-        x.print();
 
         pos.set(xnew.get(2, 0), xnew.get(3, 0));
         x.set(xnew);
@@ -138,11 +131,19 @@ public class Rover {
     }
 
     public void setObjs(Vertex[] objs) {
-        Collections.addAll(checkPoint, objs);
+        if (objs == null) {
+            if (checkPoint.isEmpty())
+                setObj(this.get());
+            return;
+        }
+        for (Vertex v : objs) {
+            checkPoint.addLast(v);
+        }
     }
 
     public void clearObjs() {
         checkPoint.clear();
+        setObj(get());
     }
 
 

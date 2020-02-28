@@ -3,11 +3,14 @@ package processingElement;
 import org.ejml.simple.SimpleMatrix;
 import processing.core.PApplet;
 
-public abstract class Solid implements Obj3D {
+public abstract class Solid implements Obstacle, Subject {
     // Coordinate origine del solido
     SimpleMatrix d;
     double angle = 0;
     PApplet win;
+
+    Observer myScene = null;
+
 
     public Solid(PApplet win) {
         this.d = new SimpleMatrix(3, 1);
@@ -32,6 +35,7 @@ public abstract class Solid implements Obj3D {
     @Override
     public void setD(SimpleMatrix m) {
         d.set(m);
+        notifyChange();
     }
 
     @Override
@@ -46,6 +50,7 @@ public abstract class Solid implements Obj3D {
     @Override
     public void addD(SimpleMatrix m) {
         d.plus(m);
+        notifyChange();
     }
 
     @Override
@@ -60,10 +65,23 @@ public abstract class Solid implements Obj3D {
     @Override
     public void setR(double rad) {
         this.angle = rad;
+        notifyChange();
     }
 
     @Override
     public void addR(double rad) {
         this.angle += rad;
+        notifyChange();
+    }
+
+    @Override
+    public void attachScene(Observer s) {
+        myScene = s;
+    }
+
+    @Override
+    public void notifyChange() {
+        if (myScene != null)
+            myScene.updateChange();
     }
 }

@@ -1,9 +1,10 @@
 package processingElement;
 import geometry.Polygon;
 import geometry.Vertex;
+import javafx.scene.Scene;
 import processing.core.PApplet;
 
-public class Box extends Solid implements Obstacle {
+public class Box extends Solid {
     private CommonDraw com;
 
 

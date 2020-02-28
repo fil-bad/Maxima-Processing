@@ -24,7 +24,7 @@ public class QTGraph {
     private SimpleWeightedGraph<QuadTree, DefaultWeightedEdge> qtGraph;
     private QuadTree root;
     private PApplet win = null;
-    private Vector<Vertex> node2visit = null;
+    private Vector<Vertex> node2visit = new Vector<>();
 
     public QTGraph(QuadTree qt, float rRobot, Obstacle[] obs) {
         this(null, QuadTree.qt2leaves(qt), rRobot, obs);
@@ -89,6 +89,7 @@ public class QTGraph {
                         v.add(n2.plus(dRel.neg()));
                         v.add(n2.plus(dRel));
                         Polygon aisle = new Polygon(v.toArray(Vertex[]::new));
+                        aisle.drawPoligon(win);
                         // se gli ostacoli si intersecano con il corridoio, l'arco non viene aggiunto
                         for (Obstacle ob : obs) {
                             if (Sat.haveCollided(ob.getPoly(), aisle)) {
@@ -168,14 +169,14 @@ public class QTGraph {
         }
     }
 
-    public void printGraph(PApplet win, float r) {
+    public void printGraph(PApplet win, float drawScale) {
         win.pushStyle();
         Set<DefaultWeightedEdge> edgeSet = this.qtGraph.edgeSet();
 
         Iterator<DefaultWeightedEdge> edgeIterator = edgeSet.iterator();
         DefaultWeightedEdge edge;
         //### PRINTING EDGES OF GRAPH ###
-        win.strokeWeight(r / 8);
+        win.strokeWeight(drawScale / 8);
         win.stroke(0, 125, 175);
         Boundary src, tg;
         while (edgeIterator.hasNext()) {
@@ -196,7 +197,7 @@ public class QTGraph {
         win.translate(0, 0, 1);
         while (vertexIterator.hasNext()) {
             node = vertexIterator.next();
-            win.circle((float) node.getBoundary().getX(), (float) node.getBoundary().getY(), (float) Math.min(r, node.getBoundary().getMinExtension() / 2.0f));
+            win.circle((float) node.getBoundary().getX(), (float) node.getBoundary().getY(), (float) Math.min(drawScale, node.getBoundary().getMinExtension() / 2.0f));
         }
         win.popMatrix();
         win.popStyle();
@@ -220,10 +221,10 @@ public class QTGraph {
         return node2visit.toArray(Vertex[]::new);
     }
 
-    public void calcVert2Visit(Vertex start, Vertex end) {
+    public Vertex[] calcVert2Visit(Vertex start, Vertex end) {
 
-        GraphPath<QuadTree, DefaultWeightedEdge> graphPath;
         //Idea per il maxSplit, funziona ma non ci piace
+//        GraphPath<QuadTree, DefaultWeightedEdge> graphPath;
 //        graphPath = this.findPath(start, end);
 //        if (graphPath == null) {
 //            System.err.println("### Cammino non esistente (MIN SPLIT), uno dei due punti è su un ostacolo ###");
@@ -236,33 +237,28 @@ public class QTGraph {
 //            extendGraph(win, QuadTree.qt2leaves(n), SceneExpert.getInstance().robotR, SceneExpert.getInstance().getObstacles());
 //        }
 
-        this.node2visit = new Vector<>(0);
-        this.node2visit.add(start);
-
-        graphPath = this.findPath(start, end);
+        GraphPath<QuadTree, DefaultWeightedEdge> graphPath = this.findPath(start, end);
         if (graphPath == null) {
             System.err.println("### Cammino non esistente, uno dei due punti è su un ostacolo ###");
-            return;
+            return null;
         }
-
         List<QuadTree> vert_list = graphPath.getVertexList();
-
-        for (int i = 0, vert_listSize = vert_list.size() - 1; i < vert_listSize; i++) {
+        this.node2visit.clear();
+        this.node2visit.add(new Vertex(start)); //Devo copiarlo per evitare di riferire lo stesso oggetto
+        for (int i = 0, vert_listSize = vert_list.size(); i < vert_listSize; i++) {
             QuadTree q = vert_list.get(i);
-//            Side nextSide = q.neighborsSide(vert_list.get(i + 1));
-//            Vertex v = q.getBoundary().getVertex(nextSide);
             this.node2visit.add(q.getBoundary().getVertex());
-//            if (v != null)
-//                this.node2visit.add(v);
         }
-        this.node2visit.add(end);
+        this.node2visit.add(new Vertex(end));    //Devo copiarlo per evitare di riferire lo stesso oggetto
+        return node2visit.toArray(Vertex[]::new);
+
     }
 
-    public void printPath(PApplet win, float r) {
+    public void printPath(PApplet win, float drawScale) {
         QuadTree.dfs(this.root, win);
 
         win.pushStyle();
-        win.strokeWeight(r / 2);
+        win.strokeWeight(drawScale / 2);
         win.stroke(130, 0, 0, 200);
 
         if (this.node2visit == null) {
