@@ -2,38 +2,39 @@ package javaMisc;
 
 import javaMisc.Link;
 
+import static java.lang.Math.PI;
+
+
 public class PrismLink implements Link {
 
 
     private String d_qi;
-    private float theta;
-    private float d = 0.0f;
-    private float alpha;
-    private float a;
+    private double theta;
+    private double alpha;
+    private double a;
 
-    private MatrixQ Q;
+    private MatrixQ Q0_1;
 
+    public PrismLink(double theta, String qi, double alpha, double a) {
 
-    public PrismLink(float theta, String qi, float alpha, float a) {
         this.theta = theta;
         this.d_qi = qi;
         this.alpha = alpha;
         this.a = a;
+
+        MatrixQ avvZ = new MatrixQ().setRotZ("", theta).mul(new MatrixQ().setTraslZ(qi, 0));
+        MatrixQ avvX = new MatrixQ().setRotX("", alpha).mul(new MatrixQ().setTraslX("", a));
+        this.Q0_1 = avvZ.mul(avvX);
     }
 
     @Override
-    public float[] getCurrValues() {
-        return new float[]{this.theta, this.d, this.alpha, this.a};
-    }
-
-    @Override
-    public void setQ_iValue(float q_i) {
-        this.d = q_i;
+    public MatrixQ getQLink() {
+        return this.Q0_1;
     }
 
     @Override
     public void printLink() {
-        System.out.printf("[%.3f;%.3f;%.3f;%.3f]\n", this.theta, this.d, this.alpha, this.a);
+        System.out.printf("[%.3f  %s  %.3f  %.3f]\n", this.theta, this.d_qi, this.alpha, this.a);
     }
 
     @Override
@@ -41,8 +42,11 @@ public class PrismLink implements Link {
         return this.d_qi;
     }
 
-    @Override
-    public void update(float qi_val) {
+
+    public static void main(String[] args) {
+        Link l = new PrismLink(PI, "q1", PI / 2, 12);
+        l.printLink();
 
     }
+
 }
