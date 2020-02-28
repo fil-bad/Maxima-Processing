@@ -1,5 +1,8 @@
 package javaMisc;
 
+import javaMisc.math.DoubleReal;
+import javaMisc.math.autodiff.Variable;
+
 import static java.lang.Math.*;
 
 import java.util.ArrayList;
@@ -8,27 +11,41 @@ public class DenHart {
 
     private ArrayList<Link> denHartTab;
 
+    private MatrixQ Q_tot;
+    private ArrayList<Variable<DoubleReal>> vars;
+
     public DenHart() {
         this.denHartTab = new ArrayList<Link>(0);
     }
 
     public DenHart(ArrayList<Link> denHartTab) {
         this.denHartTab = denHartTab;
+
+
     }
 
     public DenHart(DenHart denHart) {
         this.denHartTab = denHart.getLinks();
+        this.Q_tot = denHart.Q_tot;
+        this.vars = denHart.vars;
     }
 
     public void addLink(Link link) {
         //append a new link to D-H table
         this.denHartTab.add(link);
+        this.Q_tot.mulOnSelf(link.getQLink());
+
     }
 
     public void removeLink() {
         //remove last link (-> entry of D-H table)
         this.denHartTab.remove(denHartTab.size() - 1);
+
     }
+
+    /**
+     * Getter & Setter methods
+     */
 
     public ArrayList<Link> getLinks() {
         return this.denHartTab;
@@ -37,6 +54,10 @@ public class DenHart {
     public int getNumDOF() {
         return this.denHartTab.size();
     }
+
+    /**
+     * Print methods
+     */
 
     public void printDHTab() {
         for (Link l : this.denHartTab) {

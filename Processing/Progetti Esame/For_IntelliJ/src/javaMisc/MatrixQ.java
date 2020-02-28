@@ -437,7 +437,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
     public void printMatValue() {
         for (DifferentialFunction<DoubleReal>[] row : this.matrix) {
             for (DifferentialFunction<DoubleReal> col : row) {
-                System.out.print(col.getValue() + "\t\t");
+                System.out.printf("%.3f\t ", col.getValue().doubleValue());
             }
             System.out.println();
         }

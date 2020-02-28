@@ -46,6 +46,8 @@ public class PrismLink implements Link {
     public static void main(String[] args) {
         Link l = new PrismLink(PI, "q1", PI / 2, 12);
         l.printLink();
+        l.whichQ_iIs();
+        l.getQLink().printMatValue();
 
     }
 
