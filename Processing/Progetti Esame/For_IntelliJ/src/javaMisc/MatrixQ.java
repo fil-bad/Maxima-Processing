@@ -10,6 +10,10 @@ import static java.lang.Math.PI;
 
 public class MatrixQ implements DifferentialMatrixFunction {
 
+    /**
+     * Attributes
+     */
+
     private static final DoubleRealFactory RNFactory = DoubleRealFactory.instance();
     private static final DifferentialRealFunctionFactory<DoubleReal> DFFactory = new DifferentialRealFunctionFactory<DoubleReal>(RNFactory);
 
@@ -27,6 +31,10 @@ public class MatrixQ implements DifferentialMatrixFunction {
     private int col;
     private DifferentialFunction<DoubleReal>[][] matrix;
     private ArrayList<Variable<DoubleReal>> var_s = new ArrayList<Variable<DoubleReal>>(0);
+
+    /**
+     * Constructors
+     */
 
     public MatrixQ() {
         this(4, 4);

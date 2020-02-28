@@ -1,6 +1,8 @@
 package javaMisc;
 
 import javaMisc.Link;
+import javaMisc.math.DoubleReal;
+import javaMisc.math.autodiff.Variable;
 
 public class RotLink implements Link {
 
@@ -29,13 +31,18 @@ public class RotLink implements Link {
     }
 
     @Override
+    public Variable<DoubleReal> getVar() {
+        return this.Q0_1.getVars().get(0);
+    }
+
+    @Override
     public String whichQ_iIs() {
         return this.theta_qi;
     }
 
     @Override
     public void printLink() {
-        System.out.printf("[%s;%.3f;%.3f;%.3f]\n", this.theta_qi, this.d, this.alpha, this.a);
+        System.out.printf("[%s  %.3f  %.3f  %.3f]\n", this.theta_qi, this.d, this.alpha, this.a);
     }
 
 }

@@ -1,6 +1,8 @@
 package javaMisc;
 
 import javaMisc.Link;
+import javaMisc.math.DoubleReal;
+import javaMisc.math.autodiff.Variable;
 
 import static java.lang.Math.PI;
 
@@ -33,6 +35,11 @@ public class PrismLink implements Link {
     }
 
     @Override
+    public Variable<DoubleReal> getVar() {
+        return Q0_1.getVars().get(0);
+    }
+
+    @Override
     public void printLink() {
         System.out.printf("[%.3f  %s  %.3f  %.3f]\n", this.theta, this.d_qi, this.alpha, this.a);
     }
@@ -48,7 +55,7 @@ public class PrismLink implements Link {
         l.printLink();
         l.whichQ_iIs();
         l.getQLink().printMatValue();
-
+        System.out.println(l.getVar().getName());
     }
 
 }
