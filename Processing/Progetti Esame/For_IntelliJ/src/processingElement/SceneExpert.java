@@ -1,32 +1,63 @@
 package processingElement;
 
-import geometry.Sat;
-import geometry.Vertex;
-import processing.core.PApplet;
-
 import java.util.Vector;
 
-public class SceneExpert {
-    Vector<Obj3D> bodies;
-    Vector<Obstacle> obs;
+import geometry.Vertex;
+import graph.QTGraph;
+import processing.core.PApplet;
+import quadtree.QuadTree;
+
+
+public class SceneExpert implements Observer {
+    protected static SceneExpert instance = null;
+    PApplet win = null;
+
+    // Oggetti grafici della scena
+    private Vector<Obj3D> bodies;
+    private Vector<Obstacle> obs;
+    private Terra gnd = null;
+
+    boolean sceneChange = true;
+
+    // Informazioni della scena
+    QuadTree qt;
+    QTGraph qtGraph;
 
     //todo: Quando si avrà robot calcolarlo parametricamente
-    public float robotR = 10;
+    public float robotR = 60;
 
-    protected static SceneExpert instance = new SceneExpert();
 
-    protected SceneExpert() {
+    protected SceneExpert(PApplet win) {
         bodies = new Vector<>();
         obs = new Vector<>();
+        this.win = win;
     }
 
-    public static SceneExpert getInstance() {
+    public static SceneExpert getInstance() throws RuntimeException {
+        if (instance == null)
+            throw new RuntimeException("Impossible generate object, unknown windows (PApplet)");
         return instance;
+    }
+
+    public static SceneExpert getInstance(PApplet win) {
+        if (instance == null)
+            instance = new SceneExpert(win);
+        return instance;
+    }
+
+    public void addGnd(Terra g) {
+        this.gnd = g;
+    }
+
+    public Terra getGnd() {
+        return this.gnd;
     }
 
     public void addObstacle(Obstacle ob) {
         obs.add(ob);
         bodies.add(ob);
+        ob.attachScene(this);
+        sceneChange = true;
     }
 
     public void addObstacle(Obstacle ob, float x, float y, float z) {
@@ -64,10 +95,32 @@ public class SceneExpert {
         return obs.toArray(new Obstacle[0]);
     }
 
+    public QTGraph getQtGraph() {
+        return qtGraph;
+    }
+
 
     public void drawScene() {
+        if (this.gnd != null)
+            gnd.draw();
         for (Obj3D obj : bodies) {
             obj.draw();
         }
+        if (sceneChange) {
+            sceneChange = false;
+            qt = new QuadTree(getObstacles(), getGnd().getBoundary(), robotR);
+            qtGraph = new QTGraph(win, qt, robotR, getObstacles());
+        }
+
+        QuadTree.dfs(qt, win);
+        qtGraph.printGraph(win, 10);
+        qtGraph.printPath(win, 15);
+
+
+    }
+
+    @Override
+    public void updateChange() {
+        sceneChange = true;
     }
 }

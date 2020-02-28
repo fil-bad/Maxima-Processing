@@ -1,9 +1,11 @@
 package processingElement;
 
 import processing.core.PApplet;
+import quadtree.Boundary;
 
 public class Terra {
     private PApplet win;
+    private CommonDraw com;
     private int w, h;
     private int color;
 
@@ -16,6 +18,7 @@ public class Terra {
         this.h = h;
         this.color = win.color(color);
         this.color = color;
+        this.com = CommonDraw.getInstance(win);
     }
 
     public void draw() {
@@ -38,13 +41,17 @@ public class Terra {
         win.translate(-w / 2.0f - w_wall/2.0f, h/2.0f + w_wall/2.0f);
         win.box(w, w_wall, h_wall);
 
-        win.translate(0 , -h - w_wall);
+        win.translate(0, -h - w_wall);
         win.box(w, w_wall, h_wall);
 
         win.popMatrix();
         win.popStyle();
+        com.axes(255);
         //Torna origine su faccia superiore
         //si può disegnare in 2D sulla faccia superiore
+    }
 
+    public Boundary getBoundary() {
+        return new Boundary(-w / 2.0, -h / 2.0, w / 2.0, h / 2.0);
     }
 }
