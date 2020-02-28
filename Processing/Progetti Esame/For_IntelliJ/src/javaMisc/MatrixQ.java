@@ -69,7 +69,10 @@ public class MatrixQ implements DifferentialMatrixFunction {
         for (int i = 0; i < this.getRowDim(); i++) { // aRow
             for (int j = 0; j < ((MatrixQ) i_v).getColDim(); j++) { // bColumn
                 for (int k = 0; k < this.getColDim(); k++) { // aColumn
-                    tmp.matrix[i][j] = tmp.matrix[i][j].plus(this.matrix[i][k].mul(mat2mul[k][j]));
+                    DifferentialFunction<DoubleReal> prev_val = tmp.matrix[i][j];
+                    System.out.println("Prev_val: " + prev_val.toString());
+                    tmp.matrix[i][j] = prev_val.plus(this.matrix[i][k].mul(mat2mul[k][j]));
+                    System.out.println("New_val: " + tmp.matrix[i][j].toString());
                 }
             }
         }
@@ -354,8 +357,10 @@ public class MatrixQ implements DifferentialMatrixFunction {
         MatrixQ m4 = new MatrixQ(m2);
         m4.printVar_s();
 
+        MatrixQ m5 = new MatrixQ().setTraslZ("q2");
+        m5.printMatrix();
 
-        m4.setIdentity().setRotZ("q1").mul(new MatrixQ().setTraslZ("q2"));
+        m4.setIdentity().setRotZ("q1").mul(m5);
         m4.printMatrix();
 
 

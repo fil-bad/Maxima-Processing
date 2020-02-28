@@ -4,11 +4,15 @@ import javaMisc.Link;
 
 public class PrismLink implements Link {
 
+
     private String d_qi;
     private float theta;
     private float d = 0.0f;
     private float alpha;
     private float a;
+
+    private MatrixQ Q;
+
 
     public PrismLink(float theta, String qi, float alpha, float a) {
         this.theta = theta;
@@ -38,7 +42,7 @@ public class PrismLink implements Link {
     }
 
     @Override
-    public void update() {
+    public void update(float qi_val) {
 
     }
 }

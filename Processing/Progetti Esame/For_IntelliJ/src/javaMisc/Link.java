@@ -8,7 +8,7 @@ public interface Link {
 
     String whichQ_iIs();
 
-    void update();
+    void update(float qi_val);
 
 
 }
