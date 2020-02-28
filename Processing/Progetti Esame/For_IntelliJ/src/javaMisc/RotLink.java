@@ -38,7 +38,7 @@ public class RotLink implements Link {
     }
 
     @Override
-    public void update() {
+    public void update(float qi_var) {
 
     }
 }
