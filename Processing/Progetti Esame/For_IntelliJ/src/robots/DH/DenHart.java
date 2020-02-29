@@ -1,12 +1,13 @@
-package robots.DH;
+package javaMisc;
 
+import javaMisc.math.DoubleReal;
+import javaMisc.math.autodiff.Variable;
 import org.ejml.simple.SimpleMatrix;
-import robots.DH.math.DoubleReal;
-import robots.DH.math.autodiff.Variable;
+
+import static java.lang.Math.*;
 
 import java.util.ArrayList;
-
-import static java.lang.Math.PI;
+import java.util.concurrent.TimeUnit;
 
 public class DenHart {
 
@@ -16,8 +17,10 @@ public class DenHart {
 
     private ArrayList<Link> denHartTab;
 
-    private MatrixQ Q_tot, J;
-    private RobVars vars;
+    private MatrixQ Q_tot;
+    private ArrayList<Variable<DoubleReal>> vars;
+
+    private MatrixQ J;
 
     // todo: add Jacobian matrix & update method
 
@@ -28,9 +31,8 @@ public class DenHart {
     public DenHart() {
         this.denHartTab = new ArrayList<Link>(0);
         this.Q_tot = new MatrixQ().setIdentity();
-        this.vars = new RobVars();
-        //new ArrayList<Variable<DoubleReal>>(0);
-        this.J = this.getDsym().jacobian();
+        this.vars = new ArrayList<Variable<DoubleReal>>(0);
+        this.J = this.getPos().jacobian();
     }
 
     public DenHart(ArrayList<Link> denHartTab) {
@@ -54,8 +56,8 @@ public class DenHart {
         //append a new link to D-H table
         this.denHartTab.add(link);
         this.Q_tot.mulOnSelf(link.getQLink());
-        this.vars.addVar(link.getVar());
-        this.J = this.getDsym().jacobian();
+        this.vars.add(link.getVar());
+        this.J = this.getPos().jacobian();
     }
 
     public Link removeLink() {
@@ -66,63 +68,63 @@ public class DenHart {
         // we copy only the fields we need
         this.Q_tot = dhTmp.Q_tot;
         this.vars = dhTmp.vars;
-        this.J = this.getDsym().jacobian();
+        this.J = this.getPos().jacobian();
         return link2ret;
     }
 
+    /**
+     * Update matrix
+     */
+
+    public void updateVar(String qi, double val) {
+        for (Variable<DoubleReal> var : this.vars) {
+            if (qi.equals(var.toString())) {
+                var.set(new DoubleReal(val));
+                break;
+            }
+        }
+        System.err.println("Variable not Found!");
+    }
+
+    public void updateVars(double... vals) {
+        assert (vals.length == this.vars.size()); //we have to update all variables at once
+        int i = 0;
+        for (Variable<DoubleReal> var : this.vars) {
+            var.set(new DoubleReal(vals[i]));
+            i++;
+        }
+    }
+
 
     /**
-     * Numeric Compute of the Variable set
-     **/
-    public SimpleMatrix getQ() {
+     * Getter & Setter methods
+     */
+
+    public SimpleMatrix getNumericQ() {
         return this.Q_tot.getNumeric();
     }
 
-    public SimpleMatrix getD() {
-        return this.Q_tot.getVPos().getNumeric();
-    }
-
-    public SimpleMatrix getR() {
-        return this.Q_tot.getMatRot().getNumeric();
-    }
-
-    public SimpleMatrix getJ() {
+    public SimpleMatrix getNumericJ() {
         return this.J.getNumeric();
     }
 
-    /**
-     * Symbolic Return
-     **/
-    public MatrixQ getQsym() {
-        return this.Q_tot;
-    }
 
-    public MatrixQ getDsym() {
-        return this.Q_tot.getVPos();
-    }
-
-    public MatrixQ getRsym() {
-        return this.Q_tot.getMatRot();
-    }
-
-    public MatrixQ getJsym() {
-        return this.J;
-    }
-
-    /**
-     * DH table information
-     **/
     public ArrayList<Link> getLinks() {
         return this.denHartTab;
     }
 
-    public int DOFsize() {
+    public int getNumDOF() {
         return this.denHartTab.size();
+    }
+
+    public MatrixQ getPos() {
+        return this.Q_tot.getVPos();
     }
 
     /**
      * Print methods
-     **/
+     */
+
     public void printDHTab() {
         System.out.println("DH:");
         for (Link l : this.denHartTab) {
@@ -136,6 +138,15 @@ public class DenHart {
         dh.addLink(new RotLink("q1", 50, (float) PI, 0));
         dh.addLink(new PrismLink((float) PI / 2, "q2", 0, 20));
         dh.printDHTab();
+        int i = 0;
+        while (true) {
+            TimeUnit.SECONDS.sleep(1);
+            dh.updateVar("q2", i);
+            dh.getNumericQ().print("%.3f");
+            i++;
+        }
+        //dh.getNumericJ().print("%.3f");
+
     }
 
 }
