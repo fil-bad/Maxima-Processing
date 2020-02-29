@@ -29,7 +29,6 @@ public class MatrixQ implements DifferentialMatrixFunction {
     private int row;
     private int col;
     private DifferentialFunction<DoubleReal>[][] matrix;
-    // private ArrayList<Variable<DoubleReal>> var_s = new ArrayList<Variable<DoubleReal>>(0);
     private RobVars var_s;
 
     /**
@@ -494,8 +493,6 @@ public class MatrixQ implements DifferentialMatrixFunction {
     }
 
     public static void main(String[] args) {
-
-        //todo: fare più test case, almeno uno per ogni funzione
 
         MatrixQ m1 = new MatrixQ();
 

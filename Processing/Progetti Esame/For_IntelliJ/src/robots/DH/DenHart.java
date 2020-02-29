@@ -16,12 +16,9 @@ public class DenHart {
     private ArrayList<Link> denHartTab;
 
     private MatrixQ Q_tot;
-    //    private ArrayList<Variable<DoubleReal>> vars;
     private RobVars vars;
 
     private MatrixQ J;
-
-    // todo: add Jacobian matrix & update method
 
     /**
      * Constructors
@@ -77,26 +74,6 @@ public class DenHart {
     public RobVars getRVar() {
         return this.vars;
     }
-
-//    public void updateVar(String qi, double val) {
-//        for (Variable<DoubleReal> var : this.vars) {
-//            if (qi.equals(var.toString())) {
-//                var.set(new DoubleReal(val));
-//                break;
-//            }
-//        }
-//        System.err.println("Variable not Found!");
-//    }
-
-//    public void updateVars(double... vals) {
-//        assert (vals.length == this.vars.size()); //we have to update all variables at once
-//        int i = 0;
-//        for (Variable<DoubleReal> var : this.vars) {
-//            var.set(new DoubleReal(vals[i]));
-//            i++;
-//        }
-//    }
-
 
     /**
      * Compute Numeric Matrix form variable value

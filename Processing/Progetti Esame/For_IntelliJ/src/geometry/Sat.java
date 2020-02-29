@@ -174,7 +174,7 @@ public abstract class Sat {
         System.out.println("\tDoes a contain d? " + contains(a, d));
         System.out.println("----Now invert the polygon:----");
         System.out.println("\tDo d & a collide? " + haveCollided(d, a));
-        System.out.println("\tDoes d contain a? " + contains(d, a));     //Todo: Errato, d non contiene a
+        System.out.println("\tDoes d contain a? " + contains(d, a));
         // si engono a creare problemi ogni qualvolta si ha un vertica coincidente o un vertice su uno spigolo
 
         System.out.println();

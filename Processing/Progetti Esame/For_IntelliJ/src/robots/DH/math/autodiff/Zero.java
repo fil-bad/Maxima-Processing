@@ -45,7 +45,6 @@ public class Zero<X extends Field<X>> extends Constant<X> {
     @Override
     //public DifferentialFunction<X> inverse() {
     public Constant<X> inverse() {
-        //TODO
         return null;
     }
 

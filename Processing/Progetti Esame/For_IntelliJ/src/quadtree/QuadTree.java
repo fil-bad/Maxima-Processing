@@ -436,7 +436,6 @@ public class QuadTree {
         // tale funzione si proccupa di creare uno stack di nodi foglia del quadtree, e contemporaneamente genera i
         // nodi del grafo per il percorso del robot. Successivamente, un'altra funzione si preoccuperà di creare gli
         // archi tra nodi adiacenti, utilizzando lo stack ritornato da questa funzione.
-        // todo: sviluppare la funzione che genera gli archi
 
         Queue<QuadTree> q = new LinkedList<QuadTree>();
         Stack<QuadTree> s = new Stack<QuadTree>();
