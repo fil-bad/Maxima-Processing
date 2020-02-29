@@ -1,9 +1,6 @@
 package robots.DH;
 
-import robots.DH.math.DoubleReal;
-import robots.DH.math.autodiff.Variable;
 import org.ejml.simple.SimpleMatrix;
-import robots.DH.Link;
 
 import static java.lang.Math.*;
 
@@ -35,16 +32,14 @@ public class DenHart {
         this.Q_tot = new MatrixQ().setIdentity();
 //        this.vars = new ArrayList<Variable<DoubleReal>>(0);
         this.vars = new RobVars();
-        this.J = this.getPos().jacobian();
+        this.J = this.getDsym().jacobian();
     }
-
     public DenHart(ArrayList<Link> denHartTab) {
         this();
         for (Link l : denHartTab) {
             this.addLink(l);
         }
     }
-
     public DenHart(DenHart denHart) {
         this.denHartTab = denHart.getLinks();
         this.Q_tot = denHart.Q_tot;
@@ -60,7 +55,7 @@ public class DenHart {
         this.denHartTab.add(link);
         this.Q_tot.mulOnSelf(link.getQLink());
         this.vars.addVar(link.getVar());
-        this.J = this.getPos().jacobian();
+        this.J = this.getDsym().jacobian();
     }
 
     public Link removeLink() {
@@ -71,17 +66,18 @@ public class DenHart {
         // we copy only the fields we need
         this.Q_tot = dhTmp.Q_tot;
         this.vars = dhTmp.vars;
-        this.J = this.getPos().jacobian();
+        this.J = this.getDsym().jacobian();
         return link2ret;
     }
 
     /**
-     * Update matrix
-     */
+     * Variable interaction
+     **/
 
     public RobVars getRobVar() {
         return this.vars;
     }
+
 //    public void updateVar(String qi, double val) {
 //        for (Variable<DoubleReal> var : this.vars) {
 //            if (qi.equals(var.toString())) {
@@ -103,18 +99,47 @@ public class DenHart {
 
 
     /**
-     * Getter & Setter methods
-     */
-
-    public SimpleMatrix getNumericQ() {
+     * Compute Numeric Matrix form variable value
+     **/
+    public SimpleMatrix getQ() {
         return this.Q_tot.getNumeric();
     }
 
-    public SimpleMatrix getNumericJ() {
+    public SimpleMatrix getD() {
+        return getDsym().getNumeric();
+    }
+
+    public SimpleMatrix getR() {
+        return getRsym().getNumeric();
+    }
+
+    public SimpleMatrix getJ() {
         return this.J.getNumeric();
     }
 
+    /**
+     * Symbolic Matrix
+     **/
+    public MatrixQ getQsym() {
+        return this.Q_tot;
+    }
 
+    public MatrixQ getDsym() {
+        return this.Q_tot.getVPos();
+    }
+
+    public MatrixQ getRsym() {
+        return this.Q_tot.getMatRot();
+    }
+
+    public MatrixQ getJsym() {
+        return this.J;
+    }
+
+
+    /**
+     * DH table informatio
+     **/
     public ArrayList<Link> getLinks() {
         return this.denHartTab;
     }
@@ -123,9 +148,6 @@ public class DenHart {
         return this.denHartTab.size();
     }
 
-    public MatrixQ getPos() {
-        return this.Q_tot.getVPos();
-    }
 
     /**
      * Print methods
@@ -139,6 +161,7 @@ public class DenHart {
         System.out.println();
     }
 
+    /** Demo main**/
     public static void main(String[] args) {
         DenHart dh = new DenHart();
         dh.addLink(new RotLink("q1", 50, (float) PI, 0));
@@ -152,7 +175,7 @@ public class DenHart {
                 e.printStackTrace();
             }
             dh.getRobVar().setVars("q2", i);
-            dh.getNumericQ().print("%.3f");
+            dh.getQ().print("%.3f");
             i++;
         }
         //dh.getNumericJ().print("%.3f");
