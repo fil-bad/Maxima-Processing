@@ -7,6 +7,7 @@ import org.ejml.simple.SimpleMatrix;
 import static java.lang.Math.*;
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class DenHart {
 
@@ -79,7 +80,7 @@ public class DenHart {
         for (Variable<DoubleReal> var : this.vars) {
             if (qi.equals(var.toString())) {
                 var.set(new DoubleReal(val));
-                break;
+                return;
             }
         }
         System.err.println("Variable not Found!");
@@ -132,11 +133,20 @@ public class DenHart {
         System.out.println();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         DenHart dh = new DenHart();
         dh.addLink(new RotLink("q1", 50, (float) PI, 0));
         dh.addLink(new PrismLink((float) PI / 2, "q2", 0, 20));
         dh.printDHTab();
+        int i = 0;
+        while (true) {
+            TimeUnit.SECONDS.sleep(1);
+            dh.updateVar("q2", i);
+            dh.getNumericQ().print("%.3f");
+            i++;
+        }
+        //dh.getNumericJ().print("%.3f");
+
     }
 
 }
