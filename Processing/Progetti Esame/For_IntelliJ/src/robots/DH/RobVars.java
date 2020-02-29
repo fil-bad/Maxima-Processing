@@ -41,7 +41,6 @@ public class RobVars {
         vars.clear();
     }
 
-
     /**
      * Direct setting variable
      **/
@@ -62,7 +61,9 @@ public class RobVars {
         getVar(index).set(new DoubleReal(val));
     }
 
-    /**  Get Variable   **/
+    /**
+     * Get the Variable reference
+     **/
     public Variable<DoubleReal>[] getVar() {
         return vars.toArray(new Variable[0]);
     }

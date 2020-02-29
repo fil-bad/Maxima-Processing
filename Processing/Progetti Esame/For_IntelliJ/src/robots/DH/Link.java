@@ -12,4 +12,6 @@ public interface Link {
     String whichQ_iIs();
 
     void printLink();
+
+    void printValLink();
 }

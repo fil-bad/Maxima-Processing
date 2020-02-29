@@ -40,7 +40,12 @@ public class PrismLink implements Link {
 
     @Override
     public void printLink() {
-        System.out.printf("[%.3f  %s  %.3f  %.3f]\n", this.theta, this.d_qi, this.alpha, this.a);
+        System.out.printf("[%.3f  %s  %.3f  %.3f]", this.theta, this.d_qi, this.alpha, this.a);
+    }
+
+    @Override
+    public void printValLink() {
+        System.out.printf("[%.3f  %.3f  %.3f  %.3f]", this.theta, getVar().getValue().doubleValue(), this.alpha, this.a);
     }
 
     @Override

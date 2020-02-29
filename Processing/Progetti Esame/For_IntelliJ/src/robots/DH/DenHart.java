@@ -1,6 +1,7 @@
 package robots.DH;
 
 import org.ejml.simple.SimpleMatrix;
+import robots.DH.math.DoubleReal;
 
 import static java.lang.Math.*;
 
@@ -154,11 +155,16 @@ public class DenHart {
      */
 
     public void printDHTab() {
-        System.out.println("DH:");
+        System.out.println("DH sym:\t\t\t\t\t\tDH num:");
         for (Link l : this.denHartTab) {
             l.printLink();
+            System.out.print("\t");
+            l.printValLink();
+            System.out.println();
         }
         System.out.println();
+
+        Q_tot.printMatValue();
     }
 
     /** Demo main**/
@@ -167,6 +173,7 @@ public class DenHart {
         dh.addLink(new RotLink("q1", 50, (float) PI, 0));
         dh.addLink(new PrismLink((float) PI / 2, "q2", 0, 20));
         dh.printDHTab();
+        System.out.println("Robot RP, in cui si fa variare la P a ogni iterazione:");
         int i = 0;
         while (true) {
             try {
@@ -174,8 +181,13 @@ public class DenHart {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            dh.getRobVar().setVars("q2", i);
+//            dh.getRobVar().setVars("q2", i);  //checked
+//            dh.getRobVar().getVar()[1].set(new DoubleReal(i));  //checked
+//            double[] v = {0.0,i}; dh.getRobVar().setVars(v);    //checked
+
+            dh.printDHTab();
             dh.getQ().print("%.3f");
+            System.out.println();
             i++;
         }
         //dh.getNumericJ().print("%.3f");
