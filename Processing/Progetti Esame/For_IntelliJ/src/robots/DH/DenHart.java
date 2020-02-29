@@ -185,7 +185,16 @@ public class DenHart {
 //            double[] v = {0.0,i}; dh.getRVar().setVars(v);    //checked
 //            dh.getRVar().getVar()[1].set(new DoubleReal(i));  //checked
             dh.printDHTab();
+            System.out.println("Variabili di giunto:");
+            dh.getRVar().printVar();
+            System.out.println("Matrice cinematica diretta:");
             dh.getQ().print("%.3f");
+            System.out.println("Matrice Rotazione:");
+            dh.getR().print("%.3f");
+            System.out.println("Matrice Posizione:");
+            dh.getD().print("%.3f");
+            System.out.println("Matrice Jacobbiana:");
+            dh.getJ().print("%.3f");
             System.out.println();
             i++;
         }
