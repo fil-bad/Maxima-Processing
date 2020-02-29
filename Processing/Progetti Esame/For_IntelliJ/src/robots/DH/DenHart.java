@@ -1,7 +1,6 @@
 package robots.DH;
 
 import org.ejml.simple.SimpleMatrix;
-import robots.DH.math.DoubleReal;
 
 import static java.lang.Math.*;
 
@@ -75,7 +74,7 @@ public class DenHart {
      * Variable interaction
      **/
 
-    public RobVars getRobVar() {
+    public RobVars getRVar() {
         return this.vars;
     }
 
@@ -181,10 +180,10 @@ public class DenHart {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-//            dh.getRobVar().setVars("q2", i);  //checked
-//            dh.getRobVar().getVar()[1].set(new DoubleReal(i));  //checked
-//            double[] v = {0.0,i}; dh.getRobVar().setVars(v);    //checked
-
+            dh.getRVar().setVars(1, i);  //checked
+//            dh.getRVar().setVars("q2", i);  //checked
+//            double[] v = {0.0,i}; dh.getRVar().setVars(v);    //checked
+//            dh.getRVar().getVar()[1].set(new DoubleReal(i));  //checked
             dh.printDHTab();
             dh.getQ().print("%.3f");
             System.out.println();
