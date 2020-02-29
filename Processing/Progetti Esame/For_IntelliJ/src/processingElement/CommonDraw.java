@@ -225,6 +225,25 @@ public class CommonDraw {
         return x;
     }
 
+    void pinza(float w, float h, float p, float open) {
+        win.translate(0, 0, h / 2);
+        win.box(h, w, h); // Disegno il primo elemento della pinza
+        win.translate(0, 0, h / 2);
+
+        float distP = win.map(open, 0, 1, h / 2, w / 2 - h / 2);
+        win.pushMatrix(); // Memorizzo il sistema attuale
+        win.translate(0, distP, (p - h) / 2);
+        win.fill(255, 0, 0);
+        win.box(h, h, p - h); // Disegno il primo elemento della pinza
+        win.popMatrix();  // Ritorno al sistema di riferimento memorizzato
+        win.pushMatrix(); // Memorizzo il sistema attuale
+        win.translate(0, -distP, (p - h) / 2);
+        win.fill(0, 255, 0);
+        win.box(h, h, p - h); // Disegno il primo elemento della pinza
+        win.popMatrix();  // Ritorno al sistema di riferimento memorizzato
+        win.translate(0, 0, p - h);
+    }
+
     public void setEnvMatrix(SimpleMatrix Q) {
         win.applyMatrix((float) Q.get(0, 0), (float) Q.get(0, 1), (float) Q.get(0, 2), (float) Q.get(0, 3),
                 (float) Q.get(1, 0), (float) Q.get(1, 1), (float) Q.get(1, 2), (float) Q.get(1, 3),
