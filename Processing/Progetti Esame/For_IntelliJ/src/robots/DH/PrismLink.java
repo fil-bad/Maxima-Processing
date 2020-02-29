@@ -35,7 +35,7 @@ public class PrismLink implements Link {
 
     @Override
     public Variable<DoubleReal> getVar() {
-        return Q0_1.getVars().get(0);
+        return Q0_1.getRobVars().getVar(0);
     }
 
     @Override

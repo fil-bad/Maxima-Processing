@@ -193,7 +193,7 @@ public class DenHart {
             dh.getR().print("%.3f");
             System.out.println("Matrice Posizione:");
             dh.getD().print("%.3f");
-            System.out.println("Matrice Jacobbiana:");
+            System.out.println("Matrice Jacobiana:");
             dh.getJ().print("%.3f");
             System.out.println();
             i++;

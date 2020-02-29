@@ -5,8 +5,6 @@ import robots.DH.math.DoubleRealFactory;
 import robots.DH.math.autodiff.*;
 import org.ejml.simple.SimpleMatrix;
 
-import java.util.ArrayList;
-
 import static java.lang.Math.PI;
 
 public class MatrixQ implements DifferentialMatrixFunction {
@@ -31,7 +29,8 @@ public class MatrixQ implements DifferentialMatrixFunction {
     private int row;
     private int col;
     private DifferentialFunction<DoubleReal>[][] matrix;
-    private ArrayList<Variable<DoubleReal>> var_s = new ArrayList<Variable<DoubleReal>>(0);
+    // private ArrayList<Variable<DoubleReal>> var_s = new ArrayList<Variable<DoubleReal>>(0);
+    private RobVars var_s;
 
     /**
      * Constructors
@@ -47,6 +46,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
         this.row = row;
         this.col = col;
         this.matrix = new DifferentialFunction[row][col];
+        this.var_s = new RobVars();
 
         Constant<DoubleReal> zero = DFFactory.val(new DoubleReal(0));
 
@@ -57,7 +57,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
         }
         if (var_s != null) {
             for (String var : var_s) {
-                if (!var.isEmpty()) this.var_s.add(DFFactory.var(var, new DoubleReal(0)));
+                if (!var.isEmpty()) this.var_s.addVar(DFFactory.var(var, new DoubleReal(0)));
             }
         }
 
@@ -66,7 +66,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
     public MatrixQ(MatrixQ mat) {
         this(mat.getRowDim(), mat.getColDim());
         this.matrix = mat.getMatrix();
-        this.var_s = mat.getVars();
+        this.var_s = mat.getRobVars();
     }
 
     /**
@@ -89,8 +89,8 @@ public class MatrixQ implements DifferentialMatrixFunction {
                 }
             }
         }
-        tmp.addVar_s(this.getVars()); //adding variables from 1st matrix
-        tmp.addVar_s(((MatrixQ) i_v).getVars()); //adding variables from 2nd matrix
+        tmp.mergeVar_s(this.getRobVars()); //adding variables from 1st matrix
+        tmp.mergeVar_s(((MatrixQ) i_v).getRobVars()); //adding variables from 2nd matrix
         return tmp;
     }
 
@@ -131,7 +131,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
                 tmp.matrix[i][j] = this.matrix[i][j].plus(mat2add[i][j]);
             }
         }
-        tmp.addVar_s(((MatrixQ) i_v).getVars());
+        tmp.mergeVar_s(((MatrixQ) i_v).getRobVars());
         return tmp;
     }
 
@@ -148,7 +148,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
                 tmp.matrix[i][j] = this.matrix[i][j].minus(mat2sub[i][j]);
             }
         }
-        tmp.addVar_s(((MatrixQ) i_v).getVars());
+        tmp.mergeVar_s(((MatrixQ) i_v).getRobVars());
         return tmp;
     }
 
@@ -193,20 +193,20 @@ public class MatrixQ implements DifferentialMatrixFunction {
     public MatrixQ jacobian() {
         assert (this.getColDim() == 1); // trattiamo solo i vettori colonna
 
-        ArrayList<Variable<DoubleReal>> qi_s = this.getVars();
+        RobVars qi_s = this.getRobVars();
         if (qi_s == null)
             return new MatrixQ(this.getRowDim(), 1); // lo jacobiano di un vettore costante è un vettore nullo
 
-        int num_var = qi_s.size();
+        int num_var = qi_s.varSize();
 
         MatrixQ tmp = new MatrixQ(this.getRowDim(), num_var);
 
-        ArrayList<Variable<DoubleReal>> tmp_vars = this.getVars();
-        tmp.addVar_s(this.getVars());
+        RobVars tmp_vars = this.getRobVars();
+        tmp.mergeVar_s(this.getRobVars());
 
         for (int j = 0; j < num_var; j++) { //questo per ogni colonna
             for (int i = 0; i < this.row; i++) {
-                tmp.matrix[i][j] = this.matrix[i][0].diff(tmp_vars.get(j));
+                tmp.matrix[i][j] = this.matrix[i][0].diff(tmp_vars.getVar(j));
             }
         }
         return tmp;
@@ -218,7 +218,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
 
         if (!q_i.isEmpty()) { //we have a variable
             Variable<DoubleReal> q = DFFactory.var(q_i, new DoubleReal(value));
-            tmp.var_s.add(q);
+            tmp.var_s.addVar(q);
             tmp.matrix[1][1] = DFFactory.cos(q);
             tmp.matrix[1][2] = DFFactory.sin(q).negate();
             tmp.matrix[2][1] = DFFactory.sin(q);
@@ -239,7 +239,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
 
         if (!q_i.isEmpty()) { //we have a variable
             Variable<DoubleReal> q = DFFactory.var(q_i, new DoubleReal(value));
-            tmp.var_s.add(q);
+            tmp.var_s.addVar(q);
             tmp.matrix[0][0] = DFFactory.cos(q);
             tmp.matrix[0][1] = DFFactory.sin(q).negate();
             tmp.matrix[1][0] = DFFactory.sin(q);
@@ -260,7 +260,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
 
         if (!q_i.isEmpty()) { //we have a variable
             Variable<DoubleReal> q = DFFactory.var(q_i, new DoubleReal(value));
-            tmp.var_s.add(q);
+            tmp.var_s.addVar(q);
             tmp.matrix[2][3] = q;
         } else { //we have a constant
             Constant<DoubleReal> c = DFFactory.val(new DoubleReal(value));
@@ -275,7 +275,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
 
         if (!q_i.isEmpty()) { //we have a variable
             Variable<DoubleReal> q = DFFactory.var(q_i, new DoubleReal(value));
-            tmp.var_s.add(q);
+            tmp.var_s.addVar(q);
             tmp.matrix[0][3] = q;
         } else { //we have a constant
             Constant<DoubleReal> c = DFFactory.val(new DoubleReal(value));
@@ -294,7 +294,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
         this.matrix = tmp.getMatrix();
         this.row = tmp.getRowDim();
         this.col = tmp.getColDim();
-        this.var_s = tmp.getVars();
+        this.var_s = tmp.getRobVars();
         return this;
     }
 
@@ -314,14 +314,14 @@ public class MatrixQ implements DifferentialMatrixFunction {
     public MatrixQ plusOnSelf(Object i_v) {
         MatrixQ tmp = this.plus(i_v);
         this.matrix = tmp.getMatrix();
-        this.var_s = tmp.getVars();
+        this.var_s = tmp.getRobVars();
         return this;
     }
 
     public MatrixQ minusOnSelf(Object i_v) {
         MatrixQ tmp = this.minus(i_v);
         this.matrix = tmp.getMatrix();
-        this.var_s = tmp.getVars();
+        this.var_s = tmp.getRobVars();
         return this;
     }
 
@@ -354,7 +354,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
                 else this.matrix[i][j] = DFFactory.val(new DoubleReal(0));
             }
         }
-        this.var_s.clear(); //we remove all the variables
+        this.var_s.clearVar(); //we remove all the variables
         return this;
     }
 
@@ -376,7 +376,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
 
     public MatrixQ getSubMat(int row_s, int row_e, int col_s, int col_e) {
         MatrixQ tmp = new MatrixQ(row_e - row_s + 1, col_e - col_s + 1);
-        tmp.addVar_s(this.getVars());
+        tmp.mergeVar_s(this.getRobVars());
         for (int i = row_s; i < row_e + 1; i++) {
             for (int j = col_s; j < col_e + 1; j++) {
                 tmp.matrix[i][j] = this.matrix[i][j];
@@ -388,7 +388,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
     public MatrixQ getVPos() {
         assert (this.getRowDim() == this.getColDim() && this.getRowDim() == 4); // for Rot&Trasl in 3D
         MatrixQ tmp = new MatrixQ(3, 1);
-        tmp.addVar_s(this.getVars());
+        tmp.mergeVar_s(this.getRobVars());
         for (int i = 0; i < 3; i++) {
             tmp.matrix[i][0] = this.matrix[i][3];
         }
@@ -398,7 +398,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
     public MatrixQ getMatRot() {
         assert (this.getRowDim() == this.getColDim() && this.getRowDim() == 4); // for Rot&Trasl in 3D
         MatrixQ tmp = new MatrixQ(3, 3);
-        tmp.addVar_s(this.getVars());
+        tmp.mergeVar_s(this.getRobVars());
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 tmp.matrix[i][j] = this.matrix[i][j];
@@ -431,11 +431,10 @@ public class MatrixQ implements DifferentialMatrixFunction {
     }
 
     public String[] getVarsName() {
-        if (this.var_s.size() == 0) return null;
-        return (String[]) this.var_s.toArray(new String[var_s.size()]);
+        return this.var_s.getVarsName();
     }
 
-    public ArrayList<Variable<DoubleReal>> getVars() {
+    public RobVars getRobVars() {
         return this.var_s;
     }
 
@@ -447,14 +446,14 @@ public class MatrixQ implements DifferentialMatrixFunction {
         return this.col;
     }
 
-    private void addVar_s(ArrayList<Variable<DoubleReal>> new_vars) {
+    private void mergeVar_s(RobVars new_vars) {
         if (new_vars == null) return;
-        for (Variable<DoubleReal> n_v : new_vars) {
+        for (Variable<DoubleReal> n_v : new_vars.getVar()) {
             boolean occur = false;
-            for (Variable<DoubleReal> v : this.var_s) {
-                if (n_v.toString().equals(v.toString())) occur = true;
+            for (Variable<DoubleReal> v : this.var_s.getVar()) {
+                if (n_v.equals(v)) occur = true;
             }
-            if (!occur) this.var_s.add(n_v);
+            if (!occur) this.var_s.addVar(n_v);
         }
     }
 
@@ -486,8 +485,8 @@ public class MatrixQ implements DifferentialMatrixFunction {
 
     public void printVar_s() {
         System.out.print("[");
-        if (this.var_s.size() > 0) {
-            for (Variable<DoubleReal> v : this.var_s) {
+        if (this.var_s.varSize() > 0) {
+            for (Variable<DoubleReal> v : this.var_s.getVar()) {
                 System.out.print(v.toString() + " \t");
             }
         }
@@ -535,6 +534,8 @@ public class MatrixQ implements DifferentialMatrixFunction {
         MatrixQ m7 = m6.pow(2);
         m7.printMatSym();
         m7.printMatValue();
+
+        m7.printVar_s();
 
     }
 }

@@ -81,9 +81,15 @@ public class RobVars {
         return null;
     }
 
+    public Variable<DoubleReal> getVar(Variable<DoubleReal> v) {
+        return vars.get(vars.indexOf(v));
+    }
+
+
     /**
      * Query at variable
      **/
+
     public SimpleMatrix get_qVect() {
         SimpleMatrix q = new SimpleMatrix(vars.size(), 1);
         Variable<DoubleReal>[] var = getVar();
@@ -92,6 +98,11 @@ public class RobVars {
             q.set(i, v.getValue().doubleValue());
         }
         return q;
+    }
+
+    public String[] getVarsName() {
+        if (this.vars.size() == 0) return null;
+        return (String[]) this.vars.toArray(new String[vars.size()]);
     }
 
     public int varSize() {

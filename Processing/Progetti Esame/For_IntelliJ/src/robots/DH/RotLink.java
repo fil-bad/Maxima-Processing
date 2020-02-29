@@ -31,7 +31,7 @@ public class RotLink implements Link {
 
     @Override
     public Variable<DoubleReal> getVar() {
-        return this.Q0_1.getVars().get(0);
+        return this.Q0_1.getRobVars().getVar(0);
     }
 
     @Override
