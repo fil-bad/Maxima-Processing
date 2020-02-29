@@ -198,8 +198,6 @@ public class DenHart {
             System.out.println();
             i++;
         }
-        //dh.getNumericJ().print("%.3f");
-
     }
 
 }
