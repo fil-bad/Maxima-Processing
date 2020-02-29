@@ -1,8 +1,9 @@
-package javaMisc;
+package robots.DH;
 
-import javaMisc.math.DoubleReal;
-import javaMisc.math.autodiff.Variable;
+import robots.DH.math.DoubleReal;
+import robots.DH.math.autodiff.Variable;
 import org.ejml.simple.SimpleMatrix;
+import robots.DH.Link;
 
 import static java.lang.Math.*;
 
@@ -140,7 +141,11 @@ public class DenHart {
         dh.printDHTab();
         int i = 0;
         while (true) {
-            TimeUnit.SECONDS.sleep(1);
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             dh.updateVar("q2", i);
             dh.getNumericQ().print("%.3f");
             i++;
