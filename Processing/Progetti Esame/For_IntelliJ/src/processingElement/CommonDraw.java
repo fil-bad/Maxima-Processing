@@ -104,6 +104,127 @@ public class CommonDraw {
         win.endShape(win.CLOSE);
     }
 
+    void drawBoxBase(float p, float lb, float lh) {
+        //p= lunghezza profondità, in Z
+        //lp= larghezza base
+        //lh= altezza base
+        lb = lb / 2;
+        win.strokeWeight(1);
+        win.fill(255, 0, 0);
+        win.beginShape();
+        win.vertex(+lb, +lb, 0);
+        win.vertex(+lb, +lb, p);
+        win.vertex(+lb, -lb, p);
+        win.vertex(+lb, -lb, 0);
+        win.endShape(win.CLOSE);
+
+        win.fill(255, 255, 0);
+        win.beginShape();
+        win.vertex(+lb, -lb, 0);
+        win.vertex(+lb, -lb, p);
+        win.vertex(-lb, -lb, p);
+        win.vertex(-lb, -lb, 0);
+        win.endShape(win.CLOSE);
+
+        win.fill(0, 255, 0);
+        win.beginShape();
+        win.vertex(-lb, -lb, 0);
+        win.vertex(-lb, -lb, p);
+        win.vertex(-lb, +lb, p);
+        win.vertex(-lb, +lb, 0);
+        win.endShape(win.CLOSE);
+
+        win.fill(0, 255, 255);
+        win.beginShape();
+        win.vertex(-lb, +lb, 0);
+        win.vertex(-lb, +lb, p);
+        win.vertex(+lb, +lb, p);
+        win.vertex(+lb, +lb, 0);
+        win.endShape(win.CLOSE);
+
+        //bot face
+        win.fill(0, 0, 255);
+        win.beginShape();
+        win.vertex(+lb, +lb, 0);
+        win.vertex(+lb, -lb, 0);
+        win.vertex(-lb, -lb, 0);
+        win.vertex(-lb, +lb, 0);
+        win.endShape(win.CLOSE);
+
+        //top face
+        win.beginShape();
+        win.vertex(+lb, +lb, p);
+        win.vertex(+lb, -lb, p);
+        win.vertex(-lb, -lb, p);
+        win.vertex(-lb, +lb, p);
+        win.endShape(win.CLOSE);
+
+        win.translate(0, 0, p);  //sposto origine alla fine
+    }
+
+    float drawCylinder(int sides, float r, float h, boolean plane) {
+        //ritorna distanza tra origine e lato piano
+        win.noStroke();
+        win.colorMode(win.HSB, 360, 100, 100);
+        int n = 0;
+        if (plane)
+            n = 4;    //45° piani
+//        int n = 4 * win.int(plane); //45° piatti
+        float angle = (float) 360.0 / sides;
+        float halfHeight = h / 2;
+        win.rotateZ(-win.PI / 2);
+
+        // draw top of the tube
+        win.beginShape();
+        for (int i = n / 2; i < sides - n / 2 + 1; i++) {
+            float x = PApplet.cos(PApplet.radians(i * angle)) * r;
+            float y = PApplet.sin(PApplet.radians(i * angle)) * r;
+            win.vertex(x, y, -halfHeight);
+        }
+        win.endShape(win.CLOSE);
+
+        // draw bottom of the tube
+        win.beginShape();
+        for (int i = n / 2; i < sides - n / 2 + 1; i++) {
+            float x = PApplet.cos(PApplet.radians(i * angle)) * r;
+            float y = PApplet.sin(PApplet.radians(i * angle)) * r;
+            win.vertex(x, y, halfHeight);
+        }
+        win.endShape(win.CLOSE);
+
+        // draw sides
+        for (int i = n / 2; i < sides - n / 2; i++) {
+            win.fill(i * angle, 100, 100);
+            win.beginShape();
+            float x = PApplet.cos(PApplet.radians(i * angle)) * r;
+            float y = PApplet.sin(PApplet.radians(i * angle)) * r;
+            win.vertex(x, y, -halfHeight);
+            win.vertex(x, y, +halfHeight);
+
+            x = PApplet.cos(PApplet.radians((i + 1) * angle)) * r;
+            y = PApplet.sin(PApplet.radians((i + 1) * angle)) * r;
+            win.vertex(x, y, +halfHeight);
+            win.vertex(x, y, -halfHeight);
+            win.endShape(win.CLOSE);
+        }
+
+        //draw trunk plane
+        win.beginShape();
+        float x = PApplet.cos(PApplet.radians(n / 2.0f * angle)) * r;
+        float y = PApplet.sin(PApplet.radians(n / 2.0f * angle)) * r;
+        win.vertex(x, y, -halfHeight);
+        win.vertex(x, y, +halfHeight);
+        x = PApplet.cos(PApplet.radians((sides - n / 2.0f) * angle)) * r;
+        y = PApplet.sin(PApplet.radians((sides - n / 2.0f) * angle)) * r;
+        win.vertex(x, y, +halfHeight);
+        win.vertex(x, y, -halfHeight);
+        win.endShape(win.CLOSE);
+
+        win.colorMode(win.RGB);
+        win.stroke(0);
+        return x;
+    }
+
     public void setEnvMatrix(SimpleMatrix Q) {
         win.applyMatrix((float) Q.get(0, 0), (float) Q.get(0, 1), (float) Q.get(0, 2), (float) Q.get(0, 3),
                 (float) Q.get(1, 0), (float) Q.get(1, 1), (float) Q.get(1, 2), (float) Q.get(1, 3),

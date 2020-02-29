@@ -46,7 +46,7 @@ public class ProcessingClass extends PApplet {
         scene.addObstacle(new Box(this, 50, 40, 10, color(255, 150, 0, 100)), 50);
         scene.addObstacle(new Box(this, 50, 40, 10, color(0, 255, 0, 100)), 150, -60, 0);
 
-        scene.addRover(new Rover(this, new Vertex(100, 100), 0.1, 0.15, 0.03));
+        scene.addRover(new Rover(this, new Vertex(100, 100), 0.3, 0.15, 0.03));
 
     }
 
