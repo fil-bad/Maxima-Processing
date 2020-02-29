@@ -10,11 +10,13 @@ public class RobVars {
 
     private LinkedList<Variable<DoubleReal>> vars = null;
 
-
     public RobVars() {
         vars = new LinkedList<Variable<DoubleReal>>();
     }
 
+    /**
+     * Manipolate variable space
+     **/
     public void addVar(Variable<DoubleReal> v) {
         vars.addLast(v);
     }
@@ -23,6 +25,26 @@ public class RobVars {
         vars.add(i, v);
     }
 
+    public Variable<DoubleReal> removeLastVar() {
+        return vars.removeLast();
+    }
+
+    public void removeVar(Variable<DoubleReal> v) {
+        vars.remove(v);
+    }
+
+    public Variable<DoubleReal> removeVarIndex(int i) {
+        return vars.remove(i);
+    }
+
+    public void clearVar() {
+        vars.clear();
+    }
+
+
+    /**
+     * Direct setting variable
+     **/
     public void setVars(double... vals) {
         assert (vals.length == this.vars.size()); //we have to update all variables at once
         int i = 0;
@@ -34,33 +56,16 @@ public class RobVars {
 
     public void setVars(String qi, double val) {
         getVar(qi).set(new DoubleReal(val));
-//        for (Variable<DoubleReal> var : this.vars) {
-//            if (qi.equals(var.toString())) {
-//                var.set(new DoubleReal(val));
-//                break;
-//            }
-//        }
-//        System.err.println("Variable not Found!");
     }
 
     public void setVars(int index, double val) {
         getVar(index).set(new DoubleReal(val));
     }
 
+    /**  Get Variable   **/
     public Variable<DoubleReal>[] getVar() {
         return vars.toArray(new Variable[0]);
     }
-
-    public SimpleMatrix get_qVect() {
-        SimpleMatrix q = new SimpleMatrix(vars.size(), 1);
-        Variable<DoubleReal>[] var = getVar();
-        for (int i = 0; i < var.length; i++) {
-            Variable<DoubleReal> v = var[i];
-            q.set(i, v.getValue().doubleValue());
-        }
-        return q;
-    }
-
     public Variable<DoubleReal> getVar(int index) {
         assert (index < this.vars.size()); //we have to update all variables at once
         return vars.get(index);
@@ -75,10 +80,27 @@ public class RobVars {
         return null;
     }
 
+    /**
+     * Query at variable
+     **/
+    public SimpleMatrix get_qVect() {
+        SimpleMatrix q = new SimpleMatrix(vars.size(), 1);
+        Variable<DoubleReal>[] var = getVar();
+        for (int i = 0; i < var.length; i++) {
+            Variable<DoubleReal> v = var[i];
+            q.set(i, v.getValue().doubleValue());
+        }
+        return q;
+    }
+
     public int varSize() {
         return vars.size();
     }
 
+
+    /**
+     * Debug
+     **/
     public void printVar() {
         get_qVect().print();
     }
