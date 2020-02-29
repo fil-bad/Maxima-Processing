@@ -2,6 +2,7 @@ package javaMisc;
 
 import javaMisc.math.DoubleReal;
 import javaMisc.math.autodiff.Variable;
+import org.ejml.simple.SimpleMatrix;
 
 import static java.lang.Math.*;
 
@@ -18,6 +19,8 @@ public class DenHart {
     private MatrixQ Q_tot;
     private ArrayList<Variable<DoubleReal>> vars;
 
+    private MatrixQ J;
+
     // todo: add Jacobian matrix & update method
 
     /**
@@ -28,6 +31,7 @@ public class DenHart {
         this.denHartTab = new ArrayList<Link>(0);
         this.Q_tot = new MatrixQ().setIdentity();
         this.vars = new ArrayList<Variable<DoubleReal>>(0);
+        this.J = this.getPos().jacobian();
     }
 
     public DenHart(ArrayList<Link> denHartTab) {
@@ -52,16 +56,18 @@ public class DenHart {
         this.denHartTab.add(link);
         this.Q_tot.mulOnSelf(link.getQLink());
         this.vars.add(link.getVar());
+        this.J = this.getPos().jacobian();
     }
 
     public Link removeLink() {
-        // remove last link (-> entry of D-H table)
-        // WARNING: could be very heavy to compute
+        // remove last link (-> entry of D-H table). WARNING: could be very heavy to compute.
+
         Link link2ret = this.denHartTab.remove(denHartTab.size() - 1);
         DenHart dhTmp = new DenHart(this.denHartTab);
         // we copy only the fields we need
         this.Q_tot = dhTmp.Q_tot;
         this.vars = dhTmp.vars;
+        this.J = this.getPos().jacobian();
         return link2ret;
     }
 
@@ -69,10 +75,38 @@ public class DenHart {
      * Update matrix
      */
 
+    public void updateVar(String qi, double val) {
+        for (Variable<DoubleReal> var : this.vars) {
+            if (qi.equals(var.toString())) {
+                var.set(new DoubleReal(val));
+                break;
+            }
+        }
+        System.err.println("Variable not Found!");
+    }
+
+    public void updateVars(double... vals) {
+        assert (vals.length == this.vars.size()); //we have to update all variables at once
+        int i = 0;
+        for (Variable<DoubleReal> var : this.vars) {
+            var.set(new DoubleReal(vals[i]));
+            i++;
+        }
+    }
+
 
     /**
      * Getter & Setter methods
      */
+
+    public SimpleMatrix getNumericQ() {
+        return this.Q_tot.getNumeric();
+    }
+
+    public SimpleMatrix getNumericJ() {
+        return this.J.getNumeric();
+    }
+
 
     public ArrayList<Link> getLinks() {
         return this.denHartTab;
@@ -80,6 +114,10 @@ public class DenHart {
 
     public int getNumDOF() {
         return this.denHartTab.size();
+    }
+
+    public MatrixQ getPos() {
+        return this.Q_tot.getVPos();
     }
 
     /**
@@ -97,7 +135,7 @@ public class DenHart {
     public static void main(String[] args) {
         DenHart dh = new DenHart();
         dh.addLink(new RotLink("q1", 50, (float) PI, 0));
-        dh.addLink(new PrismLink((float) PI/2, "q2", 0,20));
+        dh.addLink(new PrismLink((float) PI / 2, "q2", 0, 20));
         dh.printDHTab();
     }
 

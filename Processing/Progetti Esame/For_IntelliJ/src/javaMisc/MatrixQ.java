@@ -3,6 +3,7 @@ package javaMisc;
 import javaMisc.math.DoubleReal;
 import javaMisc.math.DoubleRealFactory;
 import javaMisc.math.autodiff.*;
+import org.ejml.simple.SimpleMatrix;
 
 import java.util.ArrayList;
 
@@ -178,6 +179,17 @@ public class MatrixQ implements DifferentialMatrixFunction {
         return tmp;
     }
 
+    public MatrixQ transpose() {
+        MatrixQ tmp = new MatrixQ(this.getColDim(), this.getRowDim());
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < this.col; j++) {
+                tmp.matrix[j][i] = this.matrix[i][j];
+            }
+        }
+        return tmp;
+    }
+
+
     public MatrixQ jacobian() {
         assert (this.getColDim() == 1); // trattiamo solo i vettori colonna
 
@@ -325,6 +337,13 @@ public class MatrixQ implements DifferentialMatrixFunction {
         return this;
     }
 
+    public MatrixQ transposeOnSelf() {
+        MatrixQ tmp = this.transpose();
+        this.matrix = tmp.getMatrix();
+        this.col = tmp.getRowDim();
+        this.row = tmp.getColDim();
+        return this;
+    }
 
     public MatrixQ setIdentity() {
         assert this.row == this.col;
@@ -342,6 +361,18 @@ public class MatrixQ implements DifferentialMatrixFunction {
     /**
      * Getter & Setter part
      */
+
+    public SimpleMatrix getNumeric() {
+
+        double[][] dataMat = new double[this.getRowDim()][this.getColDim()];
+        for (int i = 0; i < this.row; i++) {
+            for (int j = 0; j < this.col; j++) {
+                dataMat[i][j] = this.matrix[i][j].getValue().doubleValue();
+            }
+        }
+        return new SimpleMatrix(dataMat);
+    }
+
 
     public MatrixQ getSubMat(int row_s, int row_e, int col_s, int col_e) {
         MatrixQ tmp = new MatrixQ(row_e - row_s + 1, col_e - col_s + 1);

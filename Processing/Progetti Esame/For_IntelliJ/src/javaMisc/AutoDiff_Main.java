@@ -30,19 +30,27 @@ public class AutoDiff_Main {
 
         System.out.println(h.getValue().doubleValue());
 
-        xVar.set(new DoubleReal(-5));
+        xVar.set(new DoubleReal(42));
 
         System.out.println(h.getValue().doubleValue());
 
-
-        DifferentialFunction<DoubleReal> dhpx = h.diff(xVar);
-        System.out.println(dhpx.toString());
-
-        DifferentialFunction<DoubleReal> r = xVar.mul(xVar).diff(xVar);
-        System.out.println(r.toString());
-
-        DifferentialFunction<DoubleReal> trig = DFFactory.cos(xVar.mul(xVar)).diff(xVar);
-        System.out.println(trig.toString());
+//
+//
+//        System.out.println(h.getValue().doubleValue());
+//
+//        xVar.set(new DoubleReal(-5));
+//
+//        System.out.println(h.getValue().doubleValue());
+//
+//
+//        DifferentialFunction<DoubleReal> dhpx = h.diff(xVar);
+//        System.out.println(dhpx.toString());
+//
+//        DifferentialFunction<DoubleReal> r = xVar.mul(xVar).diff(xVar);
+//        System.out.println(r.toString());
+//
+//        DifferentialFunction<DoubleReal> trig = DFFactory.cos(xVar.mul(xVar)).diff(xVar);
+//        System.out.println(trig.toString());
 
     }
 }
