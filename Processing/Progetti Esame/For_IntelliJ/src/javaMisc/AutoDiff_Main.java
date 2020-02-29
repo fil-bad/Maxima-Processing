@@ -1,11 +1,11 @@
 package javaMisc;
 
-import javaMisc.math.DoubleReal;
-import javaMisc.math.DoubleRealFactory;
-import javaMisc.math.autodiff.Constant;
-import javaMisc.math.autodiff.DifferentialFunction;
-import javaMisc.math.autodiff.DifferentialRealFunctionFactory;
-import javaMisc.math.autodiff.Variable;
+import robots.DH.math.DoubleReal;
+import robots.DH.math.DoubleRealFactory;
+import robots.DH.math.autodiff.Constant;
+import robots.DH.math.autodiff.DifferentialFunction;
+import robots.DH.math.autodiff.DifferentialRealFunctionFactory;
+import robots.DH.math.autodiff.Variable;
 
 public class AutoDiff_Main {
 

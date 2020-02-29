@@ -1,7 +1,7 @@
 package robots;
 
 import org.ejml.data.DMatrix4x4;
-import javaMisc.DenHart;
+import robots.DH.DenHart;
 
 public class Puma {
 
