@@ -62,6 +62,10 @@ public class MatrixQ implements DifferentialMatrixFunction {
 
     }
 
+    public MatrixQ(MatrixQType type, String rot, String tsl) {
+
+    }
+
     public MatrixQ(MatrixQ mat) {
         this(mat.getRowDim(), mat.getColDim());
         this.matrix = mat.getMatrix();
@@ -283,6 +287,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
         return tmp;
     }
 
+    //todo: creare matrici di avvitamento
 
     /**
      * In this part, instead, we set the calling object to a new state

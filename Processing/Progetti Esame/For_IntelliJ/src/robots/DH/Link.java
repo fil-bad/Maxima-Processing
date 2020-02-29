@@ -14,4 +14,6 @@ public interface Link {
     void printLink();
 
     void printValLink();
+
+    //todo: aggiungere draw
 }

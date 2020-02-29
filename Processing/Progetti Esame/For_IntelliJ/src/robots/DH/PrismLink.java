@@ -8,6 +8,8 @@ import static java.lang.Math.PI;
 
 public class PrismLink implements Link {
 
+// todo: extend with GenericLink
+
 
     private String d_qi;
     private double theta;
