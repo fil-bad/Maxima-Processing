@@ -19,7 +19,8 @@ public class DenHart {
     private ArrayList<Link> denHartTab;
 
     private MatrixQ Q_tot;
-    private ArrayList<Variable<DoubleReal>> vars;
+    //    private ArrayList<Variable<DoubleReal>> vars;
+    private RobVars vars;
 
     private MatrixQ J;
 
@@ -32,7 +33,8 @@ public class DenHart {
     public DenHart() {
         this.denHartTab = new ArrayList<Link>(0);
         this.Q_tot = new MatrixQ().setIdentity();
-        this.vars = new ArrayList<Variable<DoubleReal>>(0);
+//        this.vars = new ArrayList<Variable<DoubleReal>>(0);
+        this.vars = new RobVars();
         this.J = this.getPos().jacobian();
     }
 
@@ -57,7 +59,7 @@ public class DenHart {
         //append a new link to D-H table
         this.denHartTab.add(link);
         this.Q_tot.mulOnSelf(link.getQLink());
-        this.vars.add(link.getVar());
+        this.vars.addVar(link.getVar());
         this.J = this.getPos().jacobian();
     }
 
@@ -77,24 +79,27 @@ public class DenHart {
      * Update matrix
      */
 
-    public void updateVar(String qi, double val) {
-        for (Variable<DoubleReal> var : this.vars) {
-            if (qi.equals(var.toString())) {
-                var.set(new DoubleReal(val));
-                break;
-            }
-        }
-        System.err.println("Variable not Found!");
+    public RobVars getRobVar() {
+        return this.vars;
     }
+//    public void updateVar(String qi, double val) {
+//        for (Variable<DoubleReal> var : this.vars) {
+//            if (qi.equals(var.toString())) {
+//                var.set(new DoubleReal(val));
+//                break;
+//            }
+//        }
+//        System.err.println("Variable not Found!");
+//    }
 
-    public void updateVars(double... vals) {
-        assert (vals.length == this.vars.size()); //we have to update all variables at once
-        int i = 0;
-        for (Variable<DoubleReal> var : this.vars) {
-            var.set(new DoubleReal(vals[i]));
-            i++;
-        }
-    }
+//    public void updateVars(double... vals) {
+//        assert (vals.length == this.vars.size()); //we have to update all variables at once
+//        int i = 0;
+//        for (Variable<DoubleReal> var : this.vars) {
+//            var.set(new DoubleReal(vals[i]));
+//            i++;
+//        }
+//    }
 
 
     /**
@@ -146,7 +151,7 @@ public class DenHart {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            dh.updateVar("q2", i);
+            dh.getRobVar().setVars("q2", i);
             dh.getNumericQ().print("%.3f");
             i++;
         }

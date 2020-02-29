@@ -32,6 +32,17 @@ public class RobVars {
         }
     }
 
+    public void setVars(String qi, double val) {
+        getVar(qi).set(new DoubleReal(val));
+//        for (Variable<DoubleReal> var : this.vars) {
+//            if (qi.equals(var.toString())) {
+//                var.set(new DoubleReal(val));
+//                break;
+//            }
+//        }
+//        System.err.println("Variable not Found!");
+    }
+
     public void setVars(int index, double val) {
         getVar(index).set(new DoubleReal(val));
     }
