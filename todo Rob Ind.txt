@@ -6,6 +6,11 @@
 
 --Progetto da fare in processing
 
+1)Fare schermata iniziale su JavaFX che permetta di montare il robot usando bottoni AddRotLink & AddPrismLink
+(magari se si riesce ad inserire la PApplet dentro la schermata, in modo da poter visualizzare il robot che cresce
+e viene aggiornato); una volta costruito, parte la nuova schermata di Processing dove c'è il robot costruito e si può
+manovrare.
+
 
 --Matlab
 1)Lezione 21:su un 2Dof planare
@@ -17,3 +22,5 @@
 
 3)Visione artificiale
 4) Lez.34, legge bang-bang su plot di una pallina lungo curve di commutazione.
+
+
