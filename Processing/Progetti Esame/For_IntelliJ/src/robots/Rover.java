@@ -62,19 +62,19 @@ public class Rover implements Obj3D {
             omniWheel[i].scale(2 * h / size);
             switch (i) {
                 case 0:     //<--
-                    omniWheel[i].rotateY(-win.PI / 2.0f);
+                    omniWheel[i].rotateY(win.PI / 2.0f);
                     omniWheel[i].translate(-w / 2.0f, 0, 0);
                     break;
                 case 1:     //-->
-                    omniWheel[i].rotateY(-win.PI / 2.0f);
+                    omniWheel[i].rotateY(win.PI / 2.0f);
                     omniWheel[i].translate(+w / 2.0f, 0, 0);
                     break;
                 case 2:     //Up
-                    omniWheel[i].rotateX(win.PI / 2.0f);
+                    omniWheel[i].rotateX(-win.PI / 2.0f);
                     omniWheel[i].translate(0, +w / 2.0f, 0);
                     break;
                 case 3:     //Down
-                    omniWheel[i].rotateX(win.PI / 2.0f);
+                    omniWheel[i].rotateX(-win.PI / 2.0f);
                     omniWheel[i].translate(0, -w / 2.0f, 0);
                     break;
             }
@@ -109,10 +109,10 @@ public class Rover implements Obj3D {
         win.box(w - whellDeep * 1.2f, w - whellDeep * 1.2f, h);
 
 
-        omniWheel[0].rotateX((float) dx.get(3, 0) / h);
-        omniWheel[1].rotateX((float) dx.get(3, 0) / h);
-        omniWheel[2].rotateY((float) dx.get(2, 0) / h);
-        omniWheel[3].rotateY((float) dx.get(2, 0) / h);
+        omniWheel[0].rotateX((float) -x.get(1, 0) / h);
+        omniWheel[1].rotateX((float) -x.get(1, 0) / h);
+        omniWheel[2].rotateY((float) x.get(0, 0) / h);
+        omniWheel[3].rotateY((float) x.get(0, 0) / h);
 
         for (PShape wheel : omniWheel) {
             win.shape(wheel);
@@ -146,8 +146,10 @@ public class Rover implements Obj3D {
                 obj = checkPoint.pollFirst();
             }
         }
-        if (u.normF() > 1)
-            u = u.divide(u.normF());
+        if (Math.abs(u.get(0)) > 1)
+            u.set(0, Math.signum(u.get(0)));
+        if (Math.abs(u.get(1)) > 1)
+            u.set(1, Math.signum(u.get(1)));
 
         // Errore troppo piccolo, smetto di fare l'update
         if (u.normF() < 0.0001) {
