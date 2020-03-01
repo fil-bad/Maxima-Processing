@@ -62,26 +62,20 @@ public class MatrixQ implements DifferentialMatrixFunction {
 
     }
 
-    public MatrixQ(MatrixQType type, String var, double... values) {
+    public MatrixQ(MatrixQType Mtype, String var, double value) {
         this();
-        switch (type) {
+        switch (Mtype) {
             case RotX:
-                this.setRotX(var, values[0]);
+                this.setRotX(var, value);
                 break;
             case TslX:
-                this.setTslX(var, values[0]);
-                break;
-            case AvvX:
-                this.setAvvX(values[0], values[1]);
+                this.setTslX(var, value);
                 break;
             case RotZ:
-                this.setRotZ(var, values[0]);
+                this.setRotZ(var, value);
                 break;
             case TslZ:
-                this.setTslZ(var, values[0]);
-                break;
-            case AvvZ:
-                this.setTslZ(var, values[0]);
+                this.setTslZ(var, value);
                 break;
         }
     }
