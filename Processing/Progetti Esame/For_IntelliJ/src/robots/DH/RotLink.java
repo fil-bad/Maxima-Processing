@@ -19,8 +19,8 @@ public class RotLink implements Link {
         this.alpha = alpha;
         this.a = a;
 
-        MatrixQ avvZ = new MatrixQ().setRotZ(qi, 0).mul(new MatrixQ().setTraslZ("", d));
-        MatrixQ avvX = new MatrixQ().setRotX("", alpha).mul(new MatrixQ().setTraslX("", a));
+        MatrixQ avvZ = new MatrixQ().setRotZ(qi, 0).mul(new MatrixQ().setTslZ("", d));
+        MatrixQ avvX = new MatrixQ().setRotX("", alpha).mul(new MatrixQ().setTslX("", a));
         this.Q0_1 = avvZ.mul(avvX);
     }
 

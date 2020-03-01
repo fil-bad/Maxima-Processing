@@ -62,8 +62,28 @@ public class MatrixQ implements DifferentialMatrixFunction {
 
     }
 
-    public MatrixQ(MatrixQType type, String rot, String tsl) {
-
+    public MatrixQ(MatrixQType type, String var, double... values) {
+        this();
+        switch (type) {
+            case RotX:
+                this.setRotX(var, values[0]);
+                break;
+            case TslX:
+                this.setTslX(var, values[0]);
+                break;
+            case AvvX:
+                this.setAvvX(values[0], values[1]);
+                break;
+            case RotZ:
+                this.setRotZ(var, values[0]);
+                break;
+            case TslZ:
+                this.setTslZ(var, values[0]);
+                break;
+            case AvvZ:
+                this.setTslZ(var, values[0]);
+                break;
+        }
     }
 
     public MatrixQ(MatrixQ mat) {
@@ -215,26 +235,10 @@ public class MatrixQ implements DifferentialMatrixFunction {
         return tmp;
     }
 
-    public MatrixQ setRotX(String q_i, double value) {
 
-        MatrixQ tmp = new MatrixQ(this.getRowDim(), this.getColDim()).setIdentity();
-
-        if (!q_i.isEmpty()) { //we have a variable
-            Variable<DoubleReal> q = DFFactory.var(q_i, new DoubleReal(value));
-            tmp.var_s.addVar(q);
-            tmp.matrix[1][1] = DFFactory.cos(q);
-            tmp.matrix[1][2] = DFFactory.sin(q).negate();
-            tmp.matrix[2][1] = DFFactory.sin(q);
-            tmp.matrix[2][2] = DFFactory.cos(q);
-        } else { //we have a constant
-            Constant<DoubleReal> c = DFFactory.val(new DoubleReal(value));
-            tmp.matrix[1][1] = DFFactory.cos(c);
-            tmp.matrix[1][2] = DFFactory.sin(c).negate();
-            tmp.matrix[2][1] = DFFactory.sin(c);
-            tmp.matrix[2][2] = DFFactory.cos(c);
-        }
-        return tmp;
-    }
+    /**
+     * Setter for 3D matrix
+     */
 
     public MatrixQ setRotZ(String q_i, double value) {
 
@@ -257,7 +261,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
         return tmp;
     }
 
-    public MatrixQ setTraslZ(String q_i, double value) {
+    public MatrixQ setTslZ(String q_i, double value) {
 
         MatrixQ tmp = new MatrixQ(this.getRowDim(), this.getColDim()).setIdentity();
 
@@ -272,7 +276,46 @@ public class MatrixQ implements DifferentialMatrixFunction {
         return tmp;
     }
 
-    public MatrixQ setTraslX(String q_i, double value) {
+    public MatrixQ setAvvZ(String q_i, double val, AvvType type) {
+        switch (type) {
+            case RotVariable:
+                MatrixQ tmp_rot = new MatrixQ().setRotZ(q_i, 0);
+                MatrixQ tmp_tsl = new MatrixQ().setTslZ("", val);
+                tmp_rot.setVPos(tmp_tsl.getVPos());
+                return tmp_rot;
+
+            case TslVariable:
+                MatrixQ tmp2_rot = new MatrixQ().setRotZ("", val);
+                MatrixQ tmp2_tsl = new MatrixQ().setTslZ(q_i, 0);
+                tmp2_rot.setVPos(tmp2_tsl.getVPos());
+                return tmp2_rot;
+            default:
+                return null;
+        }
+    }
+
+    public MatrixQ setRotX(String q_i, double value) {
+
+        MatrixQ tmp = new MatrixQ(this.getRowDim(), this.getColDim()).setIdentity();
+
+        if (!q_i.isEmpty()) { //we have a variable
+            Variable<DoubleReal> q = DFFactory.var(q_i, new DoubleReal(value));
+            tmp.var_s.addVar(q);
+            tmp.matrix[1][1] = DFFactory.cos(q);
+            tmp.matrix[1][2] = DFFactory.sin(q).negate();
+            tmp.matrix[2][1] = DFFactory.sin(q);
+            tmp.matrix[2][2] = DFFactory.cos(q);
+        } else { //we have a constant
+            Constant<DoubleReal> c = DFFactory.val(new DoubleReal(value));
+            tmp.matrix[1][1] = DFFactory.cos(c);
+            tmp.matrix[1][2] = DFFactory.sin(c).negate();
+            tmp.matrix[2][1] = DFFactory.sin(c);
+            tmp.matrix[2][2] = DFFactory.cos(c);
+        }
+        return tmp;
+    }
+
+    public MatrixQ setTslX(String q_i, double value) {
 
         MatrixQ tmp = new MatrixQ(this.getRowDim(), this.getColDim()).setIdentity();
 
@@ -287,7 +330,12 @@ public class MatrixQ implements DifferentialMatrixFunction {
         return tmp;
     }
 
-    //todo: creare matrici di avvitamento
+    public MatrixQ setAvvX(double alpha, double a) {
+        MatrixQ tmp_rot = new MatrixQ().setRotZ("", alpha);
+        MatrixQ tmp_tsl = new MatrixQ().setTslZ("", a);
+        tmp_rot.setVPos(tmp_tsl.getVPos());
+        return tmp_rot;
+    }
 
     /**
      * In this part, instead, we set the calling object to a new state
@@ -307,7 +355,6 @@ public class MatrixQ implements DifferentialMatrixFunction {
         this.matrix = tmp.getMatrix();
         return this;
     }
-
 
     public MatrixQ negateOnSelf() {
         MatrixQ tmp = this.negate();
@@ -377,7 +424,6 @@ public class MatrixQ implements DifferentialMatrixFunction {
         return new SimpleMatrix(dataMat);
     }
 
-
     public MatrixQ getSubMat(int row_s, int row_e, int col_s, int col_e) {
         MatrixQ tmp = new MatrixQ(row_e - row_s + 1, col_e - col_s + 1);
         tmp.mergeVar_s(this.getRobVars());
@@ -399,6 +445,13 @@ public class MatrixQ implements DifferentialMatrixFunction {
         return tmp;
     }
 
+    public void setVPos(MatrixQ pos) {
+        assert (pos.getRowDim() == 3 && pos.getColDim() == 1); // for Rot&Trasl in 3D
+        for (int i = 0; i < 3; i++) {
+            this.matrix[i][3] = pos.matrix[i][0];
+        }
+    }
+
     public MatrixQ getMatRot() {
         assert (this.getRowDim() == this.getColDim() && this.getRowDim() == 4); // for Rot&Trasl in 3D
         MatrixQ tmp = new MatrixQ(3, 3);
@@ -410,6 +463,16 @@ public class MatrixQ implements DifferentialMatrixFunction {
         }
         return tmp;
     }
+
+    public void setMatRot(MatrixQ rot) {
+        assert (rot.getRowDim() == 3 && rot.getColDim() == 3); // for Rot&Trasl in 3D
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                this.matrix[i][j] = rot.matrix[i][j];
+            }
+        }
+    }
+
 
     public DifferentialFunction<DoubleReal>[][] getMatrix() {
         return this.matrix;
@@ -486,7 +549,6 @@ public class MatrixQ implements DifferentialMatrixFunction {
         System.out.println();
     }
 
-
     public void printVar_s() {
         System.out.print("[");
         if (this.var_s.varSize() > 0) {
@@ -523,7 +585,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
         MatrixQ m4 = new MatrixQ(m2);
         m4.printVar_s();
 
-        MatrixQ m5 = new MatrixQ().setTraslZ("q2", 15);
+        MatrixQ m5 = new MatrixQ().setTslZ("q2", 15);
         m5.printMatSym();
 
         MatrixQ m6 = m4.setIdentity().setRotZ("q1", PI / 2).mul(m5);
@@ -539,5 +601,10 @@ public class MatrixQ implements DifferentialMatrixFunction {
 
         m7.printVar_s();
 
+        MatrixQ m8 = m6.setIdentity().setAvvZ("q1", 10, AvvType.RotVariable);
+        MatrixQ m9 = m6.setIdentity().setAvvZ("q1", 10, AvvType.TslVariable);
+
+        m8.printMatSym();
+        m9.printMatSym();
     }
 }
