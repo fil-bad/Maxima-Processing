@@ -25,9 +25,7 @@ public class PrismLink implements Link {
         this.alpha = alpha;
         this.a = a;
 
-        MatrixQ avvZ = new MatrixQ().setRotZ("", theta).mul(new MatrixQ().setTslZ(qi, 0));
-        MatrixQ avvX = new MatrixQ().setRotX("", alpha).mul(new MatrixQ().setTslX("", a));
-        this.Q0_1 = avvZ.mul(avvX);
+        this.Q0_1 = new MatrixQ().setAvvZ(qi, theta, AvvType.TslVariable).mul(new MatrixQ().setAvvX(alpha, a));
     }
 
     @Override

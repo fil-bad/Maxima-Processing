@@ -62,9 +62,9 @@ public class MatrixQ implements DifferentialMatrixFunction {
 
     }
 
-    public MatrixQ(MatrixQType Mtype, String var, double value) {
+    public MatrixQ(MatrixQType type, String var, double value) {
         this();
-        switch (Mtype) {
+        switch (type) {
             case RotX:
                 this.setRotX(var, value);
                 break;
@@ -281,8 +281,8 @@ public class MatrixQ implements DifferentialMatrixFunction {
             case TslVariable:
                 MatrixQ tmp2_rot = new MatrixQ().setRotZ("", val);
                 MatrixQ tmp2_tsl = new MatrixQ().setTslZ(q_i, 0);
-                tmp2_rot.setVPos(tmp2_tsl.getVPos());
-                return tmp2_rot;
+                tmp2_tsl.setMatRot(tmp2_rot.getMatRot());
+                return tmp2_tsl;
             default:
                 return null;
         }
@@ -599,6 +599,8 @@ public class MatrixQ implements DifferentialMatrixFunction {
         MatrixQ m9 = m6.setIdentity().setAvvZ("q1", 10, AvvType.TslVariable);
 
         m8.printMatSym();
+        m8.printVar_s();
         m9.printMatSym();
+        m9.printVar_s();
     }
 }
