@@ -10,8 +10,8 @@ import static java.lang.Math.*;
 
 
 public class Vertex {
-    DMatrix2 pos, ap;
     static final double EPS = 1e-9;
+    DMatrix2 pos, ap;
 
     /**
      * Costruttori
@@ -30,6 +30,49 @@ public class Vertex {
     // Vettore copia
     public Vertex(Vertex a) {
         this(a.getX(), a.getY());
+    }
+
+    static double sq(double x) {
+        return x * x;
+    }
+
+    static boolean ccw(Vertex p, Vertex q, Vertex r) {
+        return new Vertex(p, q).cross(new Vertex(p, r)) > 0;
+    }
+
+    static double angle(Vertex a, Vertex o, Vertex b) {  // angle AOB
+        Vertex oa = new Vertex(o, a), ob = new Vertex(o, b);
+        return Math.acos(oa.dot(ob) / Math.sqrt(oa.norm2() * ob.norm2()));
+    }
+
+    /**
+     * Demo main
+     **/
+    public static void main(String[] args) {
+        Vertex v1 = new Vertex(5, 2);
+        v1.printVertex();
+        Vertex v2 = v1.orthogonal();
+        System.out.println();
+        System.out.print("orthogonal of v1:");
+        v2.printVertex();
+        System.out.println("\nv2 Rotate by 180°:");
+        v2.rotate(PI);
+        v2.printVertex();
+        System.out.println("\nv2 Rotate by 180°+90°:");
+        v2.rotate(PI / 2.0);
+        v2.printVertex();
+        System.out.println("\nv2 translate by +10,+20:");
+        v2.translate(10, 20);
+        v2.printVertex();
+
+        Vertex l1 = new Vertex(5, 0);
+        Vertex l2 = new Vertex(6, 0);
+        Vertex l3 = new Vertex(7, 0);
+        System.out.println("\nl2 è tra sulla linea l1 e l3? " + l2.onLine(l1, l3));
+        System.out.println("\nl1 è tra sulla linea l2 e l3? " + l1.onLine(l2, l3));
+        System.out.println("\nl1 è tra sul segmento l2 e l3? " + l1.onSegment(l2, l3));
+
+
     }
 
     /**
@@ -56,10 +99,6 @@ public class Vertex {
         return new Vertex(-getX(), -getY());
     }
 
-    static double sq(double x) {
-        return x * x;
-    }
-
     double cross(Vertex v) {
         return this.getX() * v.getY() - getY() * v.getX();
     }
@@ -75,16 +114,6 @@ public class Vertex {
     boolean between(Vertex p, Vertex q) {
         return this.getX() < Math.max(p.getX(), q.getX()) + EPS && this.getX() + EPS > Math.min(p.getX(), q.getX())
                 && this.getY() < Math.max(p.getY(), q.getY()) + EPS && this.getY() + EPS > Math.min(p.getY(), q.getY());
-    }
-
-    static boolean ccw(Vertex p, Vertex q, Vertex r) {
-        return new Vertex(p, q).cross(new Vertex(p, r)) > 0;
-    }
-
-
-    static double angle(Vertex a, Vertex o, Vertex b) {  // angle AOB
-        Vertex oa = new Vertex(o, a), ob = new Vertex(o, b);
-        return Math.acos(oa.dot(ob) / Math.sqrt(oa.norm2() * ob.norm2()));
     }
 
     public Vertex minus(Vertex v) {
@@ -200,7 +229,7 @@ public class Vertex {
         win.pushMatrix();
         win.translate(0, 0, 2);
 
-        win.circle((float) this.getX(), (float) this.getY(), (float) r);
+        win.circle((float) this.getX(), (float) this.getY(), r);
 
         win.popMatrix();
         win.popStyle();
@@ -209,36 +238,6 @@ public class Vertex {
     @Override
     public String toString() {
         return "[" + getX() + ";" + getY() + "]";
-    }
-
-    /**
-     * Demo main
-     **/
-    public static void main(String[] args) {
-        Vertex v1 = new Vertex(5, 2);
-        v1.printVertex();
-        Vertex v2 = v1.orthogonal();
-        System.out.println("");
-        System.out.print("orthogonal of v1:");
-        v2.printVertex();
-        System.out.println("\nv2 Rotate by 180°:");
-        v2.rotate(PI);
-        v2.printVertex();
-        System.out.println("\nv2 Rotate by 180°+90°:");
-        v2.rotate(PI / 2.0);
-        v2.printVertex();
-        System.out.println("\nv2 translate by +10,+20:");
-        v2.translate(10, 20);
-        v2.printVertex();
-
-        Vertex l1 = new Vertex(5, 0);
-        Vertex l2 = new Vertex(6, 0);
-        Vertex l3 = new Vertex(7, 0);
-        System.out.println("\nl2 è tra sulla linea l1 e l3? " + l2.onLine(l1, l3));
-        System.out.println("\nl1 è tra sulla linea l2 e l3? " + l1.onLine(l2, l3));
-        System.out.println("\nl1 è tra sul segmento l2 e l3? " + l1.onSegment(l2, l3));
-
-
     }
 }
 

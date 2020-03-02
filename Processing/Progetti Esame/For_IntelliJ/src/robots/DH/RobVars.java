@@ -25,6 +25,17 @@ public class RobVars {
         vars.add(i, v);
     }
 
+    public void mergeVar_s(RobVars new_vars) {
+        if (new_vars == null) return;
+        for (Variable<DoubleReal> n_v : new_vars.getVar()) {
+            boolean occur = false;
+            for (Variable<DoubleReal> v : this.getVar()) {
+                if (n_v.equals(v)) occur = true;
+            }
+            if (!occur) this.addVar(n_v);
+        }
+    }
+
     public Variable<DoubleReal> removeLastVar() {
         return vars.removeLast();
     }
@@ -67,6 +78,7 @@ public class RobVars {
     public Variable<DoubleReal>[] getVar() {
         return vars.toArray(new Variable[0]);
     }
+
     public Variable<DoubleReal> getVar(int index) {
         assert (index < this.vars.size()); //we have to update all variables at once
         return vars.get(index);
@@ -102,7 +114,7 @@ public class RobVars {
 
     public String[] getVarsName() {
         if (this.vars.size() == 0) return null;
-        return (String[]) this.vars.toArray(new String[vars.size()]);
+        return this.vars.toArray(new String[vars.size()]);
     }
 
     public int varSize() {

@@ -1,10 +1,9 @@
 package robots.DH.math.autodiff;
 
-import java.util.ArrayList;
-
 import robots.DH.math.AbstractRealNumberFactory;
-
 import robots.DH.math.RealNumber;
+
+import java.util.ArrayList;
 
 public class DifferentialRealFunctionFactory<X extends RealNumber<X>> {
 
@@ -52,7 +51,7 @@ public class DifferentialRealFunctionFactory<X extends RealNumber<X>> {
         int size = i_x.length;
         ArrayList<Variable<X>> list = new ArrayList<Variable<X>>(size);
         for (int i = 0; i < size; i++) {
-            list.add(var(i_name + String.valueOf(i), i_x[i]));
+            list.add(var(i_name + i, i_x[i]));
         }
         return new VariableVector<X>(m_factory, list);
     }
@@ -60,7 +59,7 @@ public class DifferentialRealFunctionFactory<X extends RealNumber<X>> {
     public VariableVector<X> var(String i_name, int i_size) {
         ArrayList<Variable<X>> list = new ArrayList<Variable<X>>(i_size);
         for (int i = 0; i < i_size; i++) {
-            list.add(var(i_name + String.valueOf(i), m_factory.zero()));
+            list.add(var(i_name + i, m_factory.zero()));
         }
         return new VariableVector<X>(m_factory, list);
     }

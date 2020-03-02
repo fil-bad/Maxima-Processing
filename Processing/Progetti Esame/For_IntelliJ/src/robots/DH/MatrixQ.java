@@ -1,9 +1,9 @@
 package robots.DH;
 
+import org.ejml.simple.SimpleMatrix;
 import robots.DH.math.DoubleReal;
 import robots.DH.math.DoubleRealFactory;
 import robots.DH.math.autodiff.*;
-import org.ejml.simple.SimpleMatrix;
 
 import static java.lang.Math.PI;
 
@@ -120,6 +120,57 @@ public class MatrixQ implements DifferentialMatrixFunction {
         this.var_s = mat.getRobVars();
     }
 
+    public static void main(String[] args) {
+
+        MatrixQ m1 = new MatrixQ();
+
+        m1.setIdentity();
+        m1.printMatSym();
+
+        m1.negate();
+        m1.printMatSym();
+        m1.mul(12);
+
+        System.out.println("M1:");
+        m1.printMatSym();
+
+        MatrixQ m2 = new MatrixQ(4, 4, "q1", "q2").setIdentity().mul(5).plus(m1);
+        System.out.println("M2:");
+        m2.printMatSym();
+
+        MatrixQ m3 = m1.mul(m2);
+        System.out.println("M3:");
+        m3.printMatSym();
+
+
+        MatrixQ m4 = new MatrixQ(m2);
+        m4.printVar_s();
+
+        MatrixQ m5 = new MatrixQ().setTslZ("q2", 15);
+        m5.printMatSym();
+
+        MatrixQ m6 = m4.setIdentity().setRotZ("q1", PI / 2).mul(m5);
+        m6.printMatSym();
+
+        MatrixQ jac = m6.getVPos().jacobian();
+        jac.printMatSym();
+        jac.printMatValue();
+
+        MatrixQ m7 = m6.pow(2);
+        m7.printMatSym();
+        m7.printMatValue();
+
+        m7.printVar_s();
+
+        MatrixQ m8 = m6.setIdentity().setAvvZ("q1", 10, AvvType.RotVariable);
+        MatrixQ m9 = m6.setIdentity().setAvvZ("q1", 10, AvvType.TslVariable);
+
+        m8.printMatSym();
+        m8.printVar_s();
+        m9.printMatSym();
+        m9.printVar_s();
+    }
+
     /**
      * The first part of this class contains method that return a copy to be saved locally with the operation done
      */
@@ -140,8 +191,8 @@ public class MatrixQ implements DifferentialMatrixFunction {
                 }
             }
         }
-        tmp.mergeVar_s(this.getRobVars()); //adding variables from 1st matrix
-        tmp.mergeVar_s(((MatrixQ) i_v).getRobVars()); //adding variables from 2nd matrix
+        tmp.var_s.mergeVar_s(this.getRobVars()); //adding variables from 1st matrix
+        tmp.var_s.mergeVar_s(((MatrixQ) i_v).getRobVars()); //adding variables from 2nd matrix
         return tmp;
     }
 
@@ -182,7 +233,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
                 tmp.matrix[i][j] = this.matrix[i][j].plus(mat2add[i][j]);
             }
         }
-        tmp.mergeVar_s(((MatrixQ) i_v).getRobVars());
+        tmp.var_s.mergeVar_s(((MatrixQ) i_v).getRobVars());
         return tmp;
     }
 
@@ -199,7 +250,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
                 tmp.matrix[i][j] = this.matrix[i][j].minus(mat2sub[i][j]);
             }
         }
-        tmp.mergeVar_s(((MatrixQ) i_v).getRobVars());
+        tmp.var_s.mergeVar_s(((MatrixQ) i_v).getRobVars());
         return tmp;
     }
 
@@ -240,7 +291,6 @@ public class MatrixQ implements DifferentialMatrixFunction {
         return tmp;
     }
 
-
     public MatrixQ jacobian() {
         assert (this.getColDim() == 1); // trattiamo solo i vettori colonna
 
@@ -253,7 +303,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
         MatrixQ tmp = new MatrixQ(this.getRowDim(), num_var);
 
         RobVars tmp_vars = this.getRobVars();
-        tmp.mergeVar_s(this.getRobVars());
+        tmp.var_s.mergeVar_s(this.getRobVars());
 
         for (int j = 0; j < num_var; j++) { //questo per ogni colonna
             for (int i = 0; i < this.row; i++) {
@@ -262,7 +312,6 @@ public class MatrixQ implements DifferentialMatrixFunction {
         }
         return tmp;
     }
-
 
     /**
      * Setter for 3D matrix
@@ -454,7 +503,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
 
     public MatrixQ getSubMat(int row_s, int row_e, int col_s, int col_e) {
         MatrixQ tmp = new MatrixQ(row_e - row_s + 1, col_e - col_s + 1);
-        tmp.mergeVar_s(this.getRobVars());
+        tmp.var_s.mergeVar_s(this.getRobVars());
         for (int i = row_s; i < row_e + 1; i++) {
             for (int j = col_s; j < col_e + 1; j++) {
                 tmp.matrix[i][j] = this.matrix[i][j];
@@ -466,7 +515,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
     public MatrixQ getVPos() {
         assert (this.getRowDim() == this.getColDim() && this.getRowDim() == 4); // for Rot&Trasl in 3D
         MatrixQ tmp = new MatrixQ(3, 1);
-        tmp.mergeVar_s(this.getRobVars());
+        tmp.var_s.mergeVar_s(this.getRobVars());
         for (int i = 0; i < 3; i++) {
             tmp.matrix[i][0] = this.matrix[i][3];
         }
@@ -483,7 +532,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
     public MatrixQ getMatRot() {
         assert (this.getRowDim() == this.getColDim() && this.getRowDim() == 4); // for Rot&Trasl in 3D
         MatrixQ tmp = new MatrixQ(3, 3);
-        tmp.mergeVar_s(this.getRobVars());
+        tmp.var_s.mergeVar_s(this.getRobVars());
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 tmp.matrix[i][j] = this.matrix[i][j];
@@ -500,7 +549,6 @@ public class MatrixQ implements DifferentialMatrixFunction {
             }
         }
     }
-
 
     public DifferentialFunction<DoubleReal>[][] getMatrix() {
         return this.matrix;
@@ -541,17 +589,6 @@ public class MatrixQ implements DifferentialMatrixFunction {
         return this.col;
     }
 
-    private void mergeVar_s(RobVars new_vars) {
-        if (new_vars == null) return;
-        for (Variable<DoubleReal> n_v : new_vars.getVar()) {
-            boolean occur = false;
-            for (Variable<DoubleReal> v : this.var_s.getVar()) {
-                if (n_v.equals(v)) occur = true;
-            }
-            if (!occur) this.var_s.addVar(n_v);
-        }
-    }
-
     /**
      * Print section
      */
@@ -585,56 +622,5 @@ public class MatrixQ implements DifferentialMatrixFunction {
             }
         }
         System.out.println("]\n");
-    }
-
-    public static void main(String[] args) {
-
-        MatrixQ m1 = new MatrixQ();
-
-        m1.setIdentity();
-        m1.printMatSym();
-
-        m1.negate();
-        m1.printMatSym();
-        m1.mul(12);
-
-        System.out.println("M1:");
-        m1.printMatSym();
-
-        MatrixQ m2 = new MatrixQ(4, 4, "q1", "q2").setIdentity().mul(5).plus(m1);
-        System.out.println("M2:");
-        m2.printMatSym();
-
-        MatrixQ m3 = m1.mul(m2);
-        System.out.println("M3:");
-        m3.printMatSym();
-
-
-        MatrixQ m4 = new MatrixQ(m2);
-        m4.printVar_s();
-
-        MatrixQ m5 = new MatrixQ().setTslZ("q2", 15);
-        m5.printMatSym();
-
-        MatrixQ m6 = m4.setIdentity().setRotZ("q1", PI / 2).mul(m5);
-        m6.printMatSym();
-
-        MatrixQ jac = m6.getVPos().jacobian();
-        jac.printMatSym();
-        jac.printMatValue();
-
-        MatrixQ m7 = m6.pow(2);
-        m7.printMatSym();
-        m7.printMatValue();
-
-        m7.printVar_s();
-
-        MatrixQ m8 = m6.setIdentity().setAvvZ("q1", 10, AvvType.RotVariable);
-        MatrixQ m9 = m6.setIdentity().setAvvZ("q1", 10, AvvType.TslVariable);
-
-        m8.printMatSym();
-        m8.printVar_s();
-        m9.printMatSym();
-        m9.printVar_s();
     }
 }

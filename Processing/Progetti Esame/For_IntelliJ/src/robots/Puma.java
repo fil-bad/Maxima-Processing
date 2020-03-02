@@ -28,9 +28,9 @@ public class Puma {
         this.Q.print();
     }
 
-    public static void main(String[] args) {
-        Puma puma = new Puma(new DenHart());
-    }
+//    public static void main(String[] args) {
+//        Puma puma = new Puma(new DenHart());
+//    }
 
 
 }

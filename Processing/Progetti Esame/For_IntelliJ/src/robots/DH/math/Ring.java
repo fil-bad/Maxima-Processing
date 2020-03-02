@@ -8,21 +8,21 @@ package robots.DH.math;
  */
 public interface Ring<X> extends CommutativeGroup<X> {
 
-	/**
-	 * Returns an object of X whose value is the product (this * i_v).
-	 *
-	 * @param i_v
-	 * @return this * i_v
-	 */
-	X mul(X i_v);
+    /**
+     * Returns an object of X whose value is the product (this * i_v).
+     *
+     * @param i_v
+     * @return this * i_v
+     */
+    X mul(X i_v);
 
-	/**
-	 * Returns an object of X whose value is the power (this ^ i_n).
-	 * Ring<X> guarantees the results for natural numbers only.
-	 *
-	 * @param i_n a natural number
-	 * @return this ^ i_n
-	 */
-	X pow(int i_n);
+    /**
+     * Returns an object of X whose value is the power (this ^ i_n).
+     * Ring<X> guarantees the results for natural numbers only.
+     *
+     * @param i_n a natural number
+     * @return this ^ i_n
+     */
+    X pow(int i_n);
 
 }

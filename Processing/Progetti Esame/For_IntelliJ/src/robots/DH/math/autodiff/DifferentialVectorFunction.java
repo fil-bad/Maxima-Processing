@@ -1,14 +1,12 @@
 package robots.DH.math.autodiff;
 
-import java.util.ArrayList;
-
-import java.util.Collection;
-
 import robots.DH.math.AbstractIdentityFactory;
 import robots.DH.math.BasicDenseVector;
 import robots.DH.math.CommutativeGroup;
-
 import robots.DH.math.Field;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 
 /**

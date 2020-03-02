@@ -1,5 +1,7 @@
-package robots.DH;
+package robots.DH.Links;
 
+import robots.DH.MatrixQ;
+import robots.DH.RobVars;
 import robots.DH.math.DoubleReal;
 import robots.DH.math.autodiff.Variable;
 

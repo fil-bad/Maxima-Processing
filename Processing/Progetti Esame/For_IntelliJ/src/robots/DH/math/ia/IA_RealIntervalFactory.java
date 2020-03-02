@@ -10,61 +10,59 @@ import robots.DH.math.AbstractIdentityFactory;
  */
 public class IA_RealIntervalFactory implements AbstractIdentityFactory<RealInterval> {
 
-	private static final IA_RealIntervalFactory m_INSTANCE = new IA_RealIntervalFactory();
+    private static final IA_RealIntervalFactory m_INSTANCE = new IA_RealIntervalFactory();
+    private static final RealInterval m_ZERO = new RealInterval(0.0);
+    private static final RealInterval m_UNIT = new RealInterval(1.0);
 
-	private IA_RealIntervalFactory() {
-	}
+    private IA_RealIntervalFactory() {
+    }
 
-	/**
-	 * Returns the singleton object of this class.
-	 *
-	 * @return the singleton object of this class.
-	 */
-	public static IA_RealIntervalFactory instance() {
-		return m_INSTANCE;
-	}
+    /**
+     * Returns the singleton object of this class.
+     *
+     * @return the singleton object of this class.
+     */
+    public static IA_RealIntervalFactory instance() {
+        return m_INSTANCE;
+    }
 
-	/**
-	 * Returns an object of RealInterval whose value is i_v.
-	 *
-	 * @return RealInterval()
-	 */
-	public RealInterval create() {
-		return new RealInterval();
-	}
+    /**
+     * Returns an object of RealInterval whose value is i_v.
+     *
+     * @return RealInterval()
+     */
+    public RealInterval create() {
+        return new RealInterval();
+    }
 
-	/**
-	 * Returns an object of RealInterval whose value is i_v.
-	 *
-	 * @param i_v
-	 * @return RealInterval(i_v)
-	 */
-	public RealInterval create(double i_v) {
-		return new RealInterval(i_v);
-	}
+    /**
+     * Returns an object of RealInterval whose value is i_v.
+     *
+     * @param i_v
+     * @return RealInterval(i_v)
+     */
+    public RealInterval create(double i_v) {
+        return new RealInterval(i_v);
+    }
 
-	/**
-	 * Returns an object of RealInterval whose value is [i_lo, i_hi].
-	 *
-	 * @param i_lo
-	 * @param i_hi
-	 * @return RealInterval(i_lo, i_hi)
-	 */
-	public RealInterval create(double i_lo, double i_hi) {
-		return new RealInterval(i_lo, i_hi);
-	}
+    /**
+     * Returns an object of RealInterval whose value is [i_lo, i_hi].
+     *
+     * @param i_lo
+     * @param i_hi
+     * @return RealInterval(i_lo, i_hi)
+     */
+    public RealInterval create(double i_lo, double i_hi) {
+        return new RealInterval(i_lo, i_hi);
+    }
 
+    public RealInterval zero() {
+        return m_ZERO;
+    }
 
-	private static final RealInterval m_ZERO = new RealInterval(0.0);
-	private static final RealInterval m_UNIT = new RealInterval(1.0);
-
-	public RealInterval zero() {
-		return m_ZERO;
-	}
-
-	public RealInterval one() {
-		return m_UNIT;
-	}
+    public RealInterval one() {
+        return m_UNIT;
+    }
 
 
 }

@@ -1,10 +1,10 @@
 package robots.DH.math.autodiff;
 
 
-import java.util.Collection;
-
 import robots.DH.math.AbstractIdentityFactory;
 import robots.DH.math.Field;
+
+import java.util.Collection;
 
 
 public class VariableVector<X extends Field<X>> extends DifferentialVectorFunction<X> {

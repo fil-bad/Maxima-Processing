@@ -5,11 +5,11 @@ import processing.core.PApplet;
 
 public class Pointer {
     PApplet win;
-    private CommonDraw com = CommonDraw.getInstance();
-
-
     float x, y, h;
     float minX, minY, maxX, maxY;
+    private CommonDraw com = CommonDraw.getInstance();
+    private int b = 5;    //base
+    private int lF = 5;   //lunghezza semi lato freccia
 
     public Pointer(PApplet win, int heigt, float minX, float minY, float maxX, float maxY) {
         this.win = win;
@@ -20,7 +20,6 @@ public class Pointer {
         this.maxX = maxX;
         this.maxY = maxY;
     }
-
     // sup center in 0,0
     public Pointer(PApplet win, int heigt, float w, float h) {
         this.win = win;
@@ -31,9 +30,6 @@ public class Pointer {
         this.maxX = w / 2;
         this.maxY = h / 2;
     }
-
-    private int b = 5;    //base
-    private int lF = 5;   //lunghezza semi lato freccia
 
     public void draw() {
         win.push();
@@ -79,6 +75,10 @@ public class Pointer {
             this.y = maxY;
     }
 
+    public float getX() {
+        return x;
+    }
+
     public void setX(float x) {
         this.x = x;
         if (this.x < minX)
@@ -87,20 +87,16 @@ public class Pointer {
             this.x = maxX;
     }
 
+    public float getY() {
+        return y;
+    }
+
     public void setY(float y) {
         this.y = y;
         if (this.y < minY)
             this.y = minY;
         if (this.y > maxY)
             this.y = maxY;
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
     }
 
     public Vertex get() {

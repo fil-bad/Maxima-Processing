@@ -1,13 +1,14 @@
-package robots.DH;
+package robots.DH.Links;
 
-import robots.DH.math.DoubleReal;
-import robots.DH.math.autodiff.Variable;
+import processing.core.PApplet;
+import robots.DH.AvvType;
+import robots.DH.MatrixQ;
 
 public class RotLink extends GenericLink {
 
 
-    public RotLink(String qi, double d, double alpha, double a) {
-        super();
+    public RotLink(PApplet win, String qi, double d, double alpha, double a) {
+        super(win);
         this.Theta = qi;
         D = "";
         this.theta = 0;
@@ -19,9 +20,9 @@ public class RotLink extends GenericLink {
 
     }
 
-    public RotLink(String qi, double d, double alpha, double a, float l) {
-        this(qi, d, alpha, a);
-        connectWith = l;
+    public RotLink(PApplet win, float l, String qi, double d, double alpha, double a) {
+        this(win, qi, d, alpha, a);
+        sqB = l;
     }
 
     @Override

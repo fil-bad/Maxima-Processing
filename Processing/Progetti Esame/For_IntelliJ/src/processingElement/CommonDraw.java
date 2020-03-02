@@ -7,6 +7,11 @@ public class CommonDraw {
 
     private static CommonDraw instance = null;
     PApplet win = null;
+    // Funzione visualizzazione asse
+    private int p = 50;   //profondità
+    private int b = 5;    //base
+    private int h = 5;     //altezza
+    private int lf = 5;   //lunghezza semi lato freccia
 
     private CommonDraw(PApplet win) {
         this.win = win;
@@ -33,12 +38,6 @@ public class CommonDraw {
         RGBArray[2] = Integer.valueOf(colorStr.substring(5, 7), 16);
         return RGBArray;
     }
-
-    // Funzione visualizzazione asse
-    private int p = 50;   //profondità
-    private int b = 5;    //base
-    private int h = 5;     //altezza
-    private int lf = 5;   //lunghezza semi lato freccia
 
     public void axes(float alpha) {
         win.pushStyle();
@@ -104,13 +103,13 @@ public class CommonDraw {
         win.endShape(win.CLOSE);
     }
 
-    void drawBoxBase(float p, float lb, float lh) {
+    public void drawBoxBase(float p, float lb, int color) {
         //p= lunghezza profondità, in Z
         //lp= larghezza base
         //lh= altezza base
         lb = lb / 2;
         win.strokeWeight(1);
-        win.fill(255, 0, 0);
+        win.fill(color);
         win.beginShape();
         win.vertex(+lb, +lb, 0);
         win.vertex(+lb, +lb, p);
@@ -118,7 +117,6 @@ public class CommonDraw {
         win.vertex(+lb, -lb, 0);
         win.endShape(win.CLOSE);
 
-        win.fill(255, 255, 0);
         win.beginShape();
         win.vertex(+lb, -lb, 0);
         win.vertex(+lb, -lb, p);
@@ -126,7 +124,6 @@ public class CommonDraw {
         win.vertex(-lb, -lb, 0);
         win.endShape(win.CLOSE);
 
-        win.fill(0, 255, 0);
         win.beginShape();
         win.vertex(-lb, -lb, 0);
         win.vertex(-lb, -lb, p);
@@ -134,7 +131,6 @@ public class CommonDraw {
         win.vertex(-lb, +lb, 0);
         win.endShape(win.CLOSE);
 
-        win.fill(0, 255, 255);
         win.beginShape();
         win.vertex(-lb, +lb, 0);
         win.vertex(-lb, +lb, p);
@@ -143,7 +139,6 @@ public class CommonDraw {
         win.endShape(win.CLOSE);
 
         //bot face
-        win.fill(0, 0, 255);
         win.beginShape();
         win.vertex(+lb, +lb, 0);
         win.vertex(+lb, -lb, 0);
@@ -162,7 +157,7 @@ public class CommonDraw {
         win.translate(0, 0, p);  //sposto origine alla fine
     }
 
-    float drawCylinder(int sides, float r, float h, boolean plane) {
+    public float drawCylinder(int sides, float r, float h, boolean plane) {
         //ritorna distanza tra origine e lato piano
         win.noStroke();
         win.colorMode(win.HSB, 360, 100, 100);
@@ -225,12 +220,12 @@ public class CommonDraw {
         return x;
     }
 
-    void pinza(float w, float h, float p, float open) {
+    public void pinza(float w, float h, float p, float open) {
         win.translate(0, 0, h / 2);
         win.box(h, w, h); // Disegno il primo elemento della pinza
         win.translate(0, 0, h / 2);
 
-        float distP = win.map(open, 0, 1, h / 2, w / 2 - h / 2);
+        float distP = PApplet.map(open, 0, 1, h / 2, w / 2 - h / 2);
         win.pushMatrix(); // Memorizzo il sistema attuale
         win.translate(0, distP, (p - h) / 2);
         win.fill(255, 0, 0);

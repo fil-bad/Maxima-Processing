@@ -31,14 +31,6 @@ public class Variable<X extends Field<X>> extends DifferentialFunction<X> {
         return m_factory;
     }
 
-    private void setName(String i_name) {
-        if (i_name != null) {
-            m_name = i_name;// new String(i_name);
-        } else {
-            throw new IllegalArgumentException("Input not null value.");
-        }
-    }
-
     /**
      * Returns the name of this variable.
      *
@@ -46,6 +38,14 @@ public class Variable<X extends Field<X>> extends DifferentialFunction<X> {
      */
     public String getName() {
         return m_name;
+    }
+
+    private void setName(String i_name) {
+        if (i_name != null) {
+            m_name = i_name;// new String(i_name);
+        } else {
+            throw new IllegalArgumentException("Input not null value.");
+        }
     }
 
     /**

@@ -49,6 +49,20 @@ public class QTGraph {
         extendGraph(win, qtStack, rRobot, obs);
     }
 
+    /* Test Main*/
+    public static void main(String[] args) {
+        QuadTree qt = new QuadTree(new Boundary(-100, -100, 100, 100));
+        qt.split();
+        qt.getNode('1').split();
+        qt.getNode('2').split();
+        qt.getNode('2').getNode('1').split();
+        qt.getNode('3').split();
+        qt.getNode('3').getNode('0').split();
+        qt.getNode('3').getNode('2').split();
+        QTGraph graph = new QTGraph(qt);
+        graph.printNodeEdges(qt.nearestPoint(-50, 50));
+    }
+
     /**
      * Operazioni nel grafo
      **/
@@ -289,19 +303,5 @@ public class QTGraph {
             System.out.println("##[SRC]##\t" + qtGraph.getEdgeSource(edge).dataNode());
             System.out.println("##[TAR]##\t" + qtGraph.getEdgeTarget(edge).dataNode() + "\n");
         }
-    }
-
-    /* Test Main*/
-    public static void main(String[] args) {
-        QuadTree qt = new QuadTree(new Boundary(-100, -100, 100, 100));
-        qt.split();
-        qt.getNode('1').split();
-        qt.getNode('2').split();
-        qt.getNode('2').getNode('1').split();
-        qt.getNode('3').split();
-        qt.getNode('3').getNode('0').split();
-        qt.getNode('3').getNode('2').split();
-        QTGraph graph = new QTGraph(qt);
-        graph.printNodeEdges(qt.nearestPoint(-50, 50));
     }
 }

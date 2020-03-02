@@ -10,26 +10,26 @@ package robots.DH.math;
  * @author uniker9
  */
 public interface ComplexNumber<R extends RealNumber<R>, X> extends
-		Field<X> {
+        Field<X> {
 
-	/**
-	 * Returns an object of X whose value is the conjugate (this.re() - this.im()).
-	 *
-	 * @return (this.re () - this.im()).
-	 */
-	X conjugate();
+    /**
+     * Returns an object of X whose value is the conjugate (this.re() - this.im()).
+     *
+     * @return (this.re () - this.im()).
+     */
+    X conjugate();
 
-	/**
-	 * Returns an object of R whose value is the real part of this.
-	 *
-	 * @return the real part of this.
-	 */
-	R re();
+    /**
+     * Returns an object of R whose value is the real part of this.
+     *
+     * @return the real part of this.
+     */
+    R re();
 
-	/**
-	 * Returns an object of R whose value is the imaginary part of this.
-	 *
-	 * @return the imaginary part of this.
-	 */
-	R im();
+    /**
+     * Returns an object of R whose value is the imaginary part of this.
+     *
+     * @return the imaginary part of this.
+     */
+    R im();
 }

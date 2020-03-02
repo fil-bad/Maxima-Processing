@@ -1,12 +1,25 @@
 import geometry.Vertex;
-import processing.core.*;
+import processing.core.PApplet;
 import processing.event.MouseEvent;
 import processingElement.*;
+import robots.Cartesian;
 import robots.Rover;
 
 
 public class ProcessingClass extends PApplet {
 
+
+    // Dati per il disegno del mondo
+    CommonDraw com;
+    Pointer point;
+    SceneExpert scene;
+    Obstacle selected = null;
+    Vertex addPoint; // variabile per calcolare di quanto spostare il puntatore
+    private float eyeX, eyeY, eyeZ;
+    private float centerX, centerY, centerZ;
+    private float Zrot, XRot, zoom;
+
+    int giunto = 0;
 
     public static void main(String[] args) {
         PApplet.main("ProcessingClass");
@@ -17,13 +30,6 @@ public class ProcessingClass extends PApplet {
         // Customize screen size and so on here
         size(1200, 720, P3D);
     }
-
-    // Dati per il disegno del mondo
-    CommonDraw com;
-
-    Pointer point;
-    SceneExpert scene;
-
 
     @Override
     public void setup() {
@@ -46,24 +52,30 @@ public class ProcessingClass extends PApplet {
         scene.addObstacle(new Box(this, 50, 40, 10, color(255, 150, 0, 100)), 50);
         scene.addObstacle(new Box(this, 50, 40, 10, color(0, 255, 0, 100)), 150, -60, 0);
 
-        scene.addRover(new Rover(this, new Vertex(100, 100), 0.3, 0.15, 0.03));
+        scene.setRover(new Rover(this, new Vertex(100, 100), 0.1, 0.15, 0.03));
+        scene.setRobot(new Cartesian(this, 10));
+        scene.getRobot().set(40, 20, 30);
 
     }
-
-    Obstacle selected = null;
 
     @Override
     public void draw() {
         clear();
         cameraSet();
 
-        //Oggetti da graficare
-        scene.drawScene();
-        point.draw();
+        if (keyPressed) {
+            if (key == '+') scene.getRobot().add(giunto, 1);
+            if (key == '-') scene.getRobot().add(giunto, -1);
+        }
 
         if (selected != null) {
             selected.setD(point.getX(), point.getY(), 0);
         }
+
+        //Oggetti da graficare
+        scene.drawScene();
+        point.draw();
+
     }
 
     @Override
@@ -102,9 +114,7 @@ public class ProcessingClass extends PApplet {
         if (key == 'r' || key == 'R') {
             cameraInit();
         }
-//        if (key == 'd' || key == 'D') {
-//
-//        }
+
         if (key == 'e' || key == 'E') {
             if (scene.freePlace(point.get(), scene.robotR)) {
                 scene.getRover().clearCheckPoint();
@@ -116,13 +126,10 @@ public class ProcessingClass extends PApplet {
             scene.addObstacle(new Box(this, (int) random(10, 100), (int) random(10, 100), (int) random(10, 30), color(random(255), random(255), random(255), 100)));
         }
 
+        if (key == '1') giunto = 0;
+        if (key == '2') giunto = 1;
+        if (key == '3') giunto = 2;
     }
-
-
-    private float eyeX, eyeY, eyeZ;
-    private float centerX, centerY, centerZ;
-    private float Zrot, XRot, zoom;
-    Vertex addPoint; // variabile per calcolare di quanto spostare il puntatore
 
     // Set camera e sistema ortonormale destro
     private void cameraInit() {

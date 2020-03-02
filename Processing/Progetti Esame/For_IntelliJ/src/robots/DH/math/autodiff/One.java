@@ -1,7 +1,6 @@
 package robots.DH.math.autodiff;
 
 import robots.DH.math.AbstractIdentityFactory;
-
 import robots.DH.math.Field;
 
 /**

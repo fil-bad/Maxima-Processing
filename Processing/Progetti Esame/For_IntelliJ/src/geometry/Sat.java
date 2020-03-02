@@ -132,7 +132,9 @@ public abstract class Sat {
                 projection2.getX() <= projection1.getY();
     }
 
-    /** Demo main**/
+    /**
+     * Demo main
+     **/
     public static void main(String[] args) throws Exception {
         // creating two polygons
         System.out.println("####Intersect polygons:####");

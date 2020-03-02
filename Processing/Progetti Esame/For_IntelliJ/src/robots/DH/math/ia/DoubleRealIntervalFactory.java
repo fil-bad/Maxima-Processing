@@ -12,6 +12,9 @@ import robots.DH.math.AbstractRealNumberFactory;
 public class DoubleRealIntervalFactory implements AbstractRealNumberFactory<DoubleRealInterval> {
 
     private static final DoubleRealIntervalFactory m_INSTANCE = new DoubleRealIntervalFactory();
+    private static final DoubleRealInterval m_ZERO = new DoubleRealInterval(IA_RealIntervalFactory.instance().zero());
+    private static final DoubleRealInterval m_UNIT = new DoubleRealInterval(IA_RealIntervalFactory.instance().one());
+
 
     private DoubleRealIntervalFactory() {
     }
@@ -24,7 +27,6 @@ public class DoubleRealIntervalFactory implements AbstractRealNumberFactory<Doub
     public static DoubleRealIntervalFactory instance() {
         return m_INSTANCE;
     }
-
 
     /**
      * Returns an object of DoubleRealInterval whose value is i_v.
@@ -57,10 +59,6 @@ public class DoubleRealIntervalFactory implements AbstractRealNumberFactory<Doub
     public DoubleRealInterval valWithTolerance(double i_center, double i_eps) {
         return new DoubleRealInterval(i_center - i_eps, i_center + i_eps);
     }
-
-
-    private static final DoubleRealInterval m_ZERO = new DoubleRealInterval(IA_RealIntervalFactory.instance().zero());
-    private static final DoubleRealInterval m_UNIT = new DoubleRealInterval(IA_RealIntervalFactory.instance().one());
 
     public DoubleRealInterval zero() {
         return m_ZERO;

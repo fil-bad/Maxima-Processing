@@ -1,8 +1,8 @@
 package robots.DH.math.ia;
 
-import robots.DH.math.RealNumber;
 import net.sourceforge.interval.ia_math.IAMath;
 import net.sourceforge.interval.ia_math.RealInterval;
+import robots.DH.math.RealNumber;
 
 public class DoubleRealInterval implements RealNumber<DoubleRealInterval>, Cloneable {
 
@@ -18,6 +18,10 @@ public class DoubleRealInterval implements RealNumber<DoubleRealInterval>, Clone
 
     public DoubleRealInterval(double i_v1, double i_v2) {
         m_x = new RealInterval(i_v1, i_v2);
+    }
+
+    protected DoubleRealInterval(RealInterval i_v) {
+        m_x = i_v;
     }
 
     public RealInterval viewInternal() {
@@ -48,13 +52,8 @@ public class DoubleRealInterval implements RealNumber<DoubleRealInterval>, Clone
         return !(i_p < lo() || i_p > hi());
     }
 
-
-    protected DoubleRealInterval(RealInterval i_v) {
-        m_x = i_v;
-    }
-
     public String toString() {
-        return "[" + String.valueOf(m_x.lo()) + ", " + String.valueOf(m_x.hi()) + "]";
+        return "[" + m_x.lo() + ", " + m_x.hi() + "]";
     }
 
     public Object clone() {

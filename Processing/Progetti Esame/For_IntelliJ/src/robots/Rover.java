@@ -27,6 +27,7 @@ public class Rover implements Obj3D {
     int w = 40;
     int h = 10;
     float whellDeep;
+    double distChange;
 
     public Rover(PApplet win, Vertex start, double rho, double ka, double kp) {
         this.pos = start;
@@ -54,6 +55,7 @@ public class Rover implements Obj3D {
         this.rho = rho;
         this.ka = ka;
         this.kp = kp;
+        this.distChange = getRadius();
 
         float size;
         for (int i = 0; i < omniWheel.length; i++) {
@@ -141,15 +143,25 @@ public class Rover implements Obj3D {
 //        System.out.println("controllo");
 //        u.print();
         //Cambio obiettivo prima di fermarsi
-        if (u.normF() <= 1) {
+
+        if (pos.minus(obj).len() <= distChange || u.normF() <= 1) {
             if (!checkPoint.isEmpty()) {
                 obj = checkPoint.pollFirst();
             }
         }
-        if (Math.abs(u.get(0)) > 1)
-            u.set(0, Math.signum(u.get(0)));
-        if (Math.abs(u.get(1)) > 1)
-            u.set(1, Math.signum(u.get(1)));
+
+
+//        if(u.normF()>1)
+//            u=u.divide(u.normF());
+
+        double maxU = Math.max(Math.abs(u.get(0)), Math.abs(u.get(1)));
+        if (maxU > 1) {
+            u = u.divide(u.normF());
+        }
+//        if (Math.abs(u.get(0)) > 1)
+//            u.set(0, Math.signum(u.get(0)));
+//        if (Math.abs(u.get(1)) > 1)
+//            u.set(1, Math.signum(u.get(1)));
 
         // Errore troppo piccolo, smetto di fare l'update
         if (u.normF() < 0.0001) {
@@ -186,7 +198,7 @@ public class Rover implements Obj3D {
         return pos;
     }
 
-    public double getRatius() {
+    public double getRadius() {
         return Math.sqrt(2) * w / 2.0;      // diagonale quadrato/2 = raggio cerchio circoscritto
     }
 
@@ -210,13 +222,18 @@ public class Rover implements Obj3D {
     }
 
     @Override
+    public void setD(SimpleMatrix m) {
+        setD((float) m.get(0), (float) m.get(1), (float) m.get(2));
+
+    }
+
+    @Override
     public double getR() {
         return 0;
     }
 
     @Override
-    public void setD(SimpleMatrix m) {
-        setD((float) m.get(0), (float) m.get(1), (float) m.get(2));
+    public void setR(double rad) {
 
     }
 
@@ -232,11 +249,6 @@ public class Rover implements Obj3D {
 
     @Override
     public void addD(float x, float y, float z) {
-
-    }
-
-    @Override
-    public void setR(double rad) {
 
     }
 

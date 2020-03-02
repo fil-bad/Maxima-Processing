@@ -6,6 +6,7 @@ import graph.QTGraph;
 import org.ejml.simple.SimpleMatrix;
 import processing.core.PApplet;
 import quadtree.QuadTree;
+import robots.Robot;
 import robots.Rover;
 
 import java.util.Vector;
@@ -13,23 +14,21 @@ import java.util.Vector;
 
 public class SceneExpert implements Observer {
     protected static SceneExpert instance = null;
+    public float robotR;
     PApplet win = null;
     CommonDraw com = CommonDraw.getInstance();
-
+    boolean sceneChange = true;
     // Oggetti grafici della scena
     private Vector<Obj3D> bodies;
     private Vector<Obstacle> obs;
     private Terra gnd = null;
-
-    boolean sceneChange = true;
-
     // Informazioni della scena
     private QuadTree qt;
     private QTGraph qtGraph;
-
     //Parametri Robot
     private Rover rover;
-    public float robotR;
+
+    private Robot robot;
 
 
     protected SceneExpert(PApplet win) {
@@ -66,11 +65,12 @@ public class SceneExpert implements Observer {
         qtGraph.printGraph(win, 10);
         qtGraph.printPath(win, 15);
 
-        rover.draw();
         win.push();
+        rover.draw();
         SimpleMatrix transl = rover.getD();
         win.translate((float) transl.get(0), (float) transl.get(1), (float) transl.get(2));
-        com.axes(255);
+//        com.axes(255);
+        robot.draw();
         win.pop();
     }
 
@@ -82,13 +82,21 @@ public class SceneExpert implements Observer {
         return this.gnd;
     }
 
-    public void addRover(Rover r) {
+    public void setRover(Rover r) {
         this.rover = r;
-        robotR = (float) r.getRatius();
+        robotR = (float) r.getRadius();
     }
 
     public Rover getRover() {
         return this.rover;
+    }
+
+    public void setRobot(Robot r) {
+        this.robot = r;
+    }
+
+    public Robot getRobot() {
+        return this.robot;
     }
 
     public void addObstacle(Obstacle ob) {

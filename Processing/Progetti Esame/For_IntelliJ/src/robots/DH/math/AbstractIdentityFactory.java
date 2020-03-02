@@ -8,18 +8,18 @@ package robots.DH.math;
  */
 public interface AbstractIdentityFactory<X> {
 
-	/**
-	 * Returns the zero element (additive identity) of X.
-	 *
-	 * @return the zero element of X.
-	 */
-	X zero();
+    /**
+     * Returns the zero element (additive identity) of X.
+     *
+     * @return the zero element of X.
+     */
+    X zero();
 
-	/**
-	 * Returns the unity (multiplicative identity) of X.
-	 *
-	 * @return the unity of X.
-	 */
-	X one();
+    /**
+     * Returns the unity (multiplicative identity) of X.
+     *
+     * @return the unity of X.
+     */
+    X one();
 
 }

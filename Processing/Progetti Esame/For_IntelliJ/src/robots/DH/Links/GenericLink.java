@@ -1,7 +1,9 @@
-package robots.DH;
+package robots.DH.Links;
 
 import processing.core.PApplet;
 import processingElement.CommonDraw;
+import robots.DH.MatrixQ;
+import robots.DH.RobVars;
 import robots.DH.math.DoubleReal;
 import robots.DH.math.autodiff.Variable;
 
@@ -13,14 +15,13 @@ public abstract class GenericLink implements Link {
     protected MatrixQ Q0_1;
 
     protected CommonDraw com = CommonDraw.getInstance();
-
+    protected float sqB;  // lato del quadrato del connettore
     //Parametri per il disegno
     PApplet win;
-    protected float connectWith;  // da usare nel disegno
 
 
     protected GenericLink(PApplet win) {
-        connectWith = 10;   // valore di default
+        sqB = 10;   // valore di default
         this.win = win;
 
     }
