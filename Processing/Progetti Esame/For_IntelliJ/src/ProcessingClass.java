@@ -54,7 +54,7 @@ public class ProcessingClass extends PApplet {
 
         scene.setRover(new Rover(this, new Vertex(100, 100), 0.1, 0.15, 0.03));
         scene.setRobot(new Cartesian(this, 10));
-        scene.getRobot().set(40, 20, 30);
+        scene.getRobot().set(40, 20, 30, 1, 1, 1);
 
     }
 
@@ -64,8 +64,8 @@ public class ProcessingClass extends PApplet {
         cameraSet();
 
         if (keyPressed) {
-            if (key == '+') scene.getRobot().add(giunto, 1);
-            if (key == '-') scene.getRobot().add(giunto, -1);
+            if (key == '+') scene.getRobot().add(giunto, 0.05);
+            if (key == '-') scene.getRobot().add(giunto, -0.05);
         }
 
         if (selected != null) {
@@ -126,9 +126,7 @@ public class ProcessingClass extends PApplet {
             scene.addObstacle(new Box(this, (int) random(10, 100), (int) random(10, 100), (int) random(10, 30), color(random(255), random(255), random(255), 100)));
         }
 
-        if (key == '1') giunto = 0;
-        if (key == '2') giunto = 1;
-        if (key == '3') giunto = 2;
+        if (key >= '1' && key <= '6') giunto = key - '1';
     }
 
     // Set camera e sistema ortonormale destro

@@ -158,16 +158,18 @@ public class CommonDraw {
     }
 
     public float drawCylinder(int sides, float r, float h, boolean plane) {
+        axes(150);
         //ritorna distanza tra origine e lato piano
         win.noStroke();
         win.colorMode(win.HSB, 360, 100, 100);
         int n = 0;
-        if (plane)
+        if (plane) {
             n = 4;    //45° piani
-//        int n = 4 * win.int(plane); //45° piatti
+            win.rotateZ((float) Math.PI / 6.0f);
+        }
         float angle = (float) 360.0 / sides;
-        float halfHeight = h / 2;
-        win.rotateZ(-win.PI / 2);
+        float halfHeight = h / 2.0f;
+//        win.rotateZ(-win.PI / 2.0f);
 
         // draw top of the tube
         win.beginShape();

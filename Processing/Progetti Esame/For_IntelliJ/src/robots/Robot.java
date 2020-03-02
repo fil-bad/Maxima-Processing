@@ -11,6 +11,8 @@ public abstract class Robot {
 
     public abstract void draw();
 
+    public abstract void inverse(double x, double y, double z, double theta);
+
     public void set(String name, double qVal) {
         dhTab.getDHVar().setVars(name, qVal);
     }

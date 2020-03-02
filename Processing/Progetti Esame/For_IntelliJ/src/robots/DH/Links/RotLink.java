@@ -27,6 +27,26 @@ public class RotLink extends GenericLink {
 
     @Override
     public void draw() {
+        //todo: Ste rotazioni non vanno sicuramente bene
+        theta = Q0_1.getRobVars().getVar(0).getValue().doubleValue();
+        com.axes(255);
+
+        win.rotateY(-(float) Math.PI / 2.0f);
+        win.rotateZ((float) theta);
+        float planeH = com.drawCylinder(16, (float) sqB, sqB, false);
+        win.rotateY((float) Math.PI / 2.0f);
+
+        //Escamotage perchè drawBoxBase cresce lungo la Z locale
+        com.drawBoxBase((float) (d - planeH) * 47 / 48.0f, sqB * 0.9f, win.color(255, 0, 0));
+        com.drawBoxBase((float) (d - planeH) / 48.0f, sqB, win.color(0, 255, 255));
+
+        win.rotateX((float) alpha);
+        win.rotateY(-(float) Math.PI / 2.0f);
+        com.drawBoxBase((float) a * 47 / 48.0f, sqB * 0.9f, win.color(255, 150, 150));
+        com.drawBoxBase((float) a / 48.0f, sqB, win.color(0, 255, 255));
+        win.rotateY((float) Math.PI / 2.0f);
+
+        com.axes(255);
 
     }
 
