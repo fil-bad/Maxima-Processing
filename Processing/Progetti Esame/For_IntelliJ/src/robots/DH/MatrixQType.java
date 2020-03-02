@@ -1,5 +1,5 @@
 package robots.DH;
 
 public enum MatrixQType {
-    RotX, RotZ, TslX, TslZ
+    RotX, RotZ, TslX, TslZ, AvvX, AvvZ
 }

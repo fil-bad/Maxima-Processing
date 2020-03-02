@@ -16,6 +16,9 @@ public class MatrixQ implements DifferentialMatrixFunction {
     private static final DoubleRealFactory RNFactory = DoubleRealFactory.instance();
     private static final DifferentialRealFunctionFactory<DoubleReal> DFFactory = new DifferentialRealFunctionFactory<DoubleReal>(RNFactory);
 
+    private static final Constant<DoubleReal> zero = DFFactory.val(new DoubleReal(0));
+
+
     // 4x4 dimension, as the below one
     //  ________________
     // |       .        |
@@ -47,8 +50,6 @@ public class MatrixQ implements DifferentialMatrixFunction {
         this.matrix = new DifferentialFunction[row][col];
         this.var_s = new RobVars();
 
-        Constant<DoubleReal> zero = DFFactory.val(new DoubleReal(0));
-
         for (int i = 0; i < this.row; i++) {
             for (int j = 0; j < this.col; j++) {
                 this.matrix[i][j] = zero;
@@ -77,8 +78,41 @@ public class MatrixQ implements DifferentialMatrixFunction {
             case TslZ:
                 this.setTslZ(var, value);
                 break;
+            case AvvZ:
+            case AvvX:
+                throw new RuntimeException("Wrong constructor");
         }
     }
+
+    public MatrixQ(MatrixQType type, String rotName, double rot, String traslName, double trasl) {
+        this();
+        switch (type) {
+            case RotX:
+                this.setRotX(rotName, rot);
+                break;
+            case TslX:
+                this.setTslX(traslName, trasl);
+                break;
+            case RotZ:
+                this.setRotZ(rotName, rot);
+                break;
+            case TslZ:
+                this.setTslZ(traslName, trasl);
+                break;
+            case AvvX:
+                this.setAvvX(rot, trasl);
+                break;
+            case AvvZ:
+                if (rotName.isBlank() && !traslName.isBlank())   // voglio una matrice di traslazione e rotazione fissa
+                    this.setAvvZ(traslName, rot, AvvType.TslVariable);
+                else if (!rotName.isBlank() && traslName.isBlank()) // voglio una matrice di rotazione e traslazione fissa
+                    this.setAvvZ(rotName, trasl, AvvType.RotVariable);
+                else
+                    throw new RuntimeException("Impossible to determinate the type of wanted matrix");
+                break;
+        }
+    }
+
 
     public MatrixQ(MatrixQ mat) {
         this(mat.getRowDim(), mat.getColDim());

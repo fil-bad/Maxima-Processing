@@ -1,54 +1,61 @@
 package robots.DH;
 
+import processing.core.PApplet;
+import processingElement.CommonDraw;
 import robots.DH.math.DoubleReal;
-import robots.DH.math.autodiff.DifferentialFunction;
 import robots.DH.math.autodiff.Variable;
 
-public class GenericLink implements Link {
+public abstract class GenericLink implements Link {
 
-    private String d_qi;
-    private String theta;
-    private double alpha;
-    private double a;
+    protected String Theta, D;
+    protected double theta, d, alpha, a;
 
-    private MatrixQ Q0_1;
+    protected MatrixQ Q0_1;
+
+    protected CommonDraw com = CommonDraw.getInstance();
+
+    //Parametri per il disegno
+    PApplet win;
+    protected float connectWith;  // da usare nel disegno
 
 
-    public GenericLink(String theta, String qi, double alpha, double a) {
+    protected GenericLink(PApplet win) {
+        connectWith = 10;   // valore di default
+        this.win = win;
 
-        this.theta = theta;
-        this.d_qi = qi;
-        this.alpha = alpha;
-        this.a = a;
-
-//        MatrixQ avvZ = new MatrixQ().setRotZ("", (double)theta.length()).mul(new MatrixQ().setTraslZ(qi, 0));
-//        MatrixQ avvX = new MatrixQ().setRotX("", alpha).mul(new MatrixQ().setTraslX("", a));
-//        this.Q0_1 = avvZ.mul(avvX);
     }
+
+    public abstract void draw();
 
 
     @Override
     public MatrixQ getQLink() {
-        return null;
+        return this.Q0_1;
     }
 
     @Override
     public Variable<DoubleReal> getVar() {
-        return null;
+        return this.Q0_1.getRobVars().getVar(0);
     }
 
     @Override
-    public String whichQ_iIs() {
-        return null;
+    public RobVars whichQ_iIs() {
+        return this.Q0_1.getRobVars();
     }
 
     @Override
     public void printLink() {
-
+        System.out.printf("[%s  %s  %.3f  %.3f]", this.Theta, this.D, this.alpha, this.a);
     }
 
     @Override
     public void printValLink() {
+        if (!Theta.isBlank() && D.isBlank())
+            System.out.printf("[%.3f  %.3f  %.3f  %.3f]", getVar().getValue().doubleValue(), this.d, this.alpha, this.a);
+        else if (Theta.isBlank() && !D.isBlank())
+            System.out.printf("[%.3f  %.3f  %.3f  %.3f]", this.theta, getVar().getValue().doubleValue(), this.alpha, this.a);
+        else
+            System.out.printf("[%.3f  %.3f  %.3f  %.3f]", this.theta, this.d, this.alpha, this.a);
 
     }
 }

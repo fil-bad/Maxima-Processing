@@ -1,6 +1,7 @@
 package robots.DH;
 
 import org.ejml.simple.SimpleMatrix;
+import processing.core.PApplet;
 
 import static java.lang.Math.*;
 
@@ -20,27 +21,46 @@ public class DenHart {
 
     private MatrixQ J;
 
+    PApplet win;
+
     /**
      * Constructors
      */
 
     public DenHart() {
+        this((PApplet) null);
+    }
+
+    public DenHart(PApplet win) {
         this.denHartTab = new ArrayList<Link>(0);
         this.Q_tot = new MatrixQ().setIdentity();
 //        this.vars = new ArrayList<Variable<DoubleReal>>(0);
         this.vars = new RobVars();
         this.J = this.getDsym().jacobian();
+
+        this.win = win;
     }
-    public DenHart(ArrayList<Link> denHartTab) {
-        this();
+
+    private DenHart(PApplet win, ArrayList<Link> denHartTab) {
+        this(win);
         for (Link l : denHartTab) {
             this.addLink(l);
         }
     }
+
     public DenHart(DenHart denHart) {
         this.denHartTab = denHart.getLinks();
         this.Q_tot = denHart.Q_tot;
         this.vars = denHart.vars;
+        this.win = denHart.win;
+    }
+
+    public void draw() {
+        win.push();
+        for (Link l : denHartTab) {
+            l.draw();
+        }
+        win.pop();
     }
 
     /**
@@ -57,13 +77,13 @@ public class DenHart {
 
     public Link removeLink() {
         // remove last link (-> entry of D-H table). WARNING: could be very heavy to compute.
-
+        //todo: vedere di ottimizare
         Link link2ret = this.denHartTab.remove(denHartTab.size() - 1);
-        DenHart dhTmp = new DenHart(this.denHartTab);
+        DenHart dhTmp = new DenHart(win, this.denHartTab);
         // we copy only the fields we need
         this.Q_tot = dhTmp.Q_tot;
         this.vars = dhTmp.vars;
-        this.J = this.getDsym().jacobian();
+        this.J = dhTmp.getDsym().jacobian();
         return link2ret;
     }
 
