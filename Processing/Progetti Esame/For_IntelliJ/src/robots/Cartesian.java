@@ -26,48 +26,53 @@ public class Cartesian extends Robot {
     @Override
     public void inverse(double x, double y, double z, double theta) {
 
+        // Matrici di peso dell'errore
+        SimpleMatrix Ke;
+        double lambda = 1 / 25.0;
+        double gamma = 1 / 3000.0;
+        Ke = new SimpleMatrix(6, 6);
 
-        double lambda = 1 / 100.0;
-        SimpleMatrix qCap, qJ, qCapNew, J, P, pCap;
+        Ke.set(0, 0, lambda);
+        Ke.set(1, 1, lambda);
+        Ke.set(2, 2, lambda);
+        Ke.set(3, 3, gamma);
+        Ke.set(4, 4, gamma);
+        Ke.set(5, 5, gamma);
+
+        SimpleMatrix ep, eo;
+        ep = new SimpleMatrix(3, 1);
+        ep.set(0, x);
+        ep.set(1, y);
+        ep.set(2, z);
+        ep = ep.minus(dhTab.getD());
+        ep.print();
+
+        // Errore orientamento mediante terna ZYZ di eulero (polso sferico)
+//        SimpleMatrix rDes = new SimpleMatrix(3,3);
+//        rDes.set(0,0, Math.cos(theta)); rDes.set(0,1, -Math.sin(theta));
+//        rDes.set(1,0, Math.sin(theta)); rDes.set(1,1, Math.cos(theta));
+//        rDes.set(1,1,-1.0); // Pinsa verso il basso sempre (da progetto
+
+        eo = new SimpleMatrix(3, 1);
+        eo.set(0, 0);
+        eo.set(1, 0);
+        eo.set(2, 0);
+
+        SimpleMatrix qCap, qJ, qCapNew, Jp;
         qCap = dhTab.getDHVar().get_qVect();
-        P = new SimpleMatrix(3, 1);
-        P.set(0, x);
-        P.set(1, y);
-        P.set(2, z);
-        pCap = dhTab.getD();
-        J = dhTab.getJ();
+        Jp = dhTab.getJ();
+        qJ = Ke.mult(Jp.transpose().mult(ep));
 
-        qJ = J.transpose().scale(lambda).mult(P.minus(pCap));
-        //Ulteriore scala per il passo di incremento dei giunti rotoidali
-        qJ.set(3, qJ.get(3) * lambda);
-        qJ.set(4, qJ.get(4) * lambda);
-        qJ.set(5, qJ.get(5) * lambda);
+        //Necessario calcolare ancora Joa ( jacobbiano dell'orientamento)
+//        SimpleMatrix error = Kp.mult(ep).concatRows(Ko.mult(eo));
+//        error.print();
+//        Jp.print();
+//        qJ = Jp.transpose().mult(error);
+
 
         qCapNew = qCap.plus(qJ);
         dhTab.getDHVar().setVars(qCapNew);
 
-//        System.out.println("Q");
-//        dhTab.getQ().print();
-//
-//        System.out.println("P");
-//        P.print();
-        System.out.println("pCap");
-        pCap.print();
-//
-//        System.out.println("P-pCap");
-//        P.minus(pCap).print();
-//
-//        System.out.println("J");
-//        J.print();
-//        System.out.println("Jt");
-//        J.transpose().print();
-//
-//        System.out.println("J*lambda * (p-pcap)");
-//        qJ.print();
-//
-//        System.out.println("qCapNew");
-//        qCapNew.print();
-//
         System.out.println();
 
     }
