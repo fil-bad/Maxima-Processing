@@ -123,13 +123,20 @@ public class DenHart {
     public void addLink(Link link) {
         //append a new link to D-H table
         this.dhTab.add(link);
+        System.out.println("Matrice da aggiungere in costrizione");
+        link.getQLink().printMatSym();
+//        MatrixQ tmp = this.Q_tot.mul(link.getQLink());
+//        this.Q_tot = tmp;
         this.Q_tot.mulOnSelf(link.getQLink());
+        System.out.println("Matrice risultante");
+        this.Q_tot.printMatSym();
 //        this.vars.addVar(link.getVar());
 //        this.Q_tot.getRobVars().addVar(link.getVar());
 
-        this.getDsym().printMatSym();
+//        this.getDsym().printMatSym();
 
         this.J = this.getDsym().jacobian();
+//        this.J.printMatSym();
     }
 
     public Link removeLastLink() {

@@ -55,8 +55,8 @@ public class Cartesian extends Robot {
 //
 //
 //
-//        System.out.println("J");
-//        J.print();
+        System.out.println("J");
+        J.print();
 //        System.out.println("Jt");
 //        J.transpose().print();
 //

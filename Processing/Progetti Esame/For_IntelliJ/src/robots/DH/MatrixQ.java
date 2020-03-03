@@ -136,11 +136,12 @@ public class MatrixQ implements DifferentialMatrixFunction {
 
         int col_b = ((MatrixQ) i_v).getColDim();
         MatrixQ tmp = new MatrixQ(this.getRowDim(), col_b);
-
+//        DifferentialFunction<DoubleReal> camp = zero;
 
         for (int i = 0; i < this.getRowDim(); i++) { // aRow
             for (int j = 0; j < ((MatrixQ) i_v).getColDim(); j++) { // bColumn
                 for (int k = 0; k < this.getColDim(); k++) { // aColumn
+//                    camp = camp.plus(this.matrix[i][k].mul(mat2mul[k][j]));
                     tmp.matrix[i][j] = tmp.matrix[i][j].plus(this.matrix[i][k].mul(mat2mul[k][j]));
                 }
             }
@@ -469,8 +470,6 @@ public class MatrixQ implements DifferentialMatrixFunction {
      */
 
     public SimpleMatrix getNumeric() {
-        System.out.println("getNumeric:");
-        printMatSym();
         double[][] dataMat = new double[this.getRowDim()][this.getColDim()];
         for (int i = 0; i < this.row; i++) {
             for (int j = 0; j < this.col; j++) {
@@ -683,12 +682,10 @@ public class MatrixQ implements DifferentialMatrixFunction {
         trl1.printMatSym();
         trl1.getVPos().printMatSym();
         trl1.getVPos().jacobian().printMatSym();
-        System.out.println("Ora ci moltiplico una rotazione 90°");
-        MatrixQ avvZ = new MatrixQ(4, 4).setRotZ("", Math.PI / 2.0);
-        trl1.mulOnSelf(avvZ).printMatValue();
-        trl1.printMatSym();
-        trl1.getVPos().printMatSym();
-        trl1.getVPos().jacobian().printMatSym();
+
+
+        System.out.println("### TEST Jacobiano di Avx e Avz: ###");
+        //todo: test per questa rotazione
 
     }
 }
