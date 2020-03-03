@@ -57,7 +57,7 @@ public class SceneExpert implements Observer {
         }
         if (sceneChange) {
             sceneChange = false;
-            qt = new QuadTree(getObstacles(), getGnd().getBoundary(), robotR);
+            qt = new QuadTree(getObstacles(), getGnd().getBoundary(), robotR/3);
             qtGraph = new QTGraph(win, qt, robotR, getObstacles());
         }
 
