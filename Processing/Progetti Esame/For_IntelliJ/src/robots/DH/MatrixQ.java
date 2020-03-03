@@ -19,6 +19,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
     private static final DifferentialRealFunctionFactory<DoubleReal> DFFactory = new DifferentialRealFunctionFactory<DoubleReal>(RNFactory);
 
     private static final Constant<DoubleReal> zero = DFFactory.val(new DoubleReal(0));
+    private static final Constant<DoubleReal> one = DFFactory.val(new DoubleReal(1));
 
 
     // 4x4 dimension, as the below one
@@ -282,7 +283,17 @@ public class MatrixQ implements DifferentialMatrixFunction {
             tmp.matrix[1][0] = DFFactory.sin(q);
             tmp.matrix[1][1] = DFFactory.cos(q);
         } else { //we have a constant
-            if (value != 0) {
+            if (value == PI / 2.0) {
+                tmp.matrix[0][0] = zero;
+                tmp.matrix[0][1] = one.negate();
+                tmp.matrix[1][0] = one;
+                tmp.matrix[1][1] = zero;
+            } else if (value == -PI / 2.0) {
+                tmp.matrix[0][0] = zero;
+                tmp.matrix[0][1] = one;
+                tmp.matrix[1][0] = one.negate();
+                tmp.matrix[1][1] = zero;
+            } else if (value != 0) {
                 Constant<DoubleReal> c = DFFactory.val(new DoubleReal(value));
                 tmp.matrix[0][0] = DFFactory.cos(c);
                 tmp.matrix[0][1] = DFFactory.sin(c).negate();
@@ -338,7 +349,17 @@ public class MatrixQ implements DifferentialMatrixFunction {
             tmp.matrix[2][1] = DFFactory.sin(q);
             tmp.matrix[2][2] = DFFactory.cos(q);
         } else { //we have a constant
-            if (value != 0) {
+            if (value == PI / 2.0) {
+                tmp.matrix[1][1] = zero;
+                tmp.matrix[1][2] = one.negate();
+                tmp.matrix[2][1] = one;
+                tmp.matrix[2][2] = zero;
+            } else if (value == -PI / 2.0) {
+                tmp.matrix[1][1] = zero;
+                tmp.matrix[1][2] = one;
+                tmp.matrix[2][1] = one.negate();
+                tmp.matrix[2][2] = zero;
+            } else if (value != 0) {
                 Constant<DoubleReal> c = DFFactory.val(new DoubleReal(value));
                 tmp.matrix[1][1] = DFFactory.cos(c);
                 tmp.matrix[1][2] = DFFactory.sin(c).negate();
