@@ -15,6 +15,7 @@ public class RobVars {
         vars = new LinkedList<Variable<DoubleReal>>();
     }
 
+
     /**
      * Manipolate variable space
      **/

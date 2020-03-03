@@ -68,7 +68,7 @@ public class ProcessingClass extends PApplet {
             if (key == '-') scene.getRobot().add(giunto, -0.5);
 
             if (key == 'i' || key == 'I') {
-                scene.getRobot().inverse(0, 50, 50, 0);
+                scene.getRobot().inverse(50, 50, 50, 0);
             }
         }
 

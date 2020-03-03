@@ -25,7 +25,7 @@ public class AutoDiff_Main {
 
         //h = q*x*( cos(x*y) + y )
         //DifferentialFunction<DoubleReal> h = q.mul(x).mul( DFFactory.cos( x.mul(y) ).plus(y) );
-        DifferentialFunction<DoubleReal> h = xVar.plus(q);
+        DifferentialFunction<DoubleReal> h = xVar;
         System.out.println(h.toString());
 
         System.out.println(h.getValue().doubleValue());
@@ -33,6 +33,10 @@ public class AutoDiff_Main {
         xVar.set(new DoubleReal(42));
 
         System.out.println(h.getValue().doubleValue());
+
+        DifferentialFunction<DoubleReal> h1 = h.mul(5);
+        System.out.println(h1.toString());
+
 
 //
 //

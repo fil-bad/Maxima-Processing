@@ -116,7 +116,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
         }
     }
 
-
+    // create another obj with same variable
     public MatrixQ(MatrixQ mat) {
         this(mat.getRowDim(), mat.getColDim());
         this.matrix = mat.getMatrix();
@@ -294,6 +294,11 @@ public class MatrixQ implements DifferentialMatrixFunction {
                 tmp.matrix[0][1] = one;
                 tmp.matrix[1][0] = one.negate();
                 tmp.matrix[1][1] = zero;
+            } else if (value == PI || value == -PI) {
+                tmp.matrix[0][0] = one.negate();
+                tmp.matrix[0][1] = zero;
+                tmp.matrix[1][0] = one.negate();
+                tmp.matrix[1][1] = zero;
             } else if (value != 0) {
                 Constant<DoubleReal> c = DFFactory.val(new DoubleReal(value));
                 tmp.matrix[0][0] = DFFactory.cos(c);
@@ -360,6 +365,11 @@ public class MatrixQ implements DifferentialMatrixFunction {
                 tmp.matrix[1][2] = one;
                 tmp.matrix[2][1] = one.negate();
                 tmp.matrix[2][2] = zero;
+            } else if (value == PI || value == -PI) {
+                tmp.matrix[1][1] = one.negate();
+                tmp.matrix[1][2] = zero;
+                tmp.matrix[2][1] = one.negate();
+                tmp.matrix[2][2] = zero;
             } else if (value != 0) {
                 Constant<DoubleReal> c = DFFactory.val(new DoubleReal(value));
                 tmp.matrix[1][1] = DFFactory.cos(c);
@@ -387,8 +397,8 @@ public class MatrixQ implements DifferentialMatrixFunction {
     }
 
     public MatrixQ setAvvX(double alpha, double a) {
-        MatrixQ tmp_rot = new MatrixQ().setRotZ("", alpha);
-        MatrixQ tmp_tsl = new MatrixQ().setTslZ("", a);
+        MatrixQ tmp_rot = new MatrixQ().setRotX("", alpha);
+        MatrixQ tmp_tsl = new MatrixQ().setTslX("", a);
         tmp_rot.setVPos(tmp_tsl.getVPos());
         return tmp_rot;
     }
@@ -605,53 +615,75 @@ public class MatrixQ implements DifferentialMatrixFunction {
 
     public static void main(String[] args) {
 
-        MatrixQ m1 = new MatrixQ();
+        System.out.println("###Test moltiplicazione 2 matrixi 2x2###");
+        MatrixQ A = new MatrixQ(2, 2, "a1", "b1", "c1", "d1");
+        A.getMatrix()[0][0] = A.getRobVars().getVar("a1");
+        A.getMatrix()[0][1] = A.getRobVars().getVar("b1");
+        A.getMatrix()[1][0] = A.getRobVars().getVar("c1");
+        A.getMatrix()[1][1] = A.getRobVars().getVar("d1");
+        A.printMatSym();
+        MatrixQ B = new MatrixQ(2, 2, "a2", "b2", "c2", "d2");
+        B.getMatrix()[0][0] = B.getRobVars().getVar("a2");
+        B.getMatrix()[0][1] = B.getRobVars().getVar("b2");
+        B.getMatrix()[1][0] = B.getRobVars().getVar("c2");
+        B.getMatrix()[1][1] = B.getRobVars().getVar("d2");
+        B.printMatSym();
+        MatrixQ C = A.mul(B);
+        C.printMatSym();
 
+        System.out.println("###Test moltiplicazione 2 matrixi 2x2 con Self###");
+        A.mulOnSelf(B);
+        A.printMatSym();
+
+        System.out.println("###Test Creazione matrice###");
+        MatrixQ m1 = new MatrixQ();
+        m1.printMatSym();
+
+        System.out.println("###Test SetIdentity###");
         m1.setIdentity();
         m1.printMatSym();
 
-        m1.negate();
-        m1.printMatSym();
-        m1.mul(12);
+        System.out.println("###Test Negazione###");
+        MatrixQ app;
+        app = m1.negate();
+        app.printMatSym();
 
-        System.out.println("M1:");
-        m1.printMatSym();
+        System.out.println("###Test moltiplicazione scalare###");
+        //Moltiplicazione bene ma nel simbolico scrive male (non aggiunge le parentesi necessarie)
+        app = m1.mul(12);
+        app.printMatSym();
+        app.printMatValue();
 
+
+        System.out.println("###Test creazione di variabili###");
         MatrixQ m2 = new MatrixQ(4, 4, "q1", "q2").setIdentity().mul(5).plus(m1);
         System.out.println("M2:");
         m2.printMatSym();
 
-        MatrixQ m3 = m1.mul(m2);
-        System.out.println("M3:");
-        m3.printMatSym();
-
-
+        System.out.println("###Test Copia matrice###");
+        //todo: così non serve a nulla, duplica i campi ma non cambia gli oggetti
         MatrixQ m4 = new MatrixQ(m2);
         m4.printVar_s();
 
+        System.out.println("###Test Traslazione Z###");
         MatrixQ m5 = new MatrixQ().setTslZ("q2", 15);
         m5.printMatSym();
 
-        MatrixQ m6 = m4.setIdentity().setRotZ("q1", PI / 2).mul(m5);
+        System.out.println("###Test Traslazione*Rotazione Z###");
+        MatrixQ m6 = new MatrixQ().setRotZ("q1", PI / 2).mul(m5);
         m6.printMatSym();
 
+        System.out.println("###Test jacobiano della posizioe di una Rotazione Z###");
         MatrixQ jac = m6.getVPos().jacobian();
         jac.printMatSym();
         jac.printMatValue();
 
+        System.out.println("###Test potenza di matrice###");
         MatrixQ m7 = m6.pow(2);
         m7.printMatSym();
         m7.printMatValue();
-
         m7.printVar_s();
 
-        MatrixQ m8 = m6.setIdentity().setAvvZ("q1", 10, AvvType.RotVariable);
-        MatrixQ m9 = m6.setIdentity().setAvvZ("q1", 10, AvvType.TslVariable);
-
-        m8.printMatSym();
-        m8.printVar_s();
-        m9.printMatSym();
-        m9.printVar_s();
 
         System.out.println("### TEST MulOnSelf: ###");
         MatrixQ m10 = new MatrixQ().setTslX("q1", 10);
@@ -683,9 +715,6 @@ public class MatrixQ implements DifferentialMatrixFunction {
         trl1.getVPos().printMatSym();
         trl1.getVPos().jacobian().printMatSym();
 
-
-        System.out.println("### TEST Jacobiano di Avx e Avz: ###");
-        //todo: test per questa rotazione
 
     }
 }
