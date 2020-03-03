@@ -4,6 +4,7 @@ import org.ejml.simple.SimpleMatrix;
 import robots.DH.math.DoubleReal;
 import robots.DH.math.autodiff.Variable;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 public class RobVars {
@@ -64,6 +65,15 @@ public class RobVars {
         }
     }
 
+    public void setVars(SimpleMatrix q) {
+        assert (q.numRows() == this.vars.size()); //we have to update all variables at once
+        int i = 0;
+        for (Variable<DoubleReal> var : this.vars) {
+            var.set(new DoubleReal(q.get(i)));
+            i++;
+        }
+    }
+
     public void setVars(String qi, double val) {
         getVar(qi).set(new DoubleReal(val));
     }
@@ -114,8 +124,14 @@ public class RobVars {
 
     public String[] getVarsName() {
         if (this.vars.size() == 0) return null;
-        return this.vars.toArray(new String[vars.size()]);
+        String[] ret = new String[vars.size()];
+        for (int i = 0; i < vars.size(); i++) {
+            Variable<DoubleReal> v = vars.get(i);
+            ret[i] = v.getName();
+        }
+        return ret;
     }
+
 
     public int varSize() {
         return vars.size();
@@ -127,6 +143,10 @@ public class RobVars {
      **/
     public void printVar() {
         get_qVect().print();
+    }
+
+    public void printVarName() {
+        System.out.println(Arrays.toString(getVarsName()));
     }
 
 

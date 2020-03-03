@@ -5,6 +5,8 @@ import robots.DH.math.DoubleReal;
 import robots.DH.math.DoubleRealFactory;
 import robots.DH.math.autodiff.*;
 
+import java.util.Arrays;
+
 import static java.lang.Math.PI;
 
 public class MatrixQ implements DifferentialMatrixFunction {
@@ -120,56 +122,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
         this.var_s = mat.getRobVars();
     }
 
-    public static void main(String[] args) {
 
-        MatrixQ m1 = new MatrixQ();
-
-        m1.setIdentity();
-        m1.printMatSym();
-
-        m1.negate();
-        m1.printMatSym();
-        m1.mul(12);
-
-        System.out.println("M1:");
-        m1.printMatSym();
-
-        MatrixQ m2 = new MatrixQ(4, 4, "q1", "q2").setIdentity().mul(5).plus(m1);
-        System.out.println("M2:");
-        m2.printMatSym();
-
-        MatrixQ m3 = m1.mul(m2);
-        System.out.println("M3:");
-        m3.printMatSym();
-
-
-        MatrixQ m4 = new MatrixQ(m2);
-        m4.printVar_s();
-
-        MatrixQ m5 = new MatrixQ().setTslZ("q2", 15);
-        m5.printMatSym();
-
-        MatrixQ m6 = m4.setIdentity().setRotZ("q1", PI / 2).mul(m5);
-        m6.printMatSym();
-
-        MatrixQ jac = m6.getVPos().jacobian();
-        jac.printMatSym();
-        jac.printMatValue();
-
-        MatrixQ m7 = m6.pow(2);
-        m7.printMatSym();
-        m7.printMatValue();
-
-        m7.printVar_s();
-
-        MatrixQ m8 = m6.setIdentity().setAvvZ("q1", 10, AvvType.RotVariable);
-        MatrixQ m9 = m6.setIdentity().setAvvZ("q1", 10, AvvType.TslVariable);
-
-        m8.printMatSym();
-        m8.printVar_s();
-        m9.printMatSym();
-        m9.printVar_s();
-    }
 
     /**
      * The first part of this class contains method that return a copy to be saved locally with the operation done
@@ -329,11 +282,13 @@ public class MatrixQ implements DifferentialMatrixFunction {
             tmp.matrix[1][0] = DFFactory.sin(q);
             tmp.matrix[1][1] = DFFactory.cos(q);
         } else { //we have a constant
-            Constant<DoubleReal> c = DFFactory.val(new DoubleReal(value));
-            tmp.matrix[0][0] = DFFactory.cos(c);
-            tmp.matrix[0][1] = DFFactory.sin(c).negate();
-            tmp.matrix[1][0] = DFFactory.sin(c);
-            tmp.matrix[1][1] = DFFactory.cos(c);
+            if (value != 0) {
+                Constant<DoubleReal> c = DFFactory.val(new DoubleReal(value));
+                tmp.matrix[0][0] = DFFactory.cos(c);
+                tmp.matrix[0][1] = DFFactory.sin(c).negate();
+                tmp.matrix[1][0] = DFFactory.sin(c);
+                tmp.matrix[1][1] = DFFactory.cos(c);
+            }
         }
         return tmp;
     }
@@ -383,11 +338,13 @@ public class MatrixQ implements DifferentialMatrixFunction {
             tmp.matrix[2][1] = DFFactory.sin(q);
             tmp.matrix[2][2] = DFFactory.cos(q);
         } else { //we have a constant
-            Constant<DoubleReal> c = DFFactory.val(new DoubleReal(value));
-            tmp.matrix[1][1] = DFFactory.cos(c);
-            tmp.matrix[1][2] = DFFactory.sin(c).negate();
-            tmp.matrix[2][1] = DFFactory.sin(c);
-            tmp.matrix[2][2] = DFFactory.cos(c);
+            if (value != 0) {
+                Constant<DoubleReal> c = DFFactory.val(new DoubleReal(value));
+                tmp.matrix[1][1] = DFFactory.cos(c);
+                tmp.matrix[1][2] = DFFactory.sin(c).negate();
+                tmp.matrix[2][1] = DFFactory.sin(c);
+                tmp.matrix[2][2] = DFFactory.cos(c);
+            }
         }
         return tmp;
     }
@@ -491,7 +448,8 @@ public class MatrixQ implements DifferentialMatrixFunction {
      */
 
     public SimpleMatrix getNumeric() {
-
+        System.out.println("getNumeric:");
+        printMatSym();
         double[][] dataMat = new double[this.getRowDim()][this.getColDim()];
         for (int i = 0; i < this.row; i++) {
             for (int j = 0; j < this.col; j++) {
@@ -595,6 +553,7 @@ public class MatrixQ implements DifferentialMatrixFunction {
 
 
     public void printMatSym() {
+        System.out.println("printMatSym:");
         for (DifferentialFunction<DoubleReal>[] row : this.matrix) {
             for (DifferentialFunction<DoubleReal> col : row) {
                 System.out.print(col.toString() + " \t");
@@ -622,5 +581,93 @@ public class MatrixQ implements DifferentialMatrixFunction {
             }
         }
         System.out.println("]\n");
+    }
+
+    public static void main(String[] args) {
+
+        MatrixQ m1 = new MatrixQ();
+
+        m1.setIdentity();
+        m1.printMatSym();
+
+        m1.negate();
+        m1.printMatSym();
+        m1.mul(12);
+
+        System.out.println("M1:");
+        m1.printMatSym();
+
+        MatrixQ m2 = new MatrixQ(4, 4, "q1", "q2").setIdentity().mul(5).plus(m1);
+        System.out.println("M2:");
+        m2.printMatSym();
+
+        MatrixQ m3 = m1.mul(m2);
+        System.out.println("M3:");
+        m3.printMatSym();
+
+
+        MatrixQ m4 = new MatrixQ(m2);
+        m4.printVar_s();
+
+        MatrixQ m5 = new MatrixQ().setTslZ("q2", 15);
+        m5.printMatSym();
+
+        MatrixQ m6 = m4.setIdentity().setRotZ("q1", PI / 2).mul(m5);
+        m6.printMatSym();
+
+        MatrixQ jac = m6.getVPos().jacobian();
+        jac.printMatSym();
+        jac.printMatValue();
+
+        MatrixQ m7 = m6.pow(2);
+        m7.printMatSym();
+        m7.printMatValue();
+
+        m7.printVar_s();
+
+        MatrixQ m8 = m6.setIdentity().setAvvZ("q1", 10, AvvType.RotVariable);
+        MatrixQ m9 = m6.setIdentity().setAvvZ("q1", 10, AvvType.TslVariable);
+
+        m8.printMatSym();
+        m8.printVar_s();
+        m9.printMatSym();
+        m9.printVar_s();
+
+        System.out.println("### TEST MulOnSelf: ###");
+        MatrixQ m10 = new MatrixQ().setTslX("q1", 10);
+        MatrixQ m11 = new MatrixQ().setTslZ("q2", 20);
+        m10.mulOnSelf(m11);
+        m10.printMatSym();
+        m10.getRobVars().printVar();
+        System.out.println(Arrays.toString(m10.getRobVars().getVarsName()));
+
+        System.out.println("### TEST Jacobiano nella m10 con q1 e q2: ###");
+        m10.getVPos().printMatSym();
+        m10.getVPos().jacobian().printMatSym();
+
+        System.out.println("### TEST Jacobiano del vettore q1,q2,q3: ###");
+        MatrixQ vect = new MatrixQ(3, 1, "q1", "q2", "q3");
+        vect.matrix[0][0] = vect.getRobVars().getVar("q1");
+        vect.matrix[1][0] = vect.getRobVars().getVar("q2");
+        vect.matrix[2][0] = vect.getRobVars().getVar("q3");
+
+        vect.printMatSym();
+        vect.printMatValue();
+        vect.jacobian().printMatSym();
+
+        System.out.println("### TEST Jacobiano di 2 trasl si Z: ###");
+        MatrixQ trl1 = new MatrixQ(4, 4).setTslZ("q1", 5);
+        MatrixQ trl2 = new MatrixQ(4, 4).setTslX("q2", 10);
+        trl1.mulOnSelf(trl2).printMatValue();
+        trl1.printMatSym();
+        trl1.getVPos().printMatSym();
+        trl1.getVPos().jacobian().printMatSym();
+        System.out.println("Ora ci moltiplico una rotazione 90°");
+        MatrixQ avvZ = new MatrixQ(4, 4).setRotZ("", Math.PI / 2.0);
+        trl1.mulOnSelf(avvZ).printMatValue();
+        trl1.printMatSym();
+        trl1.getVPos().printMatSym();
+        trl1.getVPos().jacobian().printMatSym();
+
     }
 }

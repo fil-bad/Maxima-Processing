@@ -22,7 +22,7 @@ public class DenHart {
     private ArrayList<Link> dhTab;
     private CommonDraw com = CommonDraw.getInstance();
     private MatrixQ Q_tot;
-    private RobVars vars;
+    //private RobVars vars;
     private MatrixQ J;
 
     /**
@@ -32,7 +32,7 @@ public class DenHart {
         this.dhTab = new ArrayList<Link>(0);
         this.Q_tot = new MatrixQ().setIdentity();
 
-        this.vars = new RobVars();
+//        this.vars = new RobVars();
         this.J = this.getDsym().jacobian();
 
         this.win = win;
@@ -60,6 +60,7 @@ public class DenHart {
         for (Link l : dhTab) {
             this.addLink(l);
         }
+
     }
 
     /**
@@ -123,7 +124,11 @@ public class DenHart {
         //append a new link to D-H table
         this.dhTab.add(link);
         this.Q_tot.mulOnSelf(link.getQLink());
-        this.vars.addVar(link.getVar());
+//        this.vars.addVar(link.getVar());
+//        this.Q_tot.getRobVars().addVar(link.getVar());
+
+        this.getDsym().printMatSym();
+
         this.J = this.getDsym().jacobian();
     }
 
@@ -143,7 +148,7 @@ public class DenHart {
      **/
 
     public RobVars getDHVar() {
-        return this.vars;
+        return this.Q_tot.getRobVars();
     }
 
     /**
