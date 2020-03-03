@@ -27,17 +27,14 @@ public class Cartesian extends Robot {
     public void inverse(double x, double y, double z, double theta) {
 
         // Matrici di peso dell'errore
-        SimpleMatrix Ke;
-        double lambda = 1 / 25.0;
+        SimpleMatrix Ke, Kep, Keo;
+        double lambda = 1 / 10.0;
         double gamma = 1 / 3000.0;
+        Kep = SimpleMatrix.identity(3).scale(lambda);
+        Keo = SimpleMatrix.identity(3).scale(gamma);
         Ke = new SimpleMatrix(6, 6);
-
-        Ke.set(0, 0, lambda);
-        Ke.set(1, 1, lambda);
-        Ke.set(2, 2, lambda);
-        Ke.set(3, 3, gamma);
-        Ke.set(4, 4, gamma);
-        Ke.set(5, 5, gamma);
+        Ke.insertIntoThis(0, 0, Kep);
+        Ke.insertIntoThis(3, 3, Keo);
 
         SimpleMatrix ep, eo;
         ep = new SimpleMatrix(3, 1);
@@ -61,7 +58,11 @@ public class Cartesian extends Robot {
         SimpleMatrix qCap, qJ, qCapNew, Jp;
         qCap = dhTab.getDHVar().get_qVect();
         Jp = dhTab.getJ();
-        qJ = Ke.mult(Jp.transpose().mult(ep));
+        if (ep.normF() > 10.0)  //se errore "grande" uso gradiente
+            qJ = Ke.mult(Jp.transpose().mult(ep));
+        else
+            qJ = Jp.pseudoInverse().mult(ep);
+
 
         //Necessario calcolare ancora Joa ( jacobbiano dell'orientamento)
 //        SimpleMatrix error = Kp.mult(ep).concatRows(Ko.mult(eo));
