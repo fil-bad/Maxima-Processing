@@ -20,4 +20,6 @@ public interface Link {
     void printValLink();
 
     void draw();
+
+    float getRadius();
 }

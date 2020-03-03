@@ -59,4 +59,9 @@ public abstract class GenericLink implements Link {
             System.out.printf("[%.3f  %.3f  %.3f  %.3f]", this.theta, this.d, this.alpha, this.a);
 
     }
+
+    @Override
+    public float getRadius() {
+        return (float) (sqB / 2 * Math.sqrt(2));
+    }
 }

@@ -13,9 +13,9 @@ public class Cartesian extends Robot {
         dhTab.addLink(new PrismLink(win, b, 0, "q1", -Math.PI / 2.0, 0));
         dhTab.addLink(new PrismLink(win, b, -Math.PI / 2.0, "q2", -Math.PI / 2.0, 0));
         dhTab.addLink(new PrismLink(win, b, 0, "q3", 0, 0));
-        dhTab.addLink(new CoaxialLink(win, b, "q4", 50));
-        dhTab.addLink(new RotLink(win, b, "q5", 50, 0, 30));
-        dhTab.addLink(new CoaxialLink(win, b, "q6", 50));
+        dhTab.addLink(new RotLink(win, b, "q4", 0, -Math.PI / 2.0, 0));
+        dhTab.addLink(new RotLink(win, b, "q5", 0, Math.PI / 2.0, 0));
+        dhTab.addLink(new RotLink(win, b, "q6", 50, 0, 0));
     }
 
     public void draw() {

@@ -158,7 +158,7 @@ public class CommonDraw {
     }
 
     public float drawCylinder(int sides, float r, float h, boolean plane) {
-        axes(150);
+//        axes(150);
         //ritorna distanza tra origine e lato piano
         win.noStroke();
         win.colorMode(win.HSB, 360, 100, 100);
@@ -222,23 +222,29 @@ public class CommonDraw {
         return x;
     }
 
-    public void pinza(float w, float h, float p, float open) {
-        win.translate(0, 0, h / 2);
-        win.box(h, w, h); // Disegno il primo elemento della pinza
-        win.translate(0, 0, h / 2);
+    // W = larghezza lungo X, L= altezza lungo Y , P = lunghezza lungo Z ( del sistema di rif iniziale)
+    public void pinza(float w, float l, float p, float open) {
+        win.translate(0, 0, p / 8.0f);
+        win.box(l, w, p / 4.0f); // Disegno il primo elemento della pinza
+        win.translate(0, 0, p / 8.0f);
 
-        float distP = PApplet.map(open, 0, 1, h / 2, w / 2 - h / 2);
+        float distP = PApplet.map(open, 0, 1, l / 16.0f, (w / 2.0f) - (l / 16.0f));
+        //Lato Pinza A
         win.pushMatrix(); // Memorizzo il sistema attuale
-        win.translate(0, distP, (p - h) / 2);
+        win.translate(0, distP, p * 6 / 16.0f);
         win.fill(255, 0, 0);
-        win.box(h, h, p - h); // Disegno il primo elemento della pinza
+        win.box(l, l / 4.0f, p * 6 / 8.0f); // Disegno il primo elemento della pinza
         win.popMatrix();  // Ritorno al sistema di riferimento memorizzato
+
+        //Lato Pinza B
         win.pushMatrix(); // Memorizzo il sistema attuale
-        win.translate(0, -distP, (p - h) / 2);
+        win.translate(0, -distP, p * 6 / 16.0f);
         win.fill(0, 255, 0);
-        win.box(h, h, p - h); // Disegno il primo elemento della pinza
+        win.box(l, l / 4.0f, p * 6 / 8.0f); // Disegno il primo elemento della pinza
         win.popMatrix();  // Ritorno al sistema di riferimento memorizzato
-        win.translate(0, 0, p - h);
+
+        //Sistema di riferimento finale
+        win.translate(0, 0, p * 7 / 16.0f);
     }
 
     public void setEnvMatrix(SimpleMatrix Q) {

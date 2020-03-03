@@ -54,7 +54,7 @@ public class ProcessingClass extends PApplet {
 
         scene.setRover(new Rover(this, new Vertex(100, 100), 0.1, 0.15, 0.03));
         scene.setRobot(new Cartesian(this, 10));
-        scene.getRobot().set(40, 20, 30, 1, 1, 1);
+        scene.getRobot().set(40, 20, 30, 0, 0, 0);
 
     }
 

@@ -100,10 +100,18 @@ public class DenHart {
 
     public void draw() {
         win.push();
+        Link lastLink = null;
         for (Link l : dhTab) {
             l.draw();
-//            com.axes(50);
+            win.pushStyle();
+            win.noStroke();
+            win.sphere(l.getRadius());
+            win.popStyle();
+            lastLink = l;
         }
+        if (lastLink != null)
+//            com.pinza(lastLink.getRadius(),lastLink.getRadius(),lastLink.getRadius(),1);
+            com.pinza(lastLink.getRadius() * 5, lastLink.getRadius() * 3, lastLink.getRadius() * 2, 1);
         win.pop();
     }
 
