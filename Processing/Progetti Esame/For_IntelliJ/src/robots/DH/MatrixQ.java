@@ -583,7 +583,6 @@ public class MatrixQ implements DifferentialMatrixFunction {
 
 
     public void printMatSym() {
-        System.out.println("printMatSym:");
         for (DifferentialFunction<DoubleReal>[] row : this.matrix) {
             for (DifferentialFunction<DoubleReal> col : row) {
                 System.out.print(col.toString() + " \t");

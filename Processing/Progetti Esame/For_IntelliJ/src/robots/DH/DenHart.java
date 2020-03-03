@@ -21,9 +21,7 @@ public class DenHart {
 
     private ArrayList<Link> dhTab;
     private CommonDraw com = CommonDraw.getInstance();
-    private MatrixQ Q_tot;
-    //private RobVars vars;
-    private MatrixQ J;
+    private MatrixQ Q_tot, J;
 
     /**
      * Constructors
@@ -111,7 +109,6 @@ public class DenHart {
             lastLink = l;
         }
         if (lastLink != null)
-//            com.pinza(lastLink.getRadius(),lastLink.getRadius(),lastLink.getRadius(),1);
             com.pinza(lastLink.getRadius() * 5, lastLink.getRadius() * 3, lastLink.getRadius() * 2, 1);
         win.pop();
     }

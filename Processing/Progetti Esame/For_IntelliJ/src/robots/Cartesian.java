@@ -3,11 +3,9 @@ package robots;
 import org.ejml.simple.SimpleMatrix;
 import processing.core.PApplet;
 import robots.DH.DenHart;
-import robots.DH.Links.CoaxialLink;
 import robots.DH.Links.PrismLink;
 import robots.DH.Links.RotLink;
 
-import java.util.Arrays;
 
 public class Cartesian extends Robot {
 
