@@ -31,7 +31,6 @@ public abstract class Robot {
 
     public void add(int index, double qVal) {
         dhTab.getDHVar().setVars(index, get(index) + qVal);
-        dhTab.getQ().print();
     }
 
     public void add(double... qVals) {
