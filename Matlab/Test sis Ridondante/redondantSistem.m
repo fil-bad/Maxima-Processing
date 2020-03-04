@@ -11,8 +11,8 @@ clear variables
 P = zeros(3,1);
 P(1) = 1;
 P(2) = 2;
-% P(3) = 3/2 *(P(1)+P(2))+1/2*(P(1)-P(2));    %Giusta e raggiungibile
-P(3) = 4.5;    %Fuori raggiungibilità
+P(3) = 3/2 *(P(1)+P(2))+1/2*(P(1)-P(2));    %Giusta e raggiungibile
+% P(3) = 4.5;    %Fuori raggiungibilità
 P
 
 % Variabile stimante
@@ -26,8 +26,11 @@ qNewD = qN;
 J = [1 1
      1 -1
      3 1]
+ J'*J
+ J*J'*J
+ pinv( J*J'*J)
  
- itr = 100;
+ itr = 50;
  qStepN =  zeros(2,itr+1);
  qStepD =  zeros(2,itr+1);
  qStepN(:,1) = qN;
@@ -37,8 +40,10 @@ J = [1 1
 
  for i=1:itr
      j = J*J'*J;    % j di appoggio per l'adattamento di J
-     qNewN = qN + (3)*(pinv(j)*(P-h(qN)));     % "Newtown"
-     qNewD = qD + (1/100)*(j'*(P-h(qD)));      % "Gradiente"
+%      qNewN = qN + (3)*(pinv(j)*(P-h(qN)));     % "Newtown"
+%      qNewD = qD + (1/100)*(j'*(P-h(qD)));      % "Gradiente"
+     qNewN = qN + (1)*(pinv(J)*(P-h(qN)));     % "Newtown"
+     qNewD = qD + (1/10)*(J'*(P-h(qD)));      % "Gradiente"
 
      qN = qNewN;
      qD = qNewD;
