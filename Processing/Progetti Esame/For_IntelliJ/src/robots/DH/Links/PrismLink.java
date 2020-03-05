@@ -29,7 +29,7 @@ public class PrismLink extends GenericLink {
     @Override
     public void draw() {
         //la funzione suppene di essere già con l'origine ben orientata
-        d = Q0_1.getRobVars().getVar(0).getValue().doubleValue();
+        d = Q0_1.getQVars().getVar(0).getValue().doubleValue();
 
         com.drawBoxBase((float) d * 24 / 48.0f, sqB, win.color(255, 0, 0));
         com.drawBoxBase((float) d * 23 / 48.0f, sqB * 0.9f, win.color(150, 255, 0));

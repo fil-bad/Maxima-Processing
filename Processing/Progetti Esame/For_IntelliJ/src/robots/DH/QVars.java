@@ -7,11 +7,11 @@ import robots.DH.math.autodiff.Variable;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-public class RobVars {
+public class QVars {
 
     private LinkedList<Variable<DoubleReal>> vars = null;
 
-    public RobVars() {
+    public QVars() {
         vars = new LinkedList<Variable<DoubleReal>>();
     }
 
@@ -27,7 +27,7 @@ public class RobVars {
         vars.add(i, v);
     }
 
-    public void mergeVar_s(RobVars new_vars) {
+    public void mergeVar_s(QVars new_vars) {
         if (new_vars == null) return;
         for (Variable<DoubleReal> n_v : new_vars.getVar()) {
             boolean occur = false;

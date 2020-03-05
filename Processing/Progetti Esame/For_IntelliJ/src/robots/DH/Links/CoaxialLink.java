@@ -12,7 +12,7 @@ public class CoaxialLink extends RotLink {
 
     @Override
     public void draw() {
-        theta = Q0_1.getRobVars().getVar(0).getValue().doubleValue();
+        theta = Q0_1.getQVars().getVar(0).getValue().doubleValue();
 
         com.drawBoxBase((float) d * 23 / 48.0f, sqB, win.color(255, 0, 255));
         com.drawBoxBase((float) d / 48.0f, sqB, win.color(255, 0, 255));

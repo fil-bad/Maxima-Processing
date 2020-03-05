@@ -3,7 +3,7 @@ package robots.DH.Links;
 import processing.core.PApplet;
 import processingElement.CommonDraw;
 import robots.DH.MatrixQ;
-import robots.DH.RobVars;
+import robots.DH.QVars;
 import robots.DH.math.DoubleReal;
 import robots.DH.math.autodiff.Variable;
 
@@ -36,12 +36,12 @@ public abstract class GenericLink implements Link {
 
     @Override
     public Variable<DoubleReal> getVar() {
-        return this.Q0_1.getRobVars().getVar(0);
+        return this.Q0_1.getQVars().getVar(0);
     }
 
     @Override
-    public RobVars whichQ_iIs() {
-        return this.Q0_1.getRobVars();
+    public QVars whichQ_iIs() {
+        return this.Q0_1.getQVars();
     }
 
     @Override

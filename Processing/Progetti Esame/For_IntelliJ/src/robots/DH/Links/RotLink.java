@@ -28,7 +28,7 @@ public class RotLink extends GenericLink {
     @Override
     public void draw() {
         //todo: Ste rotazioni non vanno sicuramente bene
-        theta = Q0_1.getRobVars().getVar(0).getValue().doubleValue();
+        theta = Q0_1.getQVars().getVar(0).getValue().doubleValue();
 
         if (d != 0 && a != 0) {
             com.drawBoxBase((float) d * 47 / 48.0f, sqB, win.color(255, 0, 255));

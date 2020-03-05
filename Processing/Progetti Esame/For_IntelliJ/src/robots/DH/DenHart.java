@@ -22,6 +22,7 @@ public class DenHart {
     private ArrayList<Link> dhTab;
     private CommonDraw com = CommonDraw.getInstance();
     private MatrixQ Q_tot, J;
+    private MatrixQ JsysQ;
 
     /**
      * Constructors
@@ -30,9 +31,8 @@ public class DenHart {
         this.dhTab = new ArrayList<Link>(0);
         this.Q_tot = new MatrixQ().setIdentity();
 
-//        this.vars = new RobVars();
         this.J = this.getDsym().jacobian();
-
+        this.JsysQ = this.getSysQSym().jacobian();
         this.win = win;
     }
 
@@ -60,6 +60,135 @@ public class DenHart {
         }
 
     }
+
+    public void draw() {
+        win.push();
+        Link lastLink = null;
+        for (Link l : dhTab) {
+            l.draw();
+            win.pushStyle();
+            win.noStroke();
+            win.sphere(l.getRadius());
+            win.popStyle();
+            lastLink = l;
+        }
+        if (lastLink != null)
+            com.pinza(lastLink.getRadius() * 5, lastLink.getRadius() * 3, lastLink.getRadius() * 2, 1);
+        win.pop();
+    }
+
+    /**
+     * Structural methods
+     */
+
+    public void addLink(Link link) {
+        //append a new link to D-H table
+        this.dhTab.add(link);
+        this.Q_tot.mulOnSelf(link.getQLink());
+        this.J = this.getDsym().jacobian();
+        this.JsysQ = this.getSysQSym().jacobian();
+    }
+
+    public Link removeLastLink() {
+        // remove last link (-> entry of D-H table). WARNING: could be very heavy to compute.
+
+        Link link2ret = this.dhTab.remove(dhTab.size() - 1);
+        Q_tot.setIdentity();    //"clear della matrice e delle variabili"
+        for (Link l : dhTab) {
+            addLink(l);
+        }
+        return link2ret;
+    }
+
+    /**
+     * Variable interaction
+     **/
+
+    public QVars getDHVar() {
+        return this.Q_tot.getQVars();
+    }
+
+    /**
+     * Compute Numeric Matrix form variable value
+     **/
+    public SimpleMatrix getQ() {
+        return this.Q_tot.getNumeric();
+    }
+
+    public SimpleMatrix getQsys() {
+        return getSysQSym().getNumeric();
+    }
+
+    public SimpleMatrix getD() {
+        return getDsym().getNumeric();
+    }
+
+    public SimpleMatrix getR() {
+        return getRsym().getNumeric();
+    }
+
+    public SimpleMatrix getJ() {
+        return this.J.getNumeric();
+    }
+
+    public SimpleMatrix getJsys() {
+        return this.JsysQ.getNumeric();
+    }
+
+    /**
+     * Symbolic Matrix
+     **/
+    public MatrixQ getQsym() {
+        return this.Q_tot;
+    }
+
+    public MatrixQ getSysQSym() {
+        return this.Q_tot.getSysQ();
+    }
+
+    public MatrixQ getDsym() {
+        return this.Q_tot.getVPos();
+    }
+
+    public MatrixQ getRsym() {
+        return this.Q_tot.getMatRot();
+    }
+
+    public MatrixQ getJsym() {
+        return this.J;
+    }
+    public MatrixQ getJSysSym() {
+        return this.JsysQ;
+    }
+
+    /**
+     * DH table informatio
+     **/
+    public ArrayList<Link> getLinks() {
+        return this.dhTab;
+    }
+
+    public int getNumDOF() {
+        return this.dhTab.size();
+    }
+
+    /**
+     * Print methods
+     */
+
+    public void printDHTab() {
+        System.out.println("DH sym:\t\t\t\t\t\tDH num:");
+        for (Link l : this.dhTab) {
+            l.printLink();
+            System.out.print("\t");
+            l.printValLink();
+            System.out.println();
+        }
+        System.out.println();
+
+        Q_tot.printMatValue();
+    }
+
 
     /**
      * Demo main
@@ -95,118 +224,6 @@ public class DenHart {
             System.out.println();
             i++;
         }
-    }
-
-    public void draw() {
-        win.push();
-        Link lastLink = null;
-        for (Link l : dhTab) {
-            l.draw();
-            win.pushStyle();
-            win.noStroke();
-            win.sphere(l.getRadius());
-            win.popStyle();
-            lastLink = l;
-        }
-        if (lastLink != null)
-            com.pinza(lastLink.getRadius() * 5, lastLink.getRadius() * 3, lastLink.getRadius() * 2, 1);
-        win.pop();
-    }
-
-    /**
-     * Structural methods
-     */
-
-    public void addLink(Link link) {
-        //append a new link to D-H table
-        this.dhTab.add(link);
-        this.Q_tot.mulOnSelf(link.getQLink());
-        this.J = this.getDsym().jacobian();
-    }
-
-    public Link removeLastLink() {
-        // remove last link (-> entry of D-H table). WARNING: could be very heavy to compute.
-
-        Link link2ret = this.dhTab.remove(dhTab.size() - 1);
-        Q_tot.setIdentity();    //"clear della matrice e delle variabili"
-        for (Link l : dhTab) {
-            addLink(l);
-        }
-        return link2ret;
-    }
-
-    /**
-     * Variable interaction
-     **/
-
-    public RobVars getDHVar() {
-        return this.Q_tot.getRobVars();
-    }
-
-    /**
-     * Compute Numeric Matrix form variable value
-     **/
-    public SimpleMatrix getQ() {
-        return this.Q_tot.getNumeric();
-    }
-
-    public SimpleMatrix getD() {
-        return getDsym().getNumeric();
-    }
-
-    public SimpleMatrix getR() {
-        return getRsym().getNumeric();
-    }
-
-    public SimpleMatrix getJ() {
-        return this.J.getNumeric();
-    }
-
-    /**
-     * Symbolic Matrix
-     **/
-    public MatrixQ getQsym() {
-        return this.Q_tot;
-    }
-
-    public MatrixQ getDsym() {
-        return this.Q_tot.getVPos();
-    }
-
-    public MatrixQ getRsym() {
-        return this.Q_tot.getMatRot();
-    }
-
-    public MatrixQ getJsym() {
-        return this.J;
-    }
-
-    /**
-     * DH table informatio
-     **/
-    public ArrayList<Link> getLinks() {
-        return this.dhTab;
-    }
-
-    public int getNumDOF() {
-        return this.dhTab.size();
-    }
-
-    /**
-     * Print methods
-     */
-
-    public void printDHTab() {
-        System.out.println("DH sym:\t\t\t\t\t\tDH num:");
-        for (Link l : this.dhTab) {
-            l.printLink();
-            System.out.print("\t");
-            l.printValLink();
-            System.out.println();
-        }
-        System.out.println();
-
-        Q_tot.printMatValue();
     }
 
 }
