@@ -14,7 +14,7 @@ import static java.lang.Math.PI;
 
 public class DenHart {
 
-    PApplet win;
+    protected PApplet win;
     /**
      * Attributes
      */
@@ -74,6 +74,7 @@ public class DenHart {
         }
         if (lastLink != null)
             com.pinza(lastLink.getRadius() * 5, lastLink.getRadius() * 3, lastLink.getRadius() * 2, 1);
+        com.axes(255);
         win.pop();
     }
 

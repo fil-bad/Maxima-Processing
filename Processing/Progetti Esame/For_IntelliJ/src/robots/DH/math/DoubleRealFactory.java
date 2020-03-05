@@ -54,6 +54,10 @@ public class DoubleRealFactory implements AbstractRealNumberFactory<DoubleReal> 
         return new DoubleReal(Math.tan(i_x.doubleValue()));
     }
 
+    public DoubleReal atan2(DoubleReal i_y, DoubleReal i_x) {
+        return new DoubleReal(Math.atan2(i_y.doubleValue(), i_x.doubleValue()));
+    }
+
     public DoubleReal exp(DoubleReal i_x) {
         return new DoubleReal(Math.exp(i_x.doubleValue()));
     }

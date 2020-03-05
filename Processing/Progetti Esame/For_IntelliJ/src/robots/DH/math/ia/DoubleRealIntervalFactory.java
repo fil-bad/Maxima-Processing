@@ -80,6 +80,11 @@ public class DoubleRealIntervalFactory implements AbstractRealNumberFactory<Doub
         return new DoubleRealInterval(IAMath.tan(i_x.viewInternal()));
     }
 
+    public DoubleRealInterval atan2(DoubleRealInterval i_y, DoubleRealInterval i_x) {
+        //todo: capire cosa inserire
+        return null;
+    }
+
     public DoubleRealInterval exp(DoubleRealInterval i_x) {
         return new DoubleRealInterval(IAMath.exp(i_x.viewInternal()));
     }

@@ -41,6 +41,8 @@ public interface AbstractRealNumberFactory<X extends RealNumber<X>> extends Abst
      * @return tan(i_x)
      */
     X tan(X i_x);
+    ///Fatto da noi
+    X atan2(X i_y, X i_x);
 
     /**
      * Returns an object of X whose value is exp(i_x).

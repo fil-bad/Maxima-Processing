@@ -1,5 +1,6 @@
 package robots;
 
+import processing.core.PApplet;
 import processingElement.CommonDraw;
 import robots.DH.DenHart;
 import robots.DH.math.DoubleReal;
@@ -8,6 +9,7 @@ import robots.DH.math.autodiff.Variable;
 public abstract class Robot {
     protected DenHart dhTab;
     protected CommonDraw com = CommonDraw.getInstance();
+    protected PApplet win = null;
 
     public abstract void draw();
 

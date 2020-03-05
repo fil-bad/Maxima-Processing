@@ -15,46 +15,37 @@ public class AutoDiff_Main {
 
     public static void main(String[] args) {
 
-        double value_x = 3.0;
-        double value_y = 3.0;
+        double value_x = 1.0;
+        double theta_y = Math.PI/4.0;
 
         Variable<DoubleReal> xVar = DFFactory.var("x", new DoubleReal(value_x));
-        Variable<DoubleReal> y = DFFactory.var("y", new DoubleReal(value_y));
+        Variable<DoubleReal> theta = DFFactory.var("theta", new DoubleReal(theta_y));
 
-        Constant<DoubleReal> q = DFFactory.val(new DoubleReal(5));
-
-        //h = q*x*( cos(x*y) + y )
-        //DifferentialFunction<DoubleReal> h = q.mul(x).mul( DFFactory.cos( x.mul(y) ).plus(y) );
-        DifferentialFunction<DoubleReal> h = xVar;
-        System.out.println(h.toString());
-
-        System.out.println(h.getValue().doubleValue());
-
-        xVar.set(new DoubleReal(42));
-
-        System.out.println(h.getValue().doubleValue());
-
-        DifferentialFunction<DoubleReal> h1 = h.mul(5);
-        System.out.println(h1.toString());
+        DifferentialFunction<DoubleReal> xVel = xVar.mul(DFFactory.cos(theta));
+        DifferentialFunction<DoubleReal> yVel = xVar.mul(DFFactory.sin(theta));
 
 
-//
-//
-//        System.out.println(h.getValue().doubleValue());
-//
-//        xVar.set(new DoubleReal(-5));
-//
-//        System.out.println(h.getValue().doubleValue());
-//
-//
-//        DifferentialFunction<DoubleReal> dhpx = h.diff(xVar);
-//        System.out.println(dhpx.toString());
-//
-//        DifferentialFunction<DoubleReal> r = xVar.mul(xVar).diff(xVar);
-//        System.out.println(r.toString());
-//
-//        DifferentialFunction<DoubleReal> trig = DFFactory.cos(xVar.mul(xVar)).diff(xVar);
-//        System.out.println(trig.toString());
+        DifferentialFunction<DoubleReal> h = DFFactory.atan2(xVel,yVel);
+        System.out.println("h funx : " + h.toString() + "\nin xVal=1 h = " + h.getValue().doubleValue());
+
+
+        DifferentialFunction<DoubleReal> h1 = h.diff(xVar);
+        DifferentialFunction<DoubleReal> h2 = h.diff(theta);
+        System.out.println("h diff(xVel) = " + h1.getValue().doubleValue());
+        System.out.println("h diff(theta) = " + h2.getValue().doubleValue());
+
+        System.out.println();
+
+        xVar.set(new DoubleReal(3));
+        System.out.println("xVar change to 3 = " + h.getValue().doubleValue());
+        System.out.println("h diff(xVel) = " + h1.getValue().doubleValue());
+        System.out.println("h diff(theta) = " + h2.getValue().doubleValue());
+
+        System.out.println("h diff(theta) =\n" + h2.toString());
+
+
+//        Constant<DoubleReal> q = DFFactory.val(new DoubleReal(5));
+
 
     }
 }

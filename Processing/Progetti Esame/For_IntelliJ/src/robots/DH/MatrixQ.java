@@ -520,9 +520,10 @@ public class MatrixQ implements DifferentialMatrixFunction {
         for (int i = 0; i < 3; i++) {
             tmp.matrix[i][0] = this.matrix[i][3];
         }
-        // 3 ori X | 3 ori Y | 3 ori Z
-        for (int i = 0; i < 9; i++) {
-            tmp.matrix[3+i][0] = this.matrix[i%3][i/3];
+        // 3 ori X | 3 ori Y | 3 ori Zi
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j<3;j++)
+                tmp.matrix[3+(3*i+j)][0] = this.matrix[j][i];
         }
         return tmp;
     }

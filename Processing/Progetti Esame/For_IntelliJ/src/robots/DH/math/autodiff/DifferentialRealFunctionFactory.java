@@ -147,6 +147,34 @@ public class DifferentialRealFunctionFactory<X extends RealNumber<X>> {
         };
     }
 
+    // si suppone che i_y e i_x siano in funzione di una variabile comune, e si fa la derivata totale
+    public DifferentialFunction<X> atan2(DifferentialFunction<X> i_y, DifferentialFunction<X> i_x) {
+        return new AbstractBinaryFunction<X>(i_y, i_x) {
+            @Override
+            public X getValue() {
+                return m_factory.atan2(larg().getValue(),rarg().getValue());
+            }
+
+            @Override
+            public DifferentialFunction<X> diff(Variable<X> i_v) {
+                // return new
+                // Inverse<X>(cos(arg()).multi(cos(arg()))).multi(arg().diff(i_v));
+                // return new Inverse<X>( new Square<X>( cos(arg())
+                // )).multi(arg().diff(i_v));
+                // return pow(cos(arg()), -2).multi(arg().diff(i_v));
+//                return (new PolynomialTerm<X>(1, cos(arg()), -2)).mul(arg()
+//                        .diff(i_v));
+                return (rarg().div(rarg().pow(2).plus(larg().pow(2))).mul(larg().diff(i_v)).minus(
+                        larg().div(rarg().pow(2).plus(larg().pow(2))).mul(rarg().diff(i_v))));
+            }
+
+            @Override
+            public String toString() {
+                return "atan2(" + larg().toString() +", "+rarg().toString() + ")";
+            }
+        };
+    }
+
     public DifferentialFunction<X> exp(DifferentialFunction<X> i_x) {
         return new AbstractUnaryFunction<X>(i_x) {
             @Override
