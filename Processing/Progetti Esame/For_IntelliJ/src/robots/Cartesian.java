@@ -20,12 +20,25 @@ public class Cartesian extends Robot {
         dhTab.addLink(new RotLink(win, b, "q5", 0, Math.PI / 2.0, 0));
         dhTab.addLink(new RotLink(win, b, "q6", 50, 0, 0));
         dhTab.getDHVar().setVars(10, 10, 10, 1, 1, 1);
+        System.out.println("getJXYZ");
+        dhTab.getJXYZ().print();
+//        dhTab.J_XYZ.printMatSym();
+
+        System.out.println("getJYXZ");
+        dhTab.getJYXZ().print();
+//        dhTab.J_YXZ.printMatSym();
+
+        System.out.println("getJZYZ");
+        dhTab.getJZYZ().print();
+//        dhTab.J_ZYZ.printMatSym();
     }
 
     public void draw() {
         com.axes(255);
         dhTab.draw();
     }
+
+    int state = 0;
 
     @Override
     public void inverse(double x, double y, double z, double theta) {
@@ -41,7 +54,7 @@ public class Cartesian extends Robot {
         Ke.insertIntoThis(0, 0, Kep);
         Ke.insertIntoThis(3, 3, Keo);
 
-        SimpleMatrix ep, eo, e;
+        SimpleMatrix ep;
         ep = new SimpleMatrix(3, 1);
         ep.set(0, x);
         ep.set(1, y);
@@ -58,41 +71,111 @@ public class Cartesian extends Robot {
         rDes.set(2, 2, -1.0); // Pinsa verso il basso sempre (da progetto
 
         TriadDegs best = DenHart.bestTriadOutsing(rDes, dhTab.getR());
-        best = TriadDegs.YXZ;
-        System.out.println("Best terna=" + best.name());
-        eo = DenHart.getAnglesTriad(best, rDes, true).minus(dhTab.getAnglesTriad(best, true));
-//        eo = dhTab.getAnglesTriad(best,true).minus(DenHart.getAnglesTriad(best,rDes,true));
-        e = ep.copy();
-        e = e.concatRows(eo);
-        System.out.println("Error vector");
+//        best = TriadDegs.YXZ;
+//        System.out.println("Best terna=" + best.name());
+        SimpleMatrix eo, eoUp, eoDown;
+        eoUp = DenHart.getAnglesTriad(best, rDes, true).minus(dhTab.getAnglesTriad(best, true));
+        eoDown = DenHart.getAnglesTriad(best, rDes, false).minus(dhTab.getAnglesTriad(best, false));
 
-        e = Ke.mult(e);
-        e.print();
+        if (eoUp.normF() <= eoDown.normF())
+            eo = eoUp;
+        else
+            eo = eoDown;
+//        eo = new SimpleMatrix(3,1);
+        SimpleMatrix e;
+        e = new SimpleMatrix(6, 1);
+
+        restart:
+        switch (state) {
+            case 0: // devo ancora muovermi
+                if (ep.normF() <= 3 && eo.normF() <= 0.1) {  // Quasi totalmente allineato
+                    System.out.println("0-->2 (rot & pos)");
+                    state = 2;  //Salto allo stato finale
+                    break restart;
+                }
+                if (ep.normF() > 3) {
+                    e.insertIntoThis(0, 0, ep);
+                } else {   // "quasi posizionato"
+                    System.out.println("0-->1 (rot)");
+                    state = 1;
+                    break restart;
+                }
+                break;
+            case 1: // quasi in posizione, mi oriento
+                if (eo.normF() > 0.1) {
+                    e.insertIntoThis(3, 0, eo);
+                } else { // "quasi orientato"
+                    System.out.println("1-->0 (pos)");
+                    state = 0;
+                    break restart;
+                }
+                break;
+            case 2:
+                if (ep.normF() <= 5 && eo.normF() <= 0.5) { //Finchè rimango ben orientato
+                    e.insertIntoThis(0, 0, ep);
+                    e.insertIntoThis(3, 0, eo);
+                } else {
+                    System.out.println("2-->0");
+                    state = 0;   // torno alla ricerca della posizione
+                    break restart;
+                }
+
+        }
+
+//        if (ep.normF() <= 3 && eo.normF() <= 0.1) {
+//            e.insertIntoThis(0, 0, ep);
+//            e.insertIntoThis(3, 0, eo);
+//        } else if (eo.normF() > 0.1) {
+//            e.insertIntoThis(3, 0, eo);
+//        } else if (ep.normF() > 3) {
+//            e.insertIntoThis(0, 0, ep);
+//        }
+
 
         SimpleMatrix qCap, qJ, qCapNew, J;
         qCap = dhTab.getDHVar().get_qVect();
+
         J = dhTab.getJp();
+//        System.out.println("Jp:");
+//        J.print();
+//        System.out.println("Jo,best:");
+//        dhTab.getJTriad(best).print();
+
         J = J.concatRows(dhTab.getJTriad(best));
-        System.out.println("J:");
-        J.transpose().print();
-        System.out.println("e.normF=" + e.normF());
-        System.out.println("ep.normF=" + ep.normF());
-        System.out.println("eo.normF=" + eo.normF());
+//        System.out.println("J':");
+//        J.transpose().print();
+//        System.out.println("Error vector");
+        e = Ke.mult(e);
+//        e.print();
 
-        if (e.normF() > 10.0)  //se errore "grande" uso gradiente
-            qJ = J.transpose().mult(e);
-        else
-            qJ = J.pseudoInverse().mult(e);
 
-        if (ep.normF() < 80)
-            Kep = SimpleMatrix.identity(3).divide(100);
-        else
-            Kep = SimpleMatrix.identity(3).divide(200);
+//        System.out.println("e.normF=" + e.normF());
+//        System.out.println("ep.normF=" + ep.normF());
+//        System.out.println("eo.normF=" + eo.normF());
 
-        if (ep.normF() > 30)
-            Keo = SimpleMatrix.identity(3).divide(10000);
+//        if (e.normF() > 10.0)  //se errore "grande" uso gradiente
+//            qJ = J.transpose().mult(e);
+//        else
+//            qJ = J.pseudoInverse().mult(e);
+
+        qJ = J.transpose().mult(e);
+
+
+        Kep = SimpleMatrix.identity(3).divide(10);
+        if (state != 0)
+            Keo = SimpleMatrix.identity(3).divide(10);
         else
-            Keo = SimpleMatrix.identity(3).divide(100);
+            Keo = SimpleMatrix.identity(3).divide(5000);
+
+//        if (ep.normF() < 80)
+//            Kep = SimpleMatrix.identity(3).divide(50);
+//        else
+//            Kep = SimpleMatrix.identity(3).divide(200);
+//
+//        if (ep.normF() > 30)
+//            Keo = SimpleMatrix.identity(3).divide(10000);
+//        else
+//            Keo = SimpleMatrix.identity(3).divide(10);
 
         Ke = new SimpleMatrix(6, 6);
         Ke.insertIntoThis(0, 0, Kep);
@@ -104,13 +187,13 @@ public class Cartesian extends Robot {
 //        qJ.set(4, Math.signum(qJ.get(4)) * Math.min(Math.abs(qJ.get(4)), PApplet.radians(10)));
 //        qJ.set(5, Math.signum(qJ.get(5)) * Math.min(Math.abs(qJ.get(5)), PApplet.radians(10)));
 
-        System.out.println("qJ:");
-        qJ.print();
+//        System.out.println("qJ:");
+//        qJ.print();
 
         qCapNew = qCap.plus(qJ);
         dhTab.getDHVar().setVars(qCapNew);
 
-        System.out.println("################################");
+//        System.out.println("################################");
 
         /** Metodo di stima a 12 variabii **/
 ////         Matrici di peso dell'errore

@@ -25,7 +25,7 @@ public class DenHart {
     private CommonDraw com = CommonDraw.getInstance();
     private MatrixQ Q_tot, Jp;
     private MatrixQ aXYZ, aYXZ, aZYZ;   // 3 Terne Fisse: Nautica RPY | Nautica Nautica YXZ | EULERO(POLSO) ZYZ
-    private MatrixQ J_XYZ, J_YXZ, J_ZYZ;
+    public MatrixQ J_XYZ, J_YXZ, J_ZYZ;
     protected static final double eSing = 1 - 0.01;   // margine prima di considerarmi troppo vicino a singolarità angolari
     private MatrixQ JsysQ;
 
@@ -263,11 +263,9 @@ public class DenHart {
         // +beta
         aXYZ.getMatrix()[1][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[2][0].negate(), cb);
         // + gamma
-        aXYZ.getMatrix()[2][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[1][0],
-                Q_tot.getMatrix()[0][0]);
+        aXYZ.getMatrix()[2][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[1][0], Q_tot.getMatrix()[0][0]);
         // + alpha
-        aXYZ.getMatrix()[0][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[2][1],
-                Q_tot.getMatrix()[2][2]);
+        aXYZ.getMatrix()[0][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[2][1], Q_tot.getMatrix()[2][2]);
         this.J_XYZ = aXYZ.jacobian();
     }
     // sol = true up solution, false = button solution
@@ -314,11 +312,9 @@ public class DenHart {
         // +beta
         aYXZ.getMatrix()[1][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[2][1], cb);
         // + gamma
-        aYXZ.getMatrix()[2][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[0][1].negate(),
-                Q_tot.getMatrix()[1][1]);
+        aYXZ.getMatrix()[2][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[0][1].negate(), Q_tot.getMatrix()[1][1]);
         // + alpha
-        aYXZ.getMatrix()[0][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[2][0].negate(),
-                Q_tot.getMatrix()[2][2]);
+        aYXZ.getMatrix()[0][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[2][0].negate(), Q_tot.getMatrix()[2][2]);
         this.J_YXZ = aYXZ.jacobian();
     }
     // sol = true up solution, false = button solution
@@ -364,11 +360,9 @@ public class DenHart {
         // +beta
         aZYZ.getMatrix()[1][0] = MatrixQ.DFFactory.atan2(sb, Q_tot.getMatrix()[2][2]);
         // + gamma
-        aZYZ.getMatrix()[2][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[1][2],
-                Q_tot.getMatrix()[0][2]);
+        aZYZ.getMatrix()[2][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[1][2], Q_tot.getMatrix()[0][2]);
         // + alpha
-        aZYZ.getMatrix()[0][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[2][1],
-                Q_tot.getMatrix()[2][0].negate());
+        aZYZ.getMatrix()[0][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[2][1], Q_tot.getMatrix()[2][0].negate());
         this.J_ZYZ = aZYZ.jacobian();
     }
     // sol = true up solution, false = button solution
