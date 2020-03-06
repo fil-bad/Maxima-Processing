@@ -6,6 +6,8 @@ import processingElement.CommonDraw;
 import robots.DH.Links.Link;
 import robots.DH.Links.PrismLink;
 import robots.DH.Links.RotLink;
+import robots.DH.math.DoubleReal;
+import robots.DH.math.autodiff.DifferentialFunction;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -21,7 +23,10 @@ public class DenHart {
 
     private ArrayList<Link> dhTab;
     private CommonDraw com = CommonDraw.getInstance();
-    private MatrixQ Q_tot, J;
+    private MatrixQ Q_tot, Jp;
+    private MatrixQ aXYZ, aYXZ, aZYZ;   // 3 Terne Fisse: Nautica RPY | Nautica Nautica YXZ | EULERO(POLSO) ZYZ
+    private MatrixQ J_XYZ, J_YXZ, J_ZYZ;
+    protected static final double eSing = 1 - 0.01;   // margine prima di considerarmi troppo vicino a singolarità angolari
     private MatrixQ JsysQ;
 
     /**
@@ -31,8 +36,12 @@ public class DenHart {
         this.dhTab = new ArrayList<Link>(0);
         this.Q_tot = new MatrixQ().setIdentity();
 
-        this.J = this.getDsym().jacobian();
+        this.Jp = this.getDsym().jacobian();
+        this.createXYZeq();
+        this.createYXZeq();
+        this.createZYZeq();
         this.JsysQ = this.getSysQSym().jacobian();
+
         this.win = win;
     }
 
@@ -86,7 +95,10 @@ public class DenHart {
         //append a new link to D-H table
         this.dhTab.add(link);
         this.Q_tot.mulOnSelf(link.getQLink());
-        this.J = this.getDsym().jacobian();
+        this.Jp = this.getDsym().jacobian();
+        this.createXYZeq();
+        this.createYXZeq();
+        this.createZYZeq();
         this.JsysQ = this.getSysQSym().jacobian();
     }
 
@@ -128,8 +140,8 @@ public class DenHart {
         return getRsym().getNumeric();
     }
 
-    public SimpleMatrix getJ() {
-        return this.J.getNumeric();
+    public SimpleMatrix getJp() {
+        return this.Jp.getNumeric();
     }
 
     public SimpleMatrix getJsys() {
@@ -156,8 +168,9 @@ public class DenHart {
     }
 
     public MatrixQ getJsym() {
-        return this.J;
+        return this.Jp;
     }
+
     public MatrixQ getJSysSym() {
         return this.JsysQ;
     }
@@ -171,6 +184,228 @@ public class DenHart {
 
     public int getNumDOF() {
         return this.dhTab.size();
+    }
+
+    /**
+     * Orientation function calc XYZ, YXZ, ZYZ
+     */
+
+    // sol = true up solution, false = button solution
+    public static SimpleMatrix getTriadAngles(TriadDegs tri, SimpleMatrix R, boolean sol) {
+        switch (tri) {
+            case XYZ:   // Roll - Pich - Yaw
+                return getXYZangles(R, sol);
+            case YXZ:
+                return getYXZangles(R, sol);
+            case ZYZ:
+                return getZYZangles(R, sol);
+        }
+        return null;
+    }
+
+    // sol = true up solution, false = button solution
+    public static SimpleMatrix getAnglesTriad(TriadDegs tri, SimpleMatrix deg, boolean sol) {
+        switch (tri) {
+            case XYZ:   // Roll - Pich - Yaw
+                return getXYZangles(deg, sol);
+            case YXZ:
+                return getYXZangles(deg, sol);
+            case ZYZ:
+                return getZYZangles(deg, sol);
+        }
+        return null;
+    }
+
+    public SimpleMatrix getAnglesTriad(TriadDegs tri, boolean sol) {
+        return getAnglesTriad(tri, this.getR(), sol);
+    }
+
+    public SimpleMatrix getJTriad(TriadDegs tri) {
+        switch (tri) {
+            case XYZ:   // Roll - Pich - Yaw
+                return getJXYZ();
+            case YXZ:
+                return getJYXZ();
+            case ZYZ:
+                return getJZYZ();
+        }
+        return null;
+    }
+
+    public static TriadDegs bestTriadOutsing(SimpleMatrix R1, SimpleMatrix R2) {
+        double minXYZ = Math.pow(howNearXYZsing(R1), 2) + Math.pow(howNearXYZsing(R2), 2);
+        double minYXZ = Math.pow(howNearYXZsing(R1), 2) + Math.pow(howNearYXZsing(R2), 2);
+        double minZYZ = Math.pow(howNearZYZsing(R1), 2) + Math.pow(howNearZYZsing(R2), 2);
+        double min = minXYZ;
+        TriadDegs best = TriadDegs.XYZ;
+        if (min > minYXZ) {
+            min = minYXZ;
+            best = TriadDegs.YXZ;
+        }
+        if (min > minZYZ) {
+            min = minZYZ;
+            best = TriadDegs.ZYZ;
+        }
+
+        if (min > DenHart.eSing) {  // Tutti sono vicino singolarità!! ( in teoria impossibile)
+            System.err.println("DenHart.bestTriadOutsing(): hai bucato la matematica che ci aspettavamo!!!!\nMOSTRO");
+            best = null;
+        }
+        return best;
+    }
+
+    /*XYZ*/
+    private void createXYZeq() {
+        this.aXYZ = new MatrixQ(3, 1);
+        this.aXYZ.getQVars().mergeVar_s(getDHVar());
+        // cos(beta)
+        DifferentialFunction<DoubleReal> cb = MatrixQ.DFFactory.square(MatrixQ.one.minus(Q_tot.getMatrix()[2][0].pow(2)));
+        // +beta
+        aXYZ.getMatrix()[1][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[2][0].negate(), cb);
+        // + gamma
+        aXYZ.getMatrix()[2][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[1][0],
+                Q_tot.getMatrix()[0][0]);
+        // + alpha
+        aXYZ.getMatrix()[0][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[2][1],
+                Q_tot.getMatrix()[2][2]);
+        this.J_XYZ = aXYZ.jacobian();
+    }
+    // sol = true up solution, false = button solution
+
+    public static SimpleMatrix getXYZangles(SimpleMatrix R, boolean sol) {
+        SimpleMatrix aXYZret = new SimpleMatrix(3, 1);
+        // cos(beta)
+        double cb = Math.sqrt(1 - Math.pow(R.get(2, 0), 2));
+        // +beta
+        aXYZret.set(1, 0, Math.atan2(-R.get(2, 0), cb));
+        // + gamma
+        aXYZret.set(2, 0, Math.atan2(+R.get(1, 0), +R.get(0, 0)));
+        // + alpha
+        aXYZret.set(0, 0, Math.atan2(+R.get(2, 1), +R.get(2, 2)));
+        return getDegXYZSol(aXYZret, sol);
+    }
+
+    // sol = true up solution, false = button solution
+    public static SimpleMatrix getDegXYZSol(SimpleMatrix deg, boolean sol) {
+        SimpleMatrix degSol = deg.copy();
+        if (!sol) {
+            SimpleMatrix pi = new SimpleMatrix(3, 1);
+            pi.fill(PI);
+            degSol.minus(pi);
+        }
+        return degSol;
+    }
+
+    public SimpleMatrix getJXYZ() {
+        return J_XYZ.getNumeric();
+    }
+
+    private static double howNearXYZsing(SimpleMatrix R) {
+        return R.get(2, 0); // meglio se lontano da +-1
+    }
+
+
+    /*YXZ*/
+    private void createYXZeq() {
+        this.aYXZ = new MatrixQ(3, 1);
+        this.aYXZ.getQVars().mergeVar_s(getDHVar());
+        // cos(beta)
+        DifferentialFunction<DoubleReal> cb = MatrixQ.DFFactory.square(MatrixQ.one.minus(Q_tot.getMatrix()[2][1].pow(2)));
+        // +beta
+        aYXZ.getMatrix()[1][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[2][1], cb);
+        // + gamma
+        aYXZ.getMatrix()[2][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[0][1].negate(),
+                Q_tot.getMatrix()[1][1]);
+        // + alpha
+        aYXZ.getMatrix()[0][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[2][0].negate(),
+                Q_tot.getMatrix()[2][2]);
+        this.J_YXZ = aYXZ.jacobian();
+    }
+    // sol = true up solution, false = button solution
+
+    public static SimpleMatrix getYXZangles(SimpleMatrix R, boolean sol) {
+        SimpleMatrix aYXZret = new SimpleMatrix(3, 1);
+        // cos(beta)
+        double cb = Math.sqrt(1 - Math.pow(R.get(2, 1), 2));
+        // +beta
+        aYXZret.set(1, 0, Math.atan2(+R.get(2, 1), +cb));
+        // + gamma
+        aYXZret.set(2, 0, Math.atan2(-R.get(0, 1), +R.get(1, 1)));
+        // + alpha
+        aYXZret.set(0, 0, Math.atan2(-R.get(2, 0), +R.get(2, 2)));
+        return getDegYXZSol(aYXZret, sol);
+    }
+
+    // sol = true up solution, false = button solution
+    public static SimpleMatrix getDegYXZSol(SimpleMatrix deg, boolean sol) {
+        SimpleMatrix degSol = deg.copy();
+        if (!sol) {
+            SimpleMatrix pi = new SimpleMatrix(3, 1);
+            pi.fill(PI);
+            degSol.plus(pi);
+        }
+        return degSol;
+    }
+
+    public SimpleMatrix getJYXZ() {
+        return J_YXZ.getNumeric();
+    }
+
+    private static double howNearYXZsing(SimpleMatrix R) {
+        return R.get(2, 1); // meglio se lontano da +-1
+    }
+
+    /*ZYZ*/
+    private void createZYZeq() {
+        this.aZYZ = new MatrixQ(3, 1);
+        this.aZYZ.getQVars().mergeVar_s(getDHVar());
+        // cos(beta)
+        DifferentialFunction<DoubleReal> sb = MatrixQ.DFFactory.square(MatrixQ.one.minus(Q_tot.getMatrix()[2][2].pow(2)));
+        // +beta
+        aZYZ.getMatrix()[1][0] = MatrixQ.DFFactory.atan2(sb, Q_tot.getMatrix()[2][2]);
+        // + gamma
+        aZYZ.getMatrix()[2][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[1][2],
+                Q_tot.getMatrix()[0][2]);
+        // + alpha
+        aZYZ.getMatrix()[0][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[2][1],
+                Q_tot.getMatrix()[2][0].negate());
+        this.J_ZYZ = aZYZ.jacobian();
+    }
+    // sol = true up solution, false = button solution
+
+    public static SimpleMatrix getZYZangles(SimpleMatrix R, boolean sol) {
+        SimpleMatrix aZYZret = new SimpleMatrix(3, 1);
+        // cos(beta)
+        double sb = Math.sqrt(1 - Math.pow(R.get(2, 2), 2));
+        // +beta
+        aZYZret.set(1, 0, Math.atan2(+sb, +R.get(2, 2)));
+        // + gamma
+        aZYZret.set(2, 0, Math.atan2(+R.get(1, 2), +R.get(0, 2)));
+        // + alpha
+        aZYZret.set(0, 0, Math.atan2(+R.get(2, 1), -R.get(2, 0)));
+        return getDegZYZSol(aZYZret, sol);
+    }
+
+    // sol = true up solution, false = button solution
+    public static SimpleMatrix getDegZYZSol(SimpleMatrix deg, boolean sol) {
+        SimpleMatrix degSol = deg.copy();
+        if (!sol) {
+            degSol.set(0, 0, -degSol.get(0, 0));
+            SimpleMatrix pi = new SimpleMatrix(3, 1);
+            pi.fill(PI);
+            pi.set(0, 0, 0);
+            degSol.minus(pi);
+        }
+        return degSol;
+    }
+
+    public SimpleMatrix getJZYZ() {
+        return J_ZYZ.getNumeric();
+    }
+
+
+    private static double howNearZYZsing(SimpleMatrix R) {
+        return R.get(2, 2); // meglio se lontano da +-1
     }
 
     /**
@@ -221,7 +456,7 @@ public class DenHart {
             System.out.println("Matrice Posizione:");
             dh.getD().print("%.3f");
             System.out.println("Matrice Jacobiana:");
-            dh.getJ().print("%.3f");
+            dh.getJp().print("%.3f");
             System.out.println();
             i++;
         }

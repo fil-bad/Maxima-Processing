@@ -16,10 +16,10 @@ public class MatrixQ implements DifferentialMatrixFunction {
      */
 
     private static final DoubleRealFactory RNFactory = DoubleRealFactory.instance();
-    private static final DifferentialRealFunctionFactory<DoubleReal> DFFactory = new DifferentialRealFunctionFactory<DoubleReal>(RNFactory);
+    public static final DifferentialRealFunctionFactory<DoubleReal> DFFactory = new DifferentialRealFunctionFactory<DoubleReal>(RNFactory);
 
-    private static final Constant<DoubleReal> zero = DFFactory.val(new DoubleReal(0));
-    private static final Constant<DoubleReal> one = DFFactory.val(new DoubleReal(1));
+    public static final Constant<DoubleReal> zero = DFFactory.val(new DoubleReal(0));
+    public static final Constant<DoubleReal> one = DFFactory.val(new DoubleReal(1));
 
 
     // 4x4 dimension, as the below one
