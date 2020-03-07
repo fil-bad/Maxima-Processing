@@ -75,6 +75,8 @@ public class AutoDiff_Main {
         System.out.println("g diff(theta1) = " + g2.getValue().doubleValue());
         System.out.println("g diff(theta1):\n" + g2.toString());
 
+        System.out.println("Test mod: -5.8 % 2.7=" + (-5.8 % 2.7));
+
 
 //        Constant<DoubleReal> q = DFFactory.val(new DoubleReal(5));
 

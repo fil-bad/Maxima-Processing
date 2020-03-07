@@ -3,6 +3,7 @@ import processing.core.PApplet;
 import processing.event.MouseEvent;
 import processingElement.*;
 import robots.Cartesian;
+import robots.CartesianSplit;
 import robots.Rover;
 
 
@@ -53,7 +54,7 @@ public class ProcessingClass extends PApplet {
         scene.addObstacle(new Box(this, 50, 40, 10, color(0, 255, 0, 100)), 150, -60, 0);
 
         scene.setRover(new Rover(this, new Vertex(100, 100), 0.1, 0.15, 0.03));
-        scene.setRobot(new Cartesian(this, 10));
+        scene.setRobot(new CartesianSplit(this, 10));
 
     }
 
@@ -67,7 +68,7 @@ public class ProcessingClass extends PApplet {
             if (key == '-') scene.getRobot().add(giunto, -0.5);
 
             if (key == 'i' || key == 'I') {
-                scene.getRobot().inverse(120, 50, 50, radians(0));
+                scene.getRobot().inverse(120, 50, 50, radians(63));
 
             }
         }

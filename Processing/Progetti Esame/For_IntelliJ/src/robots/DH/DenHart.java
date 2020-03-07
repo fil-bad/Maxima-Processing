@@ -17,13 +17,16 @@ import static java.lang.Math.PI;
 public class DenHart {
 
     protected PApplet win;
+    private CommonDraw com = CommonDraw.getInstance();
+
+
     /**
      * Attributes
      */
-
-    private ArrayList<Link> dhTab;
-    private CommonDraw com = CommonDraw.getInstance();
+    private ArrayList<Link> dhTabStrut, dhTabOri;
     private MatrixQ Q_tot, Jp;
+    private MatrixQ Q_strut, JpStrut;
+    private MatrixQ Q_Ori;
     private MatrixQ aXYZ, aYXZ, aZYZ;   // 3 Terne Fisse: Nautica RPY | Nautica Nautica YXZ | EULERO(POLSO) ZYZ
     public MatrixQ J_XYZ, J_YXZ, J_ZYZ;
     protected static final double eSing = 1 - 0.01;   // margine prima di considerarmi troppo vicino a singolarità angolari
@@ -33,13 +36,19 @@ public class DenHart {
      * Constructors
      */
     public DenHart(PApplet win) {
-        this.dhTab = new ArrayList<Link>(0);
+        this.dhTabStrut = new ArrayList<Link>(0);
+        this.dhTabOri = new ArrayList<Link>(0);
+
         this.Q_tot = new MatrixQ().setIdentity();
+        this.Q_strut = new MatrixQ().setIdentity();
+        this.Q_Ori = new MatrixQ().setIdentity();
 
         this.Jp = this.getDsym().jacobian();
-        this.createXYZeq();
-        this.createYXZeq();
-        this.createZYZeq();
+        this.JpStrut = this.getDsym().jacobian();
+
+        this.createXYZeq(Q_tot, Q_Ori.getQVars());
+        this.createYXZeq(Q_tot, Q_Ori.getQVars());
+        this.createZYZeq(Q_tot, Q_Ori.getQVars());
         this.JsysQ = this.getSysQSym().jacobian();
 
         this.win = win;
@@ -58,22 +67,30 @@ public class DenHart {
         this((PApplet) null);
     }
 
-    private DenHart(ArrayList<Link> dhTab) {
-        this(null, dhTab);
+    private DenHart(ArrayList<Link> dhTabStrut) {
+        this(null, dhTabStrut);
     }
 
-    private DenHart(PApplet win, ArrayList<Link> dhTab) {
+    private DenHart(PApplet win, ArrayList<Link> dhTabStrut) {
         this(win);
-        for (Link l : dhTab) {
-            this.addLink(l);
+        for (Link l : dhTabStrut) {
+            this.addLinkStrut(l);
         }
 
     }
 
     public void draw() {
         win.push();
+        for (Link l : dhTabStrut) {
+            l.draw();
+            win.pushStyle();
+            win.noStroke();
+            win.sphere(l.getRadius());
+            win.popStyle();
+        }
+        com.axes(150);
         Link lastLink = null;
-        for (Link l : dhTab) {
+        for (Link l : dhTabOri) {
             l.draw();
             win.pushStyle();
             win.noStroke();
@@ -91,27 +108,42 @@ public class DenHart {
      * Structural methods
      */
 
-    public void addLink(Link link) {
+    public void addLinkStrut(Link link) {
         //append a new link to D-H table
-        this.dhTab.add(link);
-        this.Q_tot.mulOnSelf(link.getQLink());
+        this.dhTabStrut.add(link);
+        this.Q_strut.mulOnSelf(link.getQLink());
+        this.JpStrut = this.getDStrutSym().jacobian();
+
+        this.Q_tot = this.Q_strut.mul(this.Q_Ori);
         this.Jp = this.getDsym().jacobian();
-        this.createXYZeq();
-        this.createYXZeq();
-        this.createZYZeq();
         this.JsysQ = this.getSysQSym().jacobian();
     }
 
-    public Link removeLastLink() {
-        // remove last link (-> entry of D-H table). WARNING: could be very heavy to compute.
+    public void addLinkOri(Link link) {
+        //append a new link to D-H table
+        this.dhTabOri.add(link);
+        this.Q_Ori.mulOnSelf(link.getQLink());
 
-        Link link2ret = this.dhTab.remove(dhTab.size() - 1);
-        Q_tot.setIdentity();    //"clear della matrice e delle variabili"
-        for (Link l : dhTab) {
-            addLink(l);
-        }
-        return link2ret;
+        this.Q_tot = this.Q_strut.mul(this.Q_Ori);
+        this.Jp = this.getDsym().jacobian();
+        this.JsysQ = this.getSysQSym().jacobian();
+
+        this.createXYZeq(Q_tot, Q_Ori.getQVars());
+        this.createYXZeq(Q_tot, Q_Ori.getQVars());
+        this.createZYZeq(Q_tot, Q_Ori.getQVars());
     }
+
+    //todo: Cambiare e adattare per le 2 diverse liste
+//    public Link removeLastLink() {
+//        // remove last link (-> entry of D-H table). WARNING: could be very heavy to compute.
+//
+//        Link link2ret = this.dhTabStrut.remove(dhTabStrut.size() - 1);
+//        Q_tot.setIdentity();    //"clear della matrice e delle variabili"
+//        for (Link l : dhTabStrut) {
+//            addLinkStrut(l);
+//        }
+//        return link2ret;
+//    }
 
     /**
      * Variable interaction
@@ -119,6 +151,14 @@ public class DenHart {
 
     public QVars getDHVar() {
         return this.Q_tot.getQVars();
+    }
+
+    public QVars getStrutVar() {
+        return this.Q_strut.getQVars();
+    }
+
+    public QVars getOriVar() {
+        return this.Q_Ori.getQVars();
     }
 
     /**
@@ -136,12 +176,32 @@ public class DenHart {
         return getDsym().getNumeric();
     }
 
+    public SimpleMatrix getDStrut() {
+        return getDStrutSym().getNumeric();
+    }
+
+    public SimpleMatrix getDOri() {
+        return getDOriSym().getNumeric();
+    }
+
     public SimpleMatrix getR() {
         return getRsym().getNumeric();
     }
 
+    public SimpleMatrix getRStrut() {
+        return getRStrutsym().getNumeric();
+    }
+
+    public SimpleMatrix getROri() {
+        return getROrisym().getNumeric();
+    }
+
     public SimpleMatrix getJp() {
         return this.Jp.getNumeric();
+    }
+
+    public SimpleMatrix getJpStrut() {
+        return this.JpStrut.getNumeric();
     }
 
     public SimpleMatrix getJsys() {
@@ -163,8 +223,24 @@ public class DenHart {
         return this.Q_tot.getVPos();
     }
 
+    public MatrixQ getDStrutSym() {
+        return this.Q_strut.getVPos();
+    }
+
+    public MatrixQ getDOriSym() {
+        return this.Q_Ori.getVPos();
+    }
+
     public MatrixQ getRsym() {
         return this.Q_tot.getMatRot();
+    }
+
+    public MatrixQ getRStrutsym() {
+        return this.Q_strut.getMatRot();
+    }
+
+    public MatrixQ getROrisym() {
+        return this.Q_Ori.getMatRot();
     }
 
     public MatrixQ getJsym() {
@@ -179,11 +255,11 @@ public class DenHart {
      * DH table informatio
      **/
     public ArrayList<Link> getLinks() {
-        return this.dhTab;
+        return this.dhTabStrut;
     }
 
     public int getNumDOF() {
-        return this.dhTab.size();
+        return this.dhTabStrut.size();
     }
 
     /**
@@ -255,17 +331,17 @@ public class DenHart {
     }
 
     /*XYZ*/
-    private void createXYZeq() {
+    private void createXYZeq(MatrixQ Q, QVars Qv) {
         this.aXYZ = new MatrixQ(3, 1);
-        this.aXYZ.getQVars().mergeVar_s(getDHVar());
+        this.aXYZ.getQVars().mergeVar_s(Qv);
         // cos(beta)
-        DifferentialFunction<DoubleReal> cb = MatrixQ.DFFactory.square(MatrixQ.one.minus(Q_tot.getMatrix()[2][0].pow(2)));
+        DifferentialFunction<DoubleReal> cb = MatrixQ.DFFactory.square(MatrixQ.one.minus(Q.getMatrix()[2][0].pow(2)));
         // +beta
-        aXYZ.getMatrix()[1][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[2][0].negate(), cb);
+        aXYZ.getMatrix()[1][0] = MatrixQ.DFFactory.atan2(Q.getMatrix()[2][0].negate(), cb);
         // + gamma
-        aXYZ.getMatrix()[2][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[1][0], Q_tot.getMatrix()[0][0]);
+        aXYZ.getMatrix()[2][0] = MatrixQ.DFFactory.atan2(Q.getMatrix()[1][0], Q.getMatrix()[0][0]);
         // + alpha
-        aXYZ.getMatrix()[0][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[2][1], Q_tot.getMatrix()[2][2]);
+        aXYZ.getMatrix()[0][0] = MatrixQ.DFFactory.atan2(Q.getMatrix()[2][1], Q.getMatrix()[2][2]);
         this.J_XYZ = aXYZ.jacobian();
     }
     // sol = true up solution, false = button solution
@@ -291,6 +367,9 @@ public class DenHart {
             pi.fill(PI);
             degSol.minus(pi);
         }
+//        for (int i = 0; i < degSol.numRows(); i++)
+//            degSol.set(i, degSol.get(i) % (2 * PI) - PI);
+
         return degSol;
     }
 
@@ -304,17 +383,17 @@ public class DenHart {
 
 
     /*YXZ*/
-    private void createYXZeq() {
+    private void createYXZeq(MatrixQ Q, QVars Qv) {
         this.aYXZ = new MatrixQ(3, 1);
-        this.aYXZ.getQVars().mergeVar_s(getDHVar());
+        this.aYXZ.getQVars().mergeVar_s(Qv);
         // cos(beta)
-        DifferentialFunction<DoubleReal> cb = MatrixQ.DFFactory.square(MatrixQ.one.minus(Q_tot.getMatrix()[2][1].pow(2)));
+        DifferentialFunction<DoubleReal> cb = MatrixQ.DFFactory.square(MatrixQ.one.minus(Q.getMatrix()[2][1].pow(2)));
         // +beta
-        aYXZ.getMatrix()[1][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[2][1], cb);
+        aYXZ.getMatrix()[1][0] = MatrixQ.DFFactory.atan2(Q.getMatrix()[2][1], cb);
         // + gamma
-        aYXZ.getMatrix()[2][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[0][1].negate(), Q_tot.getMatrix()[1][1]);
+        aYXZ.getMatrix()[2][0] = MatrixQ.DFFactory.atan2(Q.getMatrix()[0][1].negate(), Q.getMatrix()[1][1]);
         // + alpha
-        aYXZ.getMatrix()[0][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[2][0].negate(), Q_tot.getMatrix()[2][2]);
+        aYXZ.getMatrix()[0][0] = MatrixQ.DFFactory.atan2(Q.getMatrix()[2][0].negate(), Q.getMatrix()[2][2]);
         this.J_YXZ = aYXZ.jacobian();
     }
     // sol = true up solution, false = button solution
@@ -340,6 +419,9 @@ public class DenHart {
             pi.fill(PI);
             degSol.plus(pi);
         }
+//        for (int i = 0; i < degSol.numRows(); i++)
+//            degSol.set(i, degSol.get(i) % (2 * PI) - PI);
+
         return degSol;
     }
 
@@ -352,17 +434,17 @@ public class DenHart {
     }
 
     /*ZYZ*/
-    private void createZYZeq() {
+    private void createZYZeq(MatrixQ Q, QVars Qv) {
         this.aZYZ = new MatrixQ(3, 1);
-        this.aZYZ.getQVars().mergeVar_s(getDHVar());
+        this.aZYZ.getQVars().mergeVar_s(Qv);
         // cos(beta)
-        DifferentialFunction<DoubleReal> sb = MatrixQ.DFFactory.square(MatrixQ.one.minus(Q_tot.getMatrix()[2][2].pow(2)));
+        DifferentialFunction<DoubleReal> sb = MatrixQ.DFFactory.square(MatrixQ.one.minus(Q.getMatrix()[2][2].pow(2)));
         // +beta
-        aZYZ.getMatrix()[1][0] = MatrixQ.DFFactory.atan2(sb, Q_tot.getMatrix()[2][2]);
+        aZYZ.getMatrix()[1][0] = MatrixQ.DFFactory.atan2(sb, Q.getMatrix()[2][2]);
         // + gamma
-        aZYZ.getMatrix()[2][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[1][2], Q_tot.getMatrix()[0][2]);
+        aZYZ.getMatrix()[2][0] = MatrixQ.DFFactory.atan2(Q.getMatrix()[1][2], Q.getMatrix()[0][2]);
         // + alpha
-        aZYZ.getMatrix()[0][0] = MatrixQ.DFFactory.atan2(Q_tot.getMatrix()[2][1], Q_tot.getMatrix()[2][0].negate());
+        aZYZ.getMatrix()[0][0] = MatrixQ.DFFactory.atan2(Q.getMatrix()[2][1], Q.getMatrix()[2][0].negate());
         this.J_ZYZ = aZYZ.jacobian();
     }
     // sol = true up solution, false = button solution
@@ -390,6 +472,9 @@ public class DenHart {
             pi.set(0, 0, 0);
             degSol.minus(pi);
         }
+//        for (int i = 0; i < degSol.numRows(); i++)
+//            degSol.set(i, degSol.get(i) % (2 * PI) - PI);
+
         return degSol;
     }
 
@@ -408,7 +493,7 @@ public class DenHart {
 
     public void printDHTab() {
         System.out.println("DH sym:\t\t\t\t\t\tDH num:");
-        for (Link l : this.dhTab) {
+        for (Link l : this.dhTabStrut) {
             l.printLink();
             System.out.print("\t");
             l.printValLink();
@@ -425,8 +510,8 @@ public class DenHart {
      **/
     public static void main(String[] args) {
         DenHart dh = new DenHart();
-        dh.addLink(new RotLink(null, "q1", 50, (float) PI, 0));
-        dh.addLink(new PrismLink(null, (float) PI / 2, "q2", 0, 20));
+        dh.addLinkStrut(new RotLink(null, "q1", 50, (float) PI, 0));
+        dh.addLinkStrut(new PrismLink(null, (float) PI / 2, "q2", 0, 20));
         dh.printDHTab();
         System.out.println("Robot RP, in cui si fa variare la P a ogni iterazione:");
         int i = 0;
