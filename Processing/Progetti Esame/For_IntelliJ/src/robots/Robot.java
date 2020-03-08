@@ -43,7 +43,7 @@ public abstract class Robot {
         this.kp = kp;
 
         x = new SimpleMatrix(A.numRows(), 1);
-        x.insertIntoThis(dhTab.getNumDOF() - 1, 0, dhTab.getDHVar().get_qVect());
+        x.insertIntoThis(dhTab.getNumDOF(), 0, dhTab.getDHVar().get_qVect());
         xnew = x.copy();
     }
 
@@ -130,7 +130,6 @@ public abstract class Robot {
 
             //Trovo la terna migliore e la soluzione con meno errore per l'orientamento
             TriadDegs best = DenHart.bestTriadOutsing(rDes, dhTab.getROri());
-//            best = TriadDegs.YXZ;
             SimpleMatrix eo, eoUp, eoDown;
             eoUp = DenHart.getAnglesTriad(best, rDes, true).minus(dhTab.getAnglesTriad(best, true));
             eoDown = DenHart.getAnglesTriad(best, rDes, false).minus(dhTab.getAnglesTriad(best, false));
@@ -140,7 +139,7 @@ public abstract class Robot {
                 eo = eoDown;
 //            Normalizzo tutti i risultati tra -2Pi e 2Pi, per evitare numeri troppo grandi
             for (int i = 0; i < eo.numRows(); i++)
-                eo.set(i, eo.get(i) % (2 * PI));
+                eo.set(i, (eo.get(i) % (2 * PI)));
 
             JOri = dhTab.getJTriad(best); //Aggiorno numericamente JOri in base alla posizione, terna e orientamento
 

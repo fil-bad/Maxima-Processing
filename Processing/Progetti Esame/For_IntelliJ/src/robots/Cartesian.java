@@ -6,6 +6,8 @@ import robots.DH.DenHart;
 import robots.DH.Links.PrismLink;
 import robots.DH.Links.RotLink;
 
+import static java.lang.Math.PI;
+
 
 public class Cartesian extends Robot {
 
@@ -20,17 +22,8 @@ public class Cartesian extends Robot {
         dhTab.addLinkOri(new RotLink(win, b, "q6", 50, 0, 0));
         dhTab.getDHVar().setVars(50, 50, 50, 0.1, 0.2, 0);
 
-        super.setCtrl(0.7, 0.3, 0.1);
-//        System.out.println("getJXYZ");
-//        dhTab.getJXYZ().print();
-//
-//        System.out.println("getJYXZ");
-//        dhTab.getJYXZ().print();
-//
-//        System.out.println("getJZYZ");
-//        dhTab.getJZYZ().print();
+        super.setCtrl(0.2, 0.1, 0.2);
     }
-
 
     @Override
     public SimpleMatrix inverse(double x, double y, double z, double theta) {

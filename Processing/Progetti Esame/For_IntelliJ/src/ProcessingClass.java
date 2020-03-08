@@ -86,7 +86,9 @@ public class ProcessingClass extends PApplet {
 
         push();
         translate((float) scene.getRover().get().getX() + pObj[0], (float) scene.getRover().get().getY() + pObj[1], pObj[2]);
-        sphere(10);
+        fill(180);
+        rotateZ(radians(pObj[3]));
+        box(10);
         pop();
 
     }
