@@ -69,11 +69,6 @@ public class SceneExpert implements Observer {
         rover.draw();
         SimpleMatrix transl = rover.getD();
         win.translate((float) transl.get(0), (float) transl.get(1), (float) transl.get(2));
-//        com.axes(255);
-        win.push();
-        win.translate(120, 50, 50);
-        win.sphere(10);
-        win.pop();
         robot.draw();
         win.pop();
     }

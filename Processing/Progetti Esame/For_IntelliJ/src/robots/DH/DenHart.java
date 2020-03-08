@@ -259,7 +259,7 @@ public class DenHart {
     }
 
     public int getNumDOF() {
-        return this.dhTabStrut.size();
+        return this.dhTabStrut.size() + this.dhTabOri.size();
     }
 
     /**

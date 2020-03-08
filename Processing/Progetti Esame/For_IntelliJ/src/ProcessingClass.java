@@ -1,9 +1,9 @@
 import geometry.Vertex;
+import org.ejml.simple.SimpleMatrix;
 import processing.core.PApplet;
 import processing.event.MouseEvent;
 import processingElement.*;
 import robots.Cartesian;
-import robots.CartesianSplit;
 import robots.Rover;
 
 
@@ -54,9 +54,11 @@ public class ProcessingClass extends PApplet {
         scene.addObstacle(new Box(this, 50, 40, 10, color(0, 255, 0, 100)), 150, -60, 0);
 
         scene.setRover(new Rover(this, new Vertex(100, 100), 0.1, 0.15, 0.03));
-        scene.setRobot(new CartesianSplit(this, 10));
+        scene.setRobot(new Cartesian(this, 10));
 
     }
+
+    int[] pObj = new int[4];
 
     @Override
     public void draw() {
@@ -64,12 +66,13 @@ public class ProcessingClass extends PApplet {
         cameraSet();
 
         if (keyPressed) {
-            if (key == '+') scene.getRobot().add(giunto, 0.5);
-            if (key == '-') scene.getRobot().add(giunto, -0.5);
+
+            if (key == '+') pObj[giunto] += 1;
+            if (key == '-') pObj[giunto] -= 1;
 
             if (key == 'i' || key == 'I') {
-                scene.getRobot().inverse(120, 50, 50, radians(63));
-
+                SimpleMatrix newQ = scene.getRobot().inverse(pObj[0], pObj[1], pObj[2], radians(pObj[3]));
+                scene.getRobot().setqObj(newQ);
             }
         }
 
@@ -80,6 +83,11 @@ public class ProcessingClass extends PApplet {
         //Oggetti da graficare
         scene.drawScene();
         point.draw();
+
+        push();
+        translate((float) scene.getRover().get().getX() + pObj[0], (float) scene.getRover().get().getY() + pObj[1], pObj[2]);
+        sphere(10);
+        pop();
 
     }
 
@@ -131,7 +139,7 @@ public class ProcessingClass extends PApplet {
             scene.addObstacle(new Box(this, (int) random(10, 100), (int) random(10, 100), (int) random(10, 30), color(random(255), random(255), random(255), 100)));
         }
 
-        if (key >= '1' && key <= '6') giunto = key - '1';
+        if (key >= '1' && key <= '4') giunto = key - '1';
     }
 
     // Set camera e sistema ortonormale destro

@@ -20,6 +20,7 @@ public class Rover implements Obj3D {
     PApplet win;
     double rho, ka;
     double kp, ki, kd;
+    protected static final double EPSer = 0.001;
 
     PShape[] omniWheel = new PShape[4];
 
@@ -42,11 +43,10 @@ public class Rover implements Obj3D {
         B.set(0, 0, ka);
         B.set(1, 1, ka);
 
-        xnew = new SimpleMatrix(4, 1);
         x = new SimpleMatrix(4, 1);
         x.set(2, 0, pos.getX());
         x.set(3, 0, pos.getY());
-        xnew.set(x);
+        xnew = x.copy();
 
         dx = new SimpleMatrix(4, 1);
 
@@ -125,46 +125,27 @@ public class Rover implements Obj3D {
     private void ctrlStep() {
         x.set(xnew);
 
-        SimpleMatrix er = new SimpleMatrix(4, 1);
-        er.set(2, 0, pos.getX() - obj.getX());
-        er.set(3, 0, pos.getY() - obj.getY());
-
-        er = er.scale(-kp);
-
-        SimpleMatrix u = new SimpleMatrix(2, 1);
-        u.set(0, 0, er.get(2, 0));
-        u.set(1, 0, er.get(3, 0));
+        SimpleMatrix er = new SimpleMatrix(2, 1);
+        er.set(0, 0, obj.getX() - pos.getX());
+        er.set(1, 0, obj.getY() - pos.getY());
 
         //Uso un controllo proporzionale, quindi moltiplico l'errore per kp
-//        System.out.println("Stato");
-//        x.print();
-//        System.out.println("errore");
-//        er.print();
-//        System.out.println("controllo");
-//        u.print();
-        //Cambio obiettivo prima di fermarsi
+        SimpleMatrix u = er.scale(kp);
 
+        //Cambio obiettivo prima di fermarsi o se comunque sono sufficentemente vicino
         if (pos.minus(obj).len() <= distChange || u.normF() <= 1) {
             if (!checkPoint.isEmpty()) {
                 obj = checkPoint.pollFirst();
             }
         }
 
-
-//        if(u.normF()>1)
-//            u=u.divide(u.normF());
-
         double maxU = Math.max(Math.abs(u.get(0)), Math.abs(u.get(1)));
         if (maxU > 1) {
             u = u.divide(u.normF());
         }
-//        if (Math.abs(u.get(0)) > 1)
-//            u.set(0, Math.signum(u.get(0)));
-//        if (Math.abs(u.get(1)) > 1)
-//            u.set(1, Math.signum(u.get(1)));
 
         // Errore troppo piccolo, smetto di fare l'update
-        if (u.normF() < 0.0001) {
+        if (u.normF() < EPSer) {
             return;
         }
         dx.set(A.mult(x).plus(B.mult(u)));  // la uso per far ruotare le ruote
