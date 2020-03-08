@@ -144,13 +144,13 @@ public abstract class Robot {
             JOri = dhTab.getJTriad(best); //Aggiorno numericamente JOri in base alla posizione, terna e orientamento
 
             if (eo.normF() > EPSer) { //Aggiorno solo se l'errore è tangibile
-                qJ = JOri.transpose().mult(eo);
-//
-//                //todo, se J non vicina a singolarità gradiente
-//                if (eo.normF() > 10.0)  //se errore "grande" uso gradiente
-//                    qJ = JOri.transpose().mult(eo);
-//                else
-//                    qJ = JOri.pseudoInverse().mult(eo);
+//                qJ = JOri.transpose().mult(eo);
+
+                //todo, se J non vicina a singolarità gradiente
+                if (eo.normF() > 10.0)  //se errore "grande" uso gradiente
+                    qJ = JOri.transpose().mult(eo);
+                else
+                    qJ = JOri.pseudoInverse().mult(eo);
                 qJ = Keo.mult(qJ);
                 qCapNew = qCap.plus(qJ);
                 for (int i = 0; i < eo.numRows(); i++)
