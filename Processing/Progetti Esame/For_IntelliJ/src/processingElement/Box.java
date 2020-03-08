@@ -31,6 +31,14 @@ public class Box extends Solid {
     }
 
     @Override
+    public Obstacle myCopy() {
+        Box ret = new Box(win, w, l, h, color);
+        ret.setD(this.getD());
+        ret.setR(this.getR());
+        return ret;
+    }
+
+    @Override
     public void draw() {
         win.push();
 

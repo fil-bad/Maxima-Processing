@@ -84,4 +84,5 @@ public abstract class Solid implements Obstacle, Subject {
         if (myScene != null)
             myScene.updateChange();
     }
+
 }
