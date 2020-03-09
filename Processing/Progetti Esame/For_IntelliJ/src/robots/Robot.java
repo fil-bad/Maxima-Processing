@@ -47,6 +47,11 @@ public abstract class Robot {
         xnew = x.copy();
     }
 
+    public void setq(SimpleMatrix qObj) {
+        this.dhTab.getDHVar().setVars(qObj);
+        setqObj(qObj);
+    }
+
     public void setqObj(SimpleMatrix qObj) {
         this.qObj = qObj;
     }
@@ -104,6 +109,48 @@ public abstract class Robot {
         rDes.set(1, 1, Math.cos(theta));
         rDes.set(2, 2, -1.0); // Pinsa verso il basso sempre (da progetto)
 
+
+        for (int j = 0; j < loop; j++) {
+            /** Fase 2, aggiusto l'orientamento**/
+
+            qCap = dhTab.getOriVar().get_qVect();
+
+            //Trovo la terna migliore e la soluzione con meno errore per l'orientamento
+            TriadDegs best = DenHart.bestTriadOutsing(rDes, dhTab.getROri());
+            SimpleMatrix eo, eoUp, eoDown;
+            eoUp = DenHart.getAnglesTriad(best, rDes, true).minus(dhTab.getAnglesTriad(best, true));
+            eoDown = DenHart.getAnglesTriad(best, rDes, false).minus(dhTab.getAnglesTriad(best, false));
+            if (eoUp.normF() <= eoDown.normF())
+                eo = eoUp;
+            else
+                eo = eoDown;
+//            Normalizzo tutti i risultati tra -2Pi e 2Pi, per evitare numeri troppo grandi
+            for (int i = 0; i < eo.numRows(); i++)
+                eo.set(i, (eo.get(i) % (2 * PI)));
+
+            JOri = dhTab.getJTriad(best); //Aggiorno numericamente JOri in base alla posizione, terna e orientamento
+//            best = TriadDegs.YXZ;
+            if (eo.normF() > EPSer) { //Aggiorno solo se l'errore è tangibile
+                qJ = JOri.transpose().mult(eo);
+
+                //todo, se J non vicina a singolarità gradiente
+//                if (eo.normF() > 10.0)  //se errore "grande" uso gradiente
+//                    qJ = JOri.transpose().mult(eo);
+//                else
+//                    qJ = JOri.pseudoInverse().mult(eo);
+                qJ = Keo.mult(qJ);
+                qCapNew = qCap.plus(qJ);
+                for (int i = 0; i < eo.numRows(); i++)
+                    qCapNew.set(i, qCapNew.get(i) % (2 * PI));
+                dhTab.getOriVar().setVars(qCapNew); // Aggiorno temporaneamente lo stato del robot
+            } else {
+                System.out.println("Orientamento Raggiunto");
+                break;
+            }
+
+        }
+
+
         for (int j = 0; j < loop; j++) {
             /** Fase uno, aggiusto la posizione**/
             //Trovo epCap:
@@ -126,49 +173,16 @@ public abstract class Robot {
                 qJ = Kep.mult(qJ);
                 qCapNew = qCap.plus(qJ);
                 dhTab.getStrutVar().setVars(qCapNew); // Aggiorno lo stato del robot temporaneamente
-            } else
+            } else {
                 System.out.println("Posizione Raggiunta");
-
-            /** Fase 2, aggiusto l'orientamento**/
-
-            qCap = dhTab.getOriVar().get_qVect();
-
-            //Trovo la terna migliore e la soluzione con meno errore per l'orientamento
-            TriadDegs best = DenHart.bestTriadOutsing(rDes, dhTab.getROri());
-            SimpleMatrix eo, eoUp, eoDown;
-            eoUp = DenHart.getAnglesTriad(best, rDes, true).minus(dhTab.getAnglesTriad(best, true));
-            eoDown = DenHart.getAnglesTriad(best, rDes, false).minus(dhTab.getAnglesTriad(best, false));
-            if (eoUp.normF() <= eoDown.normF())
-                eo = eoUp;
-            else
-                eo = eoDown;
-//            Normalizzo tutti i risultati tra -2Pi e 2Pi, per evitare numeri troppo grandi
-            for (int i = 0; i < eo.numRows(); i++)
-                eo.set(i, (eo.get(i) % (2 * PI)));
-
-            JOri = dhTab.getJTriad(best); //Aggiorno numericamente JOri in base alla posizione, terna e orientamento
-
-            if (eo.normF() > EPSer) { //Aggiorno solo se l'errore è tangibile
-                qJ = JOri.transpose().mult(eo);
-
-                //todo, se J non vicina a singolarità gradiente
-//                if (eo.normF() > 10.0)  //se errore "grande" uso gradiente
-//                    qJ = JOri.transpose().mult(eo);
-//                else
-//                    qJ = JOri.pseudoInverse().mult(eo);
-                qJ = Keo.mult(qJ);
-                qCapNew = qCap.plus(qJ);
-                for (int i = 0; i < eo.numRows(); i++)
-                    qCapNew.set(i, qCapNew.get(i) % (2 * PI));
-                dhTab.getOriVar().setVars(qCapNew); // Aggiorno temporaneamente lo stato del robot
-            } else
-                System.out.println("Orientamento Raggiunto");
-
-            if (ep.normF() <= EPSer && eo.normF() <= EPSer) {
-                System.out.println("Finisco loop, sol trovata");
                 break;
             }
         }
+//        if (ep.normF() <= EPSer && eo.normF() <= EPSer) {
+//                System.out.println("Finisco loop, sol trovata");
+//                break;
+//            }
+
         SimpleMatrix ret = dhTab.getDHVar().get_qVect();
         dhTab.getDHVar().setVars(dhOldVar); // Ripristino la situazione iniziale
         return ret;

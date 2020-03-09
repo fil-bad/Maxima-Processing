@@ -34,6 +34,7 @@ public class Cartesian extends Robot {
         Keo = SimpleMatrix.identity(3).scale(gamma);
 
         SimpleMatrix ret = super.inverse(10000, x, y, z, theta, Kep, Keo);
+//        SimpleMatrix ret = super.inverse(1, x, y, z, theta, Kep, Keo);
         return ret;
     }
 

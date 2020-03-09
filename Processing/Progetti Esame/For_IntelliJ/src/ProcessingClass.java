@@ -58,7 +58,7 @@ public class ProcessingClass extends PApplet {
 
     }
 
-    int[] pObj = new int[4];
+    float[] pObj = new float[4];
 
     @Override
     public void draw() {
@@ -71,8 +71,11 @@ public class ProcessingClass extends PApplet {
             if (key == '-') pObj[giunto] -= 1;
 
             if (key == 'i' || key == 'I') {
+                System.out.println("Iniziato calcolo cinematica inversa");
                 SimpleMatrix newQ = scene.getRobot().inverse(pObj[0], pObj[1], pObj[2], radians(pObj[3]));
                 scene.getRobot().setqObj(newQ);
+//                SimpleMatrix newQ = scene.getRobot().inverse(pObj[0], pObj[1], pObj[2], radians(pObj[3]));
+//                scene.getRobot().setq(newQ);
             }
         }
 
@@ -107,10 +110,22 @@ public class ProcessingClass extends PApplet {
                 else {
                     selected = newSelected;
                     selected.highlight(true);
+
                 }
             }
         }
+        if (mouseButton == RIGHT) {
+            if (selected != null) {
+                SimpleMatrix dObj;
+                dObj = selected.getD().minus(scene.getRover().getD());
+                pObj[0] = (float) dObj.get(0);
+                pObj[1] = (float) dObj.get(1);
+                pObj[2] = (float) -dObj.get(2);
+                pObj[3] = degrees((float) selected.getR());
+            }
+        }
     }
+
 
     @Override
     public void mouseWheel(MouseEvent event) {
