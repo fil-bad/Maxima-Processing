@@ -5,7 +5,8 @@ import processing.core.PApplet;
 
 public abstract class Solid implements Obstacle, Subject {
     // Coordinate origine del solido
-    SimpleMatrix d;
+    SimpleMatrix d, traslC;      //d= pos basso, traslC= pos rel per connessione
+
     double angle = 0;
     PApplet win;
 
@@ -14,6 +15,7 @@ public abstract class Solid implements Obstacle, Subject {
 
     public Solid(PApplet win) {
         this.d = new SimpleMatrix(3, 1);
+        this.traslC = new SimpleMatrix(3, 1);
         this.win = win;
     }
 
@@ -24,7 +26,7 @@ public abstract class Solid implements Obstacle, Subject {
 
     @Override
     public SimpleMatrix getD() {
-        return d;
+        return d.plus(traslC);
     }
 
     @Override

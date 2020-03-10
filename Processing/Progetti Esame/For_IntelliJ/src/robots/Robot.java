@@ -14,7 +14,7 @@ public abstract class Robot {
     protected DenHart dhTab;
     protected CommonDraw com = CommonDraw.getInstance();
     protected PApplet win = null;
-    protected static final double EPSer = 0.001;
+    protected static final double EPSer = 0.005;
 
     protected SimpleMatrix A, B, xnew, x;  //Must be set by son robot using for example setCtrl()
     protected double kp;
@@ -89,15 +89,15 @@ public abstract class Robot {
     public abstract SimpleMatrix inverse(double x, double y, double z, double theta);
 
     //Return a new set of q value to reach the target point and orientation, after loops iteration
-    protected SimpleMatrix inverse(int loop, double x, double y, double z, double theta, SimpleMatrix Kep, SimpleMatrix Keo) {
+    protected SimpleMatrix inverse(int loop, double x, double y, double z, double theta, SimpleMatrix Kep, SimpleMatrix Keo) throws Exception {
 
         SimpleMatrix dhOldVar = dhTab.getDHVar().get_qVect();
 
         SimpleMatrix qCapNew, qCap, qJ; //Variabili di stato per sistema Tempo Discreto
         SimpleMatrix JpStrut, JOri;     //Jacobbiani per esecuzione degli algoritmi
+        SimpleMatrix ep, eo = null;
 
 
-        SimpleMatrix ep;
         ep = new SimpleMatrix(3, 1);
 
 
@@ -117,7 +117,9 @@ public abstract class Robot {
 
             //Trovo la terna migliore e la soluzione con meno errore per l'orientamento
             TriadDegs best = DenHart.bestTriadOutsing(rDes, dhTab.getROri());
-            SimpleMatrix eo, eoUp, eoDown;
+            best = TriadDegs.YXZ;
+
+            SimpleMatrix eoUp, eoDown;
             eoUp = DenHart.getAnglesTriad(best, rDes, true).minus(dhTab.getAnglesTriad(best, true));
             eoDown = DenHart.getAnglesTriad(best, rDes, false).minus(dhTab.getAnglesTriad(best, false));
             if (eoUp.normF() <= eoDown.normF())
@@ -129,7 +131,6 @@ public abstract class Robot {
                 eo.set(i, (eo.get(i) % (2 * PI)));
 
             JOri = dhTab.getJTriad(best); //Aggiorno numericamente JOri in base alla posizione, terna e orientamento
-//            best = TriadDegs.YXZ;
             if (eo.normF() > EPSer) { //Aggiorno solo se l'errore è tangibile
                 qJ = JOri.transpose().mult(eo);
 
@@ -140,8 +141,8 @@ public abstract class Robot {
 //                    qJ = JOri.pseudoInverse().mult(eo);
                 qJ = Keo.mult(qJ);
                 qCapNew = qCap.plus(qJ);
-                for (int i = 0; i < eo.numRows(); i++)
-                    qCapNew.set(i, qCapNew.get(i) % (2 * PI));
+//                for (int i = 0; i < eo.numRows(); i++)
+//                    qCapNew.set(i, qCapNew.get(i) % (2 * PI));
                 dhTab.getOriVar().setVars(qCapNew); // Aggiorno temporaneamente lo stato del robot
             } else {
                 System.out.println("Orientamento Raggiunto");
@@ -164,11 +165,13 @@ public abstract class Robot {
             JpStrut = dhTab.getJpStrut();   //Aggiorno numericamente Jp in base alla posizione
 
             if (ep.normF() > EPSer) { //Aggiorno solo se l'errore è tangibile
-                //todo, se J non vicina a singolarità gradiente
-                if (ep.normF() > 10.0)  //se errore "grande" uso gradiente
-                    qJ = JpStrut.transpose().mult(ep);
-                else
-                    qJ = JpStrut.pseudoInverse().mult(ep);
+                qJ = JpStrut.transpose().mult(ep);
+
+//                //todo, se J non vicina a singolarità gradiente
+//                if (ep.normF() > 10.0)  //se errore "grande" uso gradiente
+//                    qJ = JpStrut.transpose().mult(ep);
+//                else
+//                    qJ = JpStrut.pseudoInverse().mult(ep);
 
                 qJ = Kep.mult(qJ);
                 qCapNew = qCap.plus(qJ);
@@ -178,10 +181,10 @@ public abstract class Robot {
                 break;
             }
         }
-//        if (ep.normF() <= EPSer && eo.normF() <= EPSer) {
-//                System.out.println("Finisco loop, sol trovata");
-//                break;
-//            }
+        if (ep.normF() <= EPSer && eo.normF() <= EPSer) {
+            System.out.println("Finisco loop, sol trovata");
+            throw new Exception("EndWork");
+        }
 
         SimpleMatrix ret = dhTab.getDHVar().get_qVect();
         dhTab.getDHVar().setVars(dhOldVar); // Ripristino la situazione iniziale

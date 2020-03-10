@@ -47,6 +47,8 @@ public class RotLink extends GenericLink {
             com.drawBoxBase((float) d / 48.0f, sqB, win.color(150, 255, 0));
             com.drawBoxBase((float) d * 22 / 48.0f, sqB * 0.9f, win.color(150, 255, 0));
             com.drawBoxBase((float) d / 48.0f, sqB, win.color(0, 255, 255));
+            win.rotateX((float) alpha);
+
         } else if (d == 0 && a != 0) {
             win.rotateZ((float) theta);
             //Escamotage perchè drawBoxBase disegna sopra la Z

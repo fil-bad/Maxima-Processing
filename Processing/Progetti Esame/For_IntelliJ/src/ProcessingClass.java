@@ -4,6 +4,7 @@ import processing.core.PApplet;
 import processing.event.MouseEvent;
 import processingElement.*;
 import robots.Cartesian;
+import robots.Puma;
 import robots.Rover;
 
 
@@ -54,7 +55,8 @@ public class ProcessingClass extends PApplet {
         scene.addObstacle(new Box(this, 50, 40, 10, color(0, 255, 0, 100)), 150, -60, 0);
 
         scene.setRover(new Rover(this, new Vertex(100, 100), 0.1, 0.15, 0.03));
-        scene.setRobot(new Cartesian(this, 10));
+//        scene.setRobot(new Cartesian(this, 10));
+        scene.setRobot(new Puma(this, 10));
 
     }
 
@@ -72,9 +74,10 @@ public class ProcessingClass extends PApplet {
 
             if (key == 'i' || key == 'I') {
                 System.out.println("Iniziato calcolo cinematica inversa");
+//                SimpleMatrix newQ = scene.getRobot().inverse(pObj[0], pObj[1], pObj[2] - (float) scene.getRover().getD().get(2), radians(pObj[3]));
+
                 SimpleMatrix newQ = scene.getRobot().inverse(pObj[0], pObj[1], pObj[2], radians(pObj[3]));
                 scene.getRobot().setqObj(newQ);
-//                SimpleMatrix newQ = scene.getRobot().inverse(pObj[0], pObj[1], pObj[2], radians(pObj[3]));
 //                scene.getRobot().setq(newQ);
             }
         }
@@ -120,7 +123,7 @@ public class ProcessingClass extends PApplet {
                 dObj = selected.getD().minus(scene.getRover().getD());
                 pObj[0] = (float) dObj.get(0);
                 pObj[1] = (float) dObj.get(1);
-                pObj[2] = (float) -dObj.get(2);
+                pObj[2] = (float) selected.getD().get(2);
                 pObj[3] = degrees((float) selected.getR());
             }
         }

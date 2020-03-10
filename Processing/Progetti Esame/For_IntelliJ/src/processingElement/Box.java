@@ -20,6 +20,7 @@ public class Box extends Solid {
         this.color = color;
         this.showCol = this.color;
         highlight = win.color(255, 255, 0);
+        this.traslC.set(2, h);
     }
 
     // !!! DA USARE SOLO PER AVERE DEGLI OSTACOLI
@@ -48,7 +49,7 @@ public class Box extends Solid {
         win.translate(0, 0, h / 2.0f);
         win.fill(showCol);
         win.box(w, l, h);
-        win.translate(0, 0, h);
+        win.translate(0, 0, h / 2.0f);
         com.axes(100);
 
         win.pop();

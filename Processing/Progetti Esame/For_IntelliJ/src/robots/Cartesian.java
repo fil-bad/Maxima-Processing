@@ -32,8 +32,14 @@ public class Cartesian extends Robot {
         double gamma = 1 / 100.0;
         Kep = SimpleMatrix.identity(3).scale(lambda);
         Keo = SimpleMatrix.identity(3).scale(gamma);
-
-        SimpleMatrix ret = super.inverse(10000, x, y, z, theta, Kep, Keo);
+        SimpleMatrix ret = null;
+        try {
+            ret = super.inverse(10000, x, y, z, theta, Kep, Keo);
+        } catch (Exception e) {
+            System.out.println("Soluzione trovata");
+            if (ret == null)
+                return dhTab.getDHVar().get_qVect();
+        }
 //        SimpleMatrix ret = super.inverse(1, x, y, z, theta, Kep, Keo);
         return ret;
     }
