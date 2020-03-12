@@ -23,7 +23,7 @@ public class DenHart {
     /**
      * Attributes
      */
-    private ArrayList<Link> dhTabStrut, dhTabOri;
+    private ArrayList<Link> dhTab, dhTabStrut, dhTabOri;
     private MatrixQ Q_tot, Jp;
     private MatrixQ Q_strut, JpStrut;
     private MatrixQ Q_Ori;
@@ -88,7 +88,7 @@ public class DenHart {
             win.sphere(l.getRadius());
             win.popStyle();
         }
-        com.axes(150);
+//        com.axes(150);
         Link lastLink = null;
         for (Link l : dhTabOri) {
             l.draw();
@@ -100,7 +100,7 @@ public class DenHart {
         }
         if (lastLink != null)
             com.pinza(lastLink.getRadius() * 5, lastLink.getRadius() * 3, lastLink.getRadius() * 2, 1);
-        com.axes(255);
+//        com.axes(255);
         win.pop();
     }
 
@@ -112,11 +112,21 @@ public class DenHart {
         //append a new link to D-H table
         this.dhTabStrut.add(link);
         this.Q_strut.mulOnSelf(link.getQLink());
-        this.JpStrut = this.getDStrutSym().jacobian();
-
         this.Q_tot = this.Q_strut.mul(this.Q_Ori);
+
         this.Jp = this.getDsym().jacobian();
         this.JsysQ = this.getSysQSym().jacobian();
+
+        this.createXYZeq(Q_tot, Q_Ori.getQVars());
+        this.createYXZeq(Q_tot, Q_Ori.getQVars());
+        this.createZYZeq(Q_tot, Q_Ori.getQVars());
+
+        //Devo ottenere da Q_tot, una Jp, in funzione delle sole variabili della struttura:
+        this.JpStrut = Q_strut.getVPos();
+        this.JpStrut.getQVars().clearVar();
+        this.JpStrut.getQVars().mergeVar_s(Q_strut.getQVars());
+        this.JpStrut = this.JpStrut.jacobian();
+        JpStrut.printMatValue();
     }
 
     public void addLinkOri(Link link) {
@@ -131,6 +141,13 @@ public class DenHart {
         this.createXYZeq(Q_tot, Q_Ori.getQVars());
         this.createYXZeq(Q_tot, Q_Ori.getQVars());
         this.createZYZeq(Q_tot, Q_Ori.getQVars());
+
+        //Devo ottenere da Q_tot, una Jp, in funzione delle sole variabili della struttura:
+        this.JpStrut = Q_tot.getVPos();
+        this.JpStrut.getQVars().clearVar();
+        this.JpStrut.getQVars().mergeVar_s(Q_strut.getQVars());
+        JpStrut.getQVars().printVarName();
+        this.JpStrut = this.JpStrut.jacobian();
     }
 
     //todo: Cambiare e adattare per le 2 diverse liste

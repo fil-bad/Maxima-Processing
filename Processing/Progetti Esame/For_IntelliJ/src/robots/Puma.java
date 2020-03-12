@@ -27,8 +27,8 @@ public class Puma extends Robot {
         SimpleMatrix Kep, Keo;
         double lambda = 1 / 20000.0;
         double gamma = 1 / 100.0;
-        Kep = SimpleMatrix.identity(3).scale(lambda);
-        Keo = SimpleMatrix.identity(3).scale(gamma);
+        Kep = SimpleMatrix.identity(dhTab.getStrutVar().varSize()).scale(lambda);
+        Keo = SimpleMatrix.identity(dhTab.getOriVar().varSize()).scale(gamma);
         SimpleMatrix ret = null;
 
 //        SimpleMatrix ret = super.inverse(10000, x, y, z, theta, Kep, Keo);
@@ -40,14 +40,22 @@ public class Puma extends Robot {
                 ret = super.inverse(10, x, y, z, theta, Kep, Keo);
                 dhTab.getDHVar().setVars(ret);
             } catch (Exception e) {
-                System.out.println("Soluzione trovata");
-                if (ret == null)
-                    return dhTab.getDHVar().get_qVect();
-                else {
-                    dhTab.getDHVar().setVars(originalQ);
-                    return ret;
+                if (e.getMessage().equals("EndWork")) {
+                    System.out.println("Soluzione trovata");
+                    if (ret == null)
+                        return dhTab.getDHVar().get_qVect();
+                    else {
+                        dhTab.getDHVar().setVars(originalQ);
+                        return ret;
+                    }
+                } else {
+                    System.err.println(e.getMessage());
+                    e.printStackTrace();
+                    System.exit(-1);
                 }
             }
+
+
             System.out.println("i = " + i);
         }
         dhTab.getDHVar().setVars(originalQ);
