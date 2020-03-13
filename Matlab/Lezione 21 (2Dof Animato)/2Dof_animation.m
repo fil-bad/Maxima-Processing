@@ -11,7 +11,7 @@ close all
 % Parametri 2Dof
 L1 = 3;     % Lunghezza 1° braccio
 L2 = 2;     % Lunghezza 2° braccio
-gomito = 1; % 1 = Gomito alto, 0 = Gomito basso
+gomito = 0; % 1 = Gomito alto, 0 = Gomito basso
 % Calcoli notevoli
 r = abs(L1-L2);
 R = L1+L2;
