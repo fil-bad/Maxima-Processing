@@ -47,6 +47,7 @@ PDF:
 #####Emanuele
 3) Avendo la lista dei punti obiettivo ordinati, e avendo modellato il sistema come un OmniDirezionale LINEARE, controlliamo in in forza con una politica "Bang-Bang" il robot, e puntiamo un obiettivo finchè il controllo non scende sotto la saturazione o comunque siamo troppo vicini; Esenguendo per ogni nodi questa politica, di fatto si seguono i corridoi e si arriva a destinazione con continuità
     (Raccontare della libreria di algebra lineare ejml)
+
 #####Filippo
 4)Ottenere mediante AutoDiff delle matrici di funzioni che descrivono la cinematica diretta dei robot,e la differenziazione per ottenere gli Jacobbiani.
 
@@ -55,13 +56,8 @@ PDF:
 
 #####Emanuele
 6)Sfruttando il punto 4, si calcolano le cinematiche inverse usando una logica di disaccoppiamento nella risoluzione della cinematica inversa di posizione
+
 #####Gabriele
 7) Problemi nella cinematica inversa di orientamento: Singolarità, Terne scelte e proprietà
 
 8) Integrazione e vari robot
-
-
-
-
-
-
