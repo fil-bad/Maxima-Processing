@@ -1,7 +1,7 @@
 --Maxima
 1) Matrici di rotazione rispetto alle varie terne, se fisse o mobili
-2) Matrice di rotazione dato vettore e angolo usando laplace
-3) Matrice di rotazione dato vettore e angolo usando Rodirigez
+2) Matrice di rotazione dato vettore e angolo usando Laplace
+3) Matrice di rotazione dato vettore e angolo usando Rodriguez
 4) Cinematica diretta mediante tabella di DH
 5) Orientamento inverso sia per angoli di Eulero che Nautiche
 6) Stanford+Polso e Puma, calcolo numerico della cinematica inversa ESATTA
@@ -11,7 +11,7 @@
 
 
 --Processing
-1)Modifica 2 Dof
+1) Modifica 2 Dof
 2) Cinematiche Dirette e inverse dei vari robot all'interno del Progetto Finale
 
 
@@ -52,9 +52,3 @@ PDF:
 7) Problemi nella cinematica inversa di orientamento: Singolarità, Terne scelte e proprietà
 
 8) Integrazione e vari robot
-
-
-
-
-
-
