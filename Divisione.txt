@@ -1,0 +1,67 @@
+#####Filippo
+--Maxima
+1) Matrici di rotazione rispetto alle varie terne, se fisse o mobili
+2) Matrice di rotazione dato vettore e angolo usando laplace
+3) Matrice di rotazione dato vettore e angolo usando Rodirigez
+--Matlab
+3)Visione 
+
+#####Gabriele
+--Processing
+1)Modifica 2 Dof
+--Maxima
+6) Stanford+Polso e Puma, calcolo numerico della cinematica inversa ESATTA
+7) Calcolo delle singolarità Cinematiche dei vari Robot
+8) Calcolo dell'energia dei link associata al Baricentro
+9) Equazioni del moto mediante Eulero Lagrange
+
+#####Emanuele
+--Matlab
+1)Lezione 21:su un 2Dof planare
+ -Implementare cinematica inversa
+ -Implementare algoritmo di Newton e gradiente
+ -Implementare un algoritmo numerico ibrido
+2)Simulare i 2 sistemi meccanici lineari, matlab e simulink
+--Maxima
+4) Cinematica diretta mediante tabella di DH
+5) Orientamento inverso sia per angoli di Eulero che Nautiche
+
+
+
+--Progetto
+#####Filippo
+PDF:
+        1) Cosa è un QuadTree ( Struttura dati, e libreria usata/Creata per generarlo)
+            a) Capire se un poligono si interseca con un altro o è contenuto (Teorema SAP)
+            b) Capire chi siano i Vicini di un quadrante in base al livello
+
+        2) Passare da QuadTree a un Grafo
+            a) Usando i vicini connettere i nodi "Bianchi"
+            b) Per meglio limare il grafo, si crea un corridoio del diametro pari a quello del robot, e si verifica che questo corridoio non si compenetri con gli ostacoli presenti nel campo
+            c) usando un opportuno algoritmo si trova un cammino tra partenza e destinazione
+                i)Capire in quale nodo mi trovo e il nodo destinazione
+                ii) Generare la lista di checkpoint da far seguire al robot
+
+--Vista pratica del tutto quando si muovono gli oggetti
+
+#####Emanuele
+3) Avendo la lista dei punti obiettivo ordinati, e avendo modellato il sistema come un OmniDirezionale LINEARE, controlliamo in in forza con una politica "Bang-Bang" il robot, e puntiamo un obiettivo finchè il controllo non scende sotto la saturazione o comunque siamo troppo vicini; Esenguendo per ogni nodi questa politica, di fatto si seguono i corridoi e si arriva a destinazione con continuità
+    (Raccontare della libreria di algebra lineare ejml)
+#####Filippo
+4)Ottenere mediante AutoDiff delle matrici di funzioni che descrivono la cinematica diretta dei robot,e la differenziazione per ottenere gli Jacobbiani.
+
+#####Gabriele
+5)Data la cinematica diretta, si disegna il robot
+
+#####Emanuele
+6)Sfruttando il punto 4, si calcolano le cinematiche inverse usando una logica di disaccoppiamento nella risoluzione della cinematica inversa di posizione
+#####Gabriele
+7) Problemi nella cinematica inversa di orientamento: Singolarità, Terne scelte e proprietà
+
+8) Integrazione e vari robot
+
+
+
+
+
+
