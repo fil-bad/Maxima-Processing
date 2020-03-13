@@ -181,6 +181,8 @@ public abstract class Robot {
                 break;
             }
         }
+
+
         if (ep.normF() <= EPSer && eo.normF() <= EPSer) {
             System.out.println("Finisco loop, sol trovata");
             throw new Exception("EndWork");

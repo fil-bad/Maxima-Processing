@@ -368,8 +368,8 @@ public class MatrixQ implements DifferentialMatrixFunction {
             } else if (value == PI || value == -PI) {
                 tmp.matrix[1][1] = one.negate();
                 tmp.matrix[1][2] = zero;
-                tmp.matrix[2][1] = one.negate();
-                tmp.matrix[2][2] = zero;
+                tmp.matrix[2][1] = zero;
+                tmp.matrix[2][2] = one.negate();
             } else if (value != 0) {
                 Constant<DoubleReal> c = DFFactory.val(new DoubleReal(value));
                 tmp.matrix[1][1] = DFFactory.cos(c);
