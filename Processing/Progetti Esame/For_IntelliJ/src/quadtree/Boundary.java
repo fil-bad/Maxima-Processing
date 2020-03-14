@@ -21,12 +21,13 @@ public class Boundary {
 //        this.xMax = x+w/2.0;
 //        this.yMax = y+h/2.0;
 //    }
-
+    //Vero se la coordinata è dentro il confine
     public boolean inRange(int x, int y) {
         return (x >= this.getxMin() && x <= this.getxMax()
                 && y >= this.getyMin() && y <= this.getyMax());
     }
 
+    //Vero se la coordinata è dentro il confine
     public boolean inRange(Vertex v) {
         return (v.getX() >= this.getxMin() && v.getX() <= this.getxMax()
                 && v.getY() >= this.getyMin() && v.getY() <= this.getyMax());
@@ -51,10 +52,6 @@ public class Boundary {
         return xMin;
     }
 
-    public double getMinExtension() {
-        return Math.min(getW(), getH());
-    }
-
     public double getyMin() {
         return yMin;
     }
@@ -75,10 +72,16 @@ public class Boundary {
         return (yMax - yMin);
     }
 
+    public double getMinExtension() {
+        return Math.min(getW(), getH());
+    }
+
+    //Return X coord of Center
     public double getX() {
         return xMin + getW() / 2.0;
     }
 
+    //Return Y coord of Center
     public double getY() {
         return yMin + getH() / 2.0;
     }
@@ -123,7 +126,6 @@ public class Boundary {
         }
         return new Vertex(this.getX(), this.getY());
     }
-
 
     public String dataBoundary() {
         String a = String.format("[X1=%.2f Y1=%.2f] \t[X2=%.2f Y2=%.2f]",

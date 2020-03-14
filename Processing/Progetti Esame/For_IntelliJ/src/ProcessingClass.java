@@ -57,8 +57,8 @@ public class ProcessingClass extends PApplet {
 
         scene.setRover(new Rover(this, new Vertex(100, 100), 0.1, 0.15, 0.03));
 //        scene.setRobot(new Cartesian(this, 10));
-//        scene.setRobot(new Puma(this, 10));
-        scene.setRobot(new Scara(this, 10));
+        scene.setRobot(new Puma(this, 10));
+//        scene.setRobot(new Scara(this, 10));
 
     }
 
@@ -223,7 +223,6 @@ public class ProcessingClass extends PApplet {
                 0.0f, 1.0f, 0.0f); // upX, upY, upZ
 
         //Ortonormale Destro
-        //rotateZ(PI/2);
         scale(1, -1, 1);
         rotateX(XRot);
         rotateZ(Zrot);
