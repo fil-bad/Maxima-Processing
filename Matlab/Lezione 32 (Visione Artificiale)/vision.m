@@ -3,9 +3,11 @@ clear variables
 close all
 %% Open Image & set on greyscale & BW
 
-imgData = imread('foto5-rot3.jpg');
+imgData = imread('foto1.jpg');
 figure(1)
 imshow(imgData); % the same picture above
+
+
 
 % scala di grigi pesata, tenendo conto della sensibilità maggiore al verde
 % dell'occhio umano
@@ -107,7 +109,7 @@ for i = 1:180
 end
 
 % ampl valore massimo per l'angolo, locs angolo del picco
-[ampl, locs] = findpeaks(vals,'MinPeakProminence',0.05*max(R(:)));
+[ampl, locs] = findpeaks(vals,'MinPeakProminence',0.01*max(R(:)));
 
 % per fare in modo, successivamente, di avere sempre la bisettrice scelta 
 % con lo stesso criterio (in ordine crescente di valore)

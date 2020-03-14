@@ -1,8 +1,8 @@
 #####Filippo
 --Maxima
 1) Matrici di rotazione rispetto alle varie terne, se fisse o mobili
-2) Matrice di rotazione dato vettore e angolo usando laplace
-3) Matrice di rotazione dato vettore e angolo usando Rodirigez
+2) Matrice di rotazione dato vettore e angolo usando Laplace
+3) Matrice di rotazione dato vettore e angolo usando Rodriguez
 --Matlab
 3)Visione 
 
@@ -32,12 +32,13 @@
 #####Filippo
 PDF:
         1) Cosa è un QuadTree ( Struttura dati, e libreria usata/Creata per generarlo)
-            a) Capire se un poligono si interseca con un altro o è contenuto (Teorema SAP)
+            a) Capire se un poligono si interseca con un altro o è contenuto (Teorema SAT)
             b) Capire chi siano i Vicini di un quadrante in base al livello
 
         2) Passare da QuadTree a un Grafo
             a) Usando i vicini connettere i nodi "Bianchi"
-            b) Per meglio limare il grafo, si crea un corridoio del diametro pari a quello del robot, e si verifica che questo corridoio non si compenetri con gli ostacoli presenti nel campo
+            b) Per meglio limare il grafo, si crea un corridoio del diametro pari a quello del robot, 
+		e si verifica che questo corridoio non si compenetri con gli ostacoli presenti nel campo
             c) usando un opportuno algoritmo si trova un cammino tra partenza e destinazione
                 i)Capire in quale nodo mi trovo e il nodo destinazione
                 ii) Generare la lista di checkpoint da far seguire al robot
@@ -49,7 +50,8 @@ PDF:
     (Raccontare della libreria di algebra lineare ejml)
 
 #####Filippo
-4)Ottenere mediante AutoDiff delle matrici di funzioni che descrivono la cinematica diretta dei robot,e la differenziazione per ottenere gli Jacobbiani.
+4)Ottenere mediante AutoDiff delle matrici di funzioni che descrivono la cinematica diretta dei robot,
+e la differenziazione per ottenere gli Jacobiani.
 
 #####Gabriele
 5)Data la cinematica diretta, si disegna il robot
