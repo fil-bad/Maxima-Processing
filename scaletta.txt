@@ -24,8 +24,6 @@
 2)Simulare i 2 sistemi meccanici lineari, matlab e simulink
 3)Visione artificiale
 
-<4) Lez.34, legge bang-bang su plot di una pallina lungo curve di commutazione.>
-
 --Progetto
 PDF:
         1) Cosa è un QuadTree ( Struttura dati, e libreria usata/Creata per generarlo)
